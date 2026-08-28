@@ -160,3 +160,14 @@ background-color:#378de5;
 position:relative;
 top:1px;
 }
+
+.options form {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+}
+
+.optionLeft,
+.optionRight {
+    text-align: left;
+}
