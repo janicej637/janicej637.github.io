@@ -196,7 +196,7 @@ top:1px;
    ========================================== */
 
 .resultContainer {
-    width: 100%;
+    width: 800;
     overflow: hidden;
     white-space: nowrap;
 }
