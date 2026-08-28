@@ -143,39 +143,36 @@
 
         <div class="scoreCard">
 
-            <table>
+           <table class="scoreTable">
 
-                <!-- Correct Count Row -->
-                <tr style="text-align: right;">
+```
+<tr>
 
-                    <td>
-                        <h3>Correct Answers</h3>
-                    </td>
+    <!-- Correct Answers - Left -->
+    <td>
+        <h3>Correct Answers</h3>
+        <div class="cBlock">
+            <h5 id="correctCount"></h5>
+        </div>
+    </td>
 
-                    <td>
-                        <div class="cBlock">
-                            <h5 id="correctCount"></h5>
-                        </div>
-                    </td>
+    <!-- Blank Column - Middle -->
+    <td>
+    </td>
 
-                </tr>
+    <!-- Total Attempts - Right -->
+    <td>
+        <h3>Total Attempts</h3>
+        <div class="tBlock">
+            <h5 id="totalCount"></h5>
+        </div>
+    </td>
 
-                <!-- Total Count Row -->
-                <tr>
+</tr>
+```
 
-                    <td style="text-align: right;">
-                        <h3>Total Attempts</h3>
-                    </td>
+</table>
 
-                    <td>
-                        <div class="tBlock">
-                            <h5 id="totalCount"></h5>
-                        </div>
-                    </td>
-
-                </tr>
-
-            </table>
 
         </div>
 
