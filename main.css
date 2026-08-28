@@ -55,7 +55,7 @@ background: url(ragged.gif) bottom repeat-x;
 .contents{
 width: 100%;
 background:url(binder.png);
-height: 93%;
+height: 100%;
 }
 
 /*Table Layout*/
