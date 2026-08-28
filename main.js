@@ -4,7 +4,7 @@
 // Declare Application Variables 
 var checkFlag; 									// Reports if no option is selected
 var attemptTotal = -1; 							// Keeps track of total attempts
-var correctTotal = 0; 							// Keeps track of correct answers
+var correctTotal = -1; 							// Keeps track of correct answers
 var clickCounter = 0; 							// Keeps track of Submit clicks
 var correctAnswer = 0; 							// Position of correct answer
 var optA, optB, optC, optD; 					// Option variables for each radio button
@@ -290,6 +290,7 @@ function random(){
 	document.getElementById("totalCount").innerHTML = attemptTotal;
 	
 // Update correctTotal on Score Card 
+	correctTotal = correctTotal + 1;
 	document.getElementById("correctCount").innerHTML =correctTotal;	
 
 	// Clear Result Banner
