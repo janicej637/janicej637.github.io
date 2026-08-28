@@ -1,0 +1,331 @@
+<!-- Assignment 3 -->
+
+<!-- Author: Janice James -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "https://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<head>
+
+<meta charset="utf-8">
+
+<title>Flag Flashcards</title>
+
+<meta name="keywords" content="landmarks">
+
+<meta name="description"
+   content="This site contains images of flags from different countries around the world and requires the user to identify the country represented by each flag.">
+
+<meta name="author" content="Janice James">
+
+<!-- Link Scripts -->
+
+<script type="text/javascript"
+        src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+</script>
+
+<script type="text/javascript" src="imagescroll.js"></script>
+
+<script type="text/javascript" src="main.js"></script>
+
+<!-- Link Stylesheets -->
+
+<link href="main.css"
+      rel="stylesheet"
+      type="text/css">
+
+<link href="https://fonts.googleapis.com/css?family=Unkempt"
+      rel="stylesheet"
+      type="text/css">
+
+<!-- Embedded Script -->
+
+<script type="text/javascript">
+
+window.addEventListener("load", random, false);
+
+</script>
+
+</head>
+
+<body>
+
+<!-- Page Wrapper -->
+
+<div class="page">
+
+```
+<!-- HOME BUTTON / PAGE HEADER -->
+
+<div class="topHeader">
+
+    <h1>
+
+        <a href="https://janicej637.github.io/">
+
+            <img src="https://clipart-library.com/data_images/469756.png"
+                 alt="Home"
+                 class="homeImage">
+
+        </a>
+
+    </h1>
+
+
+    <div class="header">
+
+        <h1>
+            <span class="underline">
+                Flag Flashcards
+            </span>
+        </h1>
+
+    </div>
+
+</div>
+
+
+<!-- INSTRUCTIONS -->
+
+<h2 class="instructions">
+    Submit the country represented by the flag below.
+</h2>
+
+
+<!-- APPLICATION CONTENTS -->
+
+<div class="contents" id="main">
+
+
+    <!-- FLAG -->
+
+    <div class="flagRow">
+
+        <div class="flagDiv">
+
+            <div class="flag">
+
+                <img id="showFlag"
+                     src=""
+                     alt="Flag"
+                     class="flagImage">
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- OPTIONS / BUTTONS / SCORES -->
+
+    <table class="mainTable">
+
+        <tr class="mainRow">
+
+
+            <!-- COLUMN 1: OPTIONS -->
+
+            <td class="optionsColumn">
+
+                <div class="options">
+
+
+                    <!-- SHOW RESULT -->
+
+                    <marquee behavior="scroll"
+                             direction="left"
+                             scrollamount="4"
+                             id="result">
+                    </marquee>
+
+
+                    <!-- ANSWER OPTIONS -->
+
+                    <form class="answerForm">
+
+
+                        <!-- LEFT OPTIONS -->
+
+                        <div class="optionLeft">
+
+                            <div class="option">
+
+                                <input type="radio"
+                                       name="rad"
+                                       id="a">
+
+                                <label for="a"
+                                       id="opt_a">
+                                </label>
+
+                            </div>
+
+
+                            <div class="option">
+
+                                <input type="radio"
+                                       name="rad"
+                                       id="b">
+
+                                <label for="b"
+                                       id="opt_b">
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- RIGHT OPTIONS -->
+
+                        <div class="optionRight">
+
+                            <div class="option">
+
+                                <input type="radio"
+                                       name="rad"
+                                       id="c">
+
+                                <label for="c"
+                                       id="opt_c">
+                                </label>
+
+                            </div>
+
+
+                            <div class="option">
+
+                                <input type="radio"
+                                       name="rad"
+                                       id="d">
+
+                                <label for="d"
+                                       id="opt_d">
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </td>
+
+
+            <!-- COLUMN 2: BUTTONS -->
+
+            <td class="buttonsColumn">
+
+                <div class="buttons">
+
+                    <input type="button"
+                           id="submit"
+                           class="button"
+                           value="Submit">
+
+
+                    <input type="button"
+                           id="next"
+                           class="button"
+                           value="Next">
+
+                </div>
+
+            </td>
+
+
+            <!-- COLUMN 3: SCORES -->
+
+            <td class="scoresColumn">
+
+                <div class="scoreCard">
+
+                    <table class="scoreTable">
+
+                        <tr>
+
+
+                            <!-- CORRECT ANSWERS -->
+
+                            <td>
+
+                                <h3>
+                                    Correct Answers
+                                </h3>
+
+                                <div class="cBlock">
+
+                                    <h5 id="correctCount">
+                                    </h5>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- BLANK COLUMN -->
+
+                            <td>
+                            </td>
+
+
+                            <!-- TOTAL ATTEMPTS -->
+
+                            <td>
+
+                                <h3>
+                                    Total Attempts
+                                </h3>
+
+                                <div class="tBlock">
+
+                                    <h5 id="totalCount">
+                                    </h5>
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </td>
+
+
+        </tr>
+
+    </table>
+
+
+</div>
+
+
+<!-- IMAGE SCROLLER -->
+
+<div id="img"
+     class="imagescroll">
+</div>
+
+
+<marquee behavior="scroll"
+         direction="right"
+         scrollamount="4"
+         class="imagescroll">
+</marquee>
+```
+
+</div>
+
+</body>
+
+</html>
