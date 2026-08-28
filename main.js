@@ -284,6 +284,10 @@ function random(){
 
 	// Set Flag Image with Correct Answer
 	document.getElementById("showFlag").setAttribute("src",baseUrl + arrCountry[arrRadios[correctAnswer].value].shortName + appendUrl);
+	
+// Update correctAnswer on Score Card 
+	correctTotal = correctTotal + 1;
+	document.getElementById("correctCount").innerHTML =correctTotal;	
 
 	
 
