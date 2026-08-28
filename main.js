@@ -288,6 +288,9 @@ function random(){
 	// Update Total Attempts on Score Card 
 	attemptTotal = attemptTotal + 1;
 	document.getElementById("totalCount").innerHTML = attemptTotal;
+	
+// Update correctTotal on Score Card 
+	document.getElementById("correctCount").innerHTML =correctTotal;	
 
 	// Clear Result Banner
 	document.getElementById("result").innerHTML = '';
