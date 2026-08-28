@@ -3,8 +3,8 @@
 
 // Declare Application Variables 
 var checkFlag; 									// Reports if no option is selected
-var attemptTotal = 0; 							// Keeps track of total attempts
-var correctTotal = 0; 							// Keeps track of correct answers
+var attemptTotal = -1; 							// Keeps track of total attempts
+var correctTotal = -1; 							// Keeps track of correct answers
 var clickCounter = 0; 							// Keeps track of Submit clicks
 var correctAnswer = 0; 							// Position of correct answer
 var optA, optB, optC, optD; 					// Option variables for each radio button
@@ -284,6 +284,10 @@ function random(){
 
 	// Set Flag Image with Correct Answer
 	document.getElementById("showFlag").setAttribute("src",baseUrl + arrCountry[arrRadios[correctAnswer].value].shortName + appendUrl);
+
+	// Update correctAnswer on Score Card 
+	correctAnswer = correctAnswer + 1;
+	document.getElementById("correctCount").innerHTML =correctTotal;	
 
 	// Update Total Attempts on Score Card 
 	attemptTotal = attemptTotal + 1;
