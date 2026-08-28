@@ -1,0 +1,156 @@
+<!-- Assignment 3 -->
+<!-- Author: Janice James -->
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<head>
+
+<meta charset  = "utf-8">
+<title>Flag Flashcards</title>
+<meta name = "keywords" content ="landmarks">
+<meta name = "description" content ="This site cotains images of flags from different countries around the world and requires the user to identify the country represented by each flag.">
+<meta name = "author" content ="Janice James">
+
+<!-- Link Scripts -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>	
+<script type="text/javascript" src="js/imagescroll.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+
+<!-- Link Stylesheets -->
+<link href='css/main.css' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Unkempt' rel='stylesheet' type='text/css'>
+
+<!-- Embedded Script -->
+<script type="text/javascript">
+window.addEventListener("load", random, false);
+</script>
+
+</head>
+
+<body>
+
+<!-- Page Wrapper-->
+<div class= "page">
+
+<!-- Page Header-->
+<div class= "header">
+<h1><span class="underline">Flag Flashcards</span></h1>
+</div>
+
+<!-- Instructions-->
+<h2>Submit the country represented by the flag below.</h2>
+
+<!-- Application Contents-->
+<div class= "contents" id="main">
+
+<!-- Content Table-->
+<table class= "conTable">
+
+<tr style="height:700; ">
+
+<!-- Flag Column-->
+<td width="50%" >
+<div class = "flagDiv">
+
+<!-- Flag Image -->
+<div class="flag">
+<img id="showFlag" src="" alt ="" width="100%" height="250"/>
+</div>
+
+</div>
+</td>
+
+<!-- Options Column -->
+<td width="30%" >
+
+<div class="options">
+
+<!-- Show Result -->
+<marquee behavior="scroll" direction="left" scrollamount="4" id="result"></marquee>
+<br>
+
+<!-- Options -->
+<form>
+		<input type="radio" name="rad" id="a">
+		<label for="a" id="opt_a" style="" ></label>
+
+		<br><br><input type="radio" class="radio" name="rad" id="b">
+		<label for="b" id="opt_b" style=""></label>
+
+		<br><br><input type="radio" class="radio" name="rad" id="c">
+		<label for="c" id="opt_c" style=""></label>
+		
+		<br><br><input type="radio" class="radio" name="rad" id="d">
+		<label for="d" id="opt_d" style=""></label>
+</form>
+
+</div>
+
+
+<!-- Nested Buttons Table -->
+<table align="center" >
+<tr >
+<td >
+
+<!-- Buttons -->
+<div>
+<input type="button" id="submit" class="button" value="Submit">
+<input type="button" id= "next" class="button" value="Next"  >
+</div>
+
+</td>
+</tr>
+</table>
+
+</td>
+<td width="10%" ></td>
+<!-- Score Card Column-->
+<td width="10%" >
+
+<div class = "scoreCard" align="right">
+<table>
+
+
+<!-- Correct Count Row-->
+<tr style = "text-align: right;">
+<td>
+<h3> Correct Answers</h3>
+</td>
+<td>
+<div class = "cBlock">
+<h5 id ="correctCount"></h5>
+</div>
+</td>
+</tr>
+
+<!-- Total Count Row-->
+<tr>
+<td style = "text-align: right;">
+<h3>Total Attempts </h3>
+</td>
+<td>
+<div class = "tBlock">
+<h5  id ="totalCount" ></h5>
+</div>
+</td>
+</tr>
+</table>
+
+<!-- Close Score Card-->
+</div>
+</td>
+</tr>
+</table>
+
+<!-- Close Contents-->
+</div>
+
+<!-- Image Scroller-->
+<div id="img" class="imagescroll"></div>
+<marquee behavior="scroll" direction="right" scrollamount="4" id="img" class="imagescroll"></marquee>
+<!-- Close Page Wrapper-->
+</div>
+
+</body>
+</html>
