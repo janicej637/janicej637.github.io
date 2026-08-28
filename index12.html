@@ -200,7 +200,7 @@
      *
      * The summer transfer window remains open until September 1,
      * so this list can be updated if Arsenal make another move.
-     */
+    
 
     var players = [
 
@@ -331,7 +331,451 @@
             totalAttempts;
     }
 
-    nextPlayer();
+    nextPlayer();*/
+
+    
+    
+/* ============================================================
+   ARSENAL FC FLASHCARD PLAYERS
+   Season: 2026/27
+   Arsenal Theme + Nationality Flags + 4 Answer Choices
+   ============================================================ */
+
+const arsenalTheme = {
+    primary: "#DB0007",
+    secondary: "#FFFFFF",
+    dark: "#121212",
+    gold: "#D4AF37",
+    name: "Arsenal FC",
+    nickname: "The Gunners",
+    flag: "🏴",
+    crest: "https://www.arsenal.com/"
+};
+
+
+/* ============================================================
+   PLAYER DATA
+   ============================================================ */
+
+const players = [
+
+    {
+        name: "David Raya",
+        number: 1,
+        position: "Goalkeeper",
+        nationality: "Spain",
+        flag: "🇪🇸",
+        answer: "David Raya",
+        profile: "david-raya"
+    },
+
+    {
+        name: "William Saliba",
+        number: 2,
+        position: "Defender",
+        nationality: "France",
+        flag: "🇫🇷",
+        answer: "William Saliba",
+        profile: "william-saliba"
+    },
+
+    {
+        name: "Cristhian Mosquera",
+        number: 3,
+        position: "Defender",
+        nationality: "Spain",
+        flag: "🇪🇸",
+        answer: "Cristhian Mosquera",
+        profile: "cristhian-mosquera"
+    },
+
+    {
+        name: "Ben White",
+        number: 4,
+        position: "Defender",
+        nationality: "England",
+        flag: "🏴",
+        answer: "Ben White",
+        profile: "ben-white"
+    },
+
+    {
+        name: "Piero Hincapié",
+        number: 5,
+        position: "Defender",
+        nationality: "Ecuador",
+        flag: "🇪🇨",
+        answer: "Piero Hincapié",
+        profile: "piero-hincapie"
+    },
+
+    {
+        name: "Gabriel Magalhães",
+        number: 6,
+        position: "Defender",
+        nationality: "Brazil",
+        flag: "🇧🇷",
+        answer: "Gabriel Magalhães",
+        profile: "gabriel"
+    },
+
+    {
+        name: "Bukayo Saka",
+        number: 7,
+        position: "Forward",
+        nationality: "England",
+        flag: "🏴",
+        answer: "Bukayo Saka",
+        profile: "bukayo-saka"
+    },
+
+    {
+        name: "Martin Ødegaard",
+        number: 8,
+        position: "Midfielder",
+        nationality: "Norway",
+        flag: "🇳🇴",
+        answer: "Martin Ødegaard",
+        profile: "martin-odegaard"
+    },
+
+    {
+        name: "Gabriel Jesus",
+        number: 9,
+        position: "Forward",
+        nationality: "Brazil",
+        flag: "🇧🇷",
+        answer: "Gabriel Jesus",
+        profile: "gabriel-jesus"
+    },
+
+    {
+        name: "Eberechi Eze",
+        number: 10,
+        position: "Midfielder",
+        nationality: "England",
+        flag: "🏴",
+        answer: "Eberechi Eze",
+        profile: "eberechi-eze"
+    },
+
+    {
+        name: "Gabriel Martinelli",
+        number: 11,
+        position: "Forward",
+        nationality: "Brazil",
+        flag: "🇧🇷",
+        answer: "Gabriel Martinelli",
+        profile: "gabriel-martinelli"
+    },
+
+    {
+        name: "Jurrien Timber",
+        number: 12,
+        position: "Defender",
+        nationality: "Netherlands",
+        flag: "🇳🇱",
+        answer: "Jurrien Timber",
+        profile: "jurrien-timber"
+    },
+
+    {
+        name: "Kepa Arrizabalaga",
+        number: 13,
+        position: "Goalkeeper",
+        nationality: "Spain",
+        flag: "🇪🇸",
+        answer: "Kepa Arrizabalaga",
+        profile: "kepa-arrizabalaga"
+    },
+
+    {
+        name: "Viktor Gyökeres",
+        number: 14,
+        position: "Forward",
+        nationality: "Sweden",
+        flag: "🇸🇪",
+        answer: "Viktor Gyökeres",
+        profile: "viktor-gyokeres"
+    },
+
+    {
+        name: "Christos Tzolis",
+        number: 17,
+        position: "Forward",
+        nationality: "Greece",
+        flag: "🇬🇷",
+        answer: "Christos Tzolis",
+        profile: "christos-tzolis"
+    },
+
+    {
+        name: "Noni Madueke",
+        number: 20,
+        position: "Forward",
+        nationality: "England",
+        flag: "🏴",
+        answer: "Noni Madueke",
+        profile: "noni-madueke"
+    },
+
+    {
+        name: "Fábio Vieira",
+        number: 21,
+        position: "Midfielder",
+        nationality: "Portugal",
+        flag: "🇵🇹",
+        answer: "Fábio Vieira",
+        profile: "fabio-vieira"
+    },
+
+    {
+        name: "Ethan Nwaneri",
+        number: 22,
+        position: "Midfielder",
+        nationality: "England",
+        flag: "🏴",
+        answer: "Ethan Nwaneri",
+        profile: "ethan-nwaneri"
+    },
+
+    {
+        name: "Mikel Merino",
+        number: 23,
+        position: "Midfielder",
+        nationality: "Spain",
+        flag: "🇪🇸",
+        answer: "Mikel Merino",
+        profile: "mikel-merino"
+    },
+
+    {
+        name: "Reiss Nelson",
+        number: 24,
+        position: "Forward",
+        nationality: "England",
+        flag: "🏴",
+        answer: "Reiss Nelson",
+        profile: "reiss-nelson"
+    },
+
+    {
+        name: "Kai Havertz",
+        number: 29,
+        position: "Forward",
+        nationality: "Germany",
+        flag: "🇩🇪",
+        answer: "Kai Havertz",
+        profile: "kai-havertz"
+    },
+
+    {
+        name: "Illan Meslier",
+        number: 30,
+        position: "Goalkeeper",
+        nationality: "France",
+        flag: "🇫🇷",
+        answer: "Illan Meslier",
+        profile: "illan-meslier"
+    },
+
+    {
+        name: "Riccardo Calafiori",
+        number: 33,
+        position: "Defender",
+        nationality: "Italy",
+        flag: "🇮🇹",
+        answer: "Riccardo Calafiori",
+        profile: "riccardo-calafiori"
+    },
+
+    {
+        name: "Tommy Setford",
+        number: 35,
+        position: "Goalkeeper",
+        nationality: "England",
+        flag: "🏴",
+        answer: "Tommy Setford",
+        profile: "tommy-setford"
+    },
+
+    {
+        name: "Martin Zubimendi",
+        number: 36,
+        position: "Midfielder",
+        nationality: "Spain",
+        flag: "🇪🇸",
+        answer: "Martin Zubimendi",
+        profile: "martin-zubimendi"
+    },
+
+    {
+        name: "Bruno Guimarães",
+        number: 39,
+        position: "Midfielder",
+        nationality: "Brazil",
+        flag: "🇧🇷",
+        answer: "Bruno Guimarães",
+        profile: "bruno-guimaraes"
+    },
+
+    {
+        name: "Declan Rice",
+        number: 41,
+        position: "Midfielder",
+        nationality: "England",
+        flag: "🏴",
+        answer: "Declan Rice",
+        profile: "declan-rice"
+    },
+
+    {
+        name: "Myles Lewis-Skelly",
+        number: 49,
+        position: "Defender / Midfielder",
+        nationality: "England",
+        flag: "🏴",
+        answer: "Myles Lewis-Skelly",
+        profile: "myles-lewis-skelly"
+    },
+
+    {
+        name: "Max Dowman",
+        number: 56,
+        position: "Forward / Midfielder",
+        nationality: "England",
+        flag: "🏴",
+        answer: "Max Dowman",
+        profile: "max-dowman"
+    }
+
+];
+
+
+/* ============================================================
+   GENERATE FOUR RADIO-BUTTON ANSWERS
+   ============================================================ */
+
+function getAnswerChoices(correctPlayer) {
+
+    const choices = [correctPlayer.name];
+
+    const otherPlayers = players.filter(
+        player => player.name !== correctPlayer.name
+    );
+
+    // Shuffle the other players
+    const shuffled = [...otherPlayers].sort(
+        () => Math.random() - 0.5
+    );
+
+    // Add three incorrect answers
+    for (let i = 0; i < shuffled.length && choices.length < 4; i++) {
+        choices.push(shuffled[i].name);
+    }
+
+    // Shuffle all four answers
+    return choices.sort(() => Math.random() - 0.5);
+}
+
+
+/* ============================================================
+   CREATE QUESTION DATA
+   ============================================================ */
+
+function createQuestion(player) {
+
+    return {
+        player: player,
+        question: `Who is this Arsenal player?`,
+        choices: getAnswerChoices(player),
+        correctAnswer: player.name
+    };
+
+}
+
+
+/* ============================================================
+   SHUFFLE PLAYERS
+   ============================================================ */
+
+function shufflePlayers() {
+
+    return [...players].sort(
+        () => Math.random() - 0.5
+    );
+
+}
+
+
+/* ============================================================
+   ARSENAL THEME COLORS
+   ============================================================ */
+
+document.documentElement.style.setProperty(
+    "--arsenal-red",
+    arsenalTheme.primary
+);
+
+document.documentElement.style.setProperty(
+    "--arsenal-white",
+    arsenalTheme.secondary
+);
+
+document.documentElement.style.setProperty(
+    "--arsenal-dark",
+    arsenalTheme.dark
+);
+
+document.documentElement.style.setProperty(
+    "--arsenal-gold",
+    arsenalTheme.gold
+);
+
+
+/* ============================================================
+   HELPER FUNCTIONS
+   ============================================================ */
+
+function getPlayerByName(name) {
+
+    return players.find(
+        player => player.name === name
+    );
+
+}
+
+
+function getPlayersByPosition(position) {
+
+    return players.filter(
+        player => player.position.includes(position)
+    );
+
+}
+
+
+function getRandomPlayer() {
+
+    return players[
+        Math.floor(Math.random() * players.length)
+    ];
+
+}
+
+
+/* ============================================================
+   EXAMPLE:
+   
+   const player = getRandomPlayer();
+
+   console.log(player.name);
+   console.log(player.flag);
+   console.log(getAnswerChoices(player));
+
+   ============================================================ */
+
+
 </script>
 
 </body>
