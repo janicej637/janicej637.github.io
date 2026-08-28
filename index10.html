@@ -70,8 +70,15 @@
     </div>
 
 
-    <!-- OPTIONS ROW -->
-    <div class="optionsRow" width="90%">
+    <!-- OPTIONS / BUTTONS / SCORES -->
+
+<table class="mainTable">
+
+
+<tr>
+
+    <!-- COLUMN 1: OPTIONS -->
+    <td class="optionsColumn">
 
         <div class="options">
 
@@ -87,40 +94,42 @@
             <!-- Options -->
             <form>
 
+                <!-- Left Options -->
+                <div class="optionLeft">
 
-<!-- Left Column -->
-<div class="optionLeft">
+                    <input type="radio" name="rad" id="a">
+                    <label for="a" id="opt_a"></label>
 
-    <input type="radio" name="rad" id="a">
-    <label for="a" id="opt_a"></label>
+                    <br><br>
 
-    <br><br>
+                    <input type="radio" name="rad" id="b">
+                    <label for="b" id="opt_b"></label>
 
-    <input type="radio" name="rad" id="b">
-    <label for="b" id="opt_b"></label>
+                </div>
 
-</div>
+                <!-- Right Options -->
+                <div class="optionRight">
 
+                    <input type="radio" name="rad" id="c">
+                    <label for="c" id="opt_c"></label>
 
-<!-- Right Column -->
-<div class="optionRight">
+                    <br><br>
 
-    <input type="radio" name="rad" id="c">
-    <label for="c" id="opt_c"></label>
+                    <input type="radio" name="rad" id="d">
+                    <label for="d" id="opt_d"></label>
 
-    <br><br>
+                </div>
 
-    <input type="radio" name="rad" id="d">
-    <label for="d" id="opt_d"></label>
-
-</div>
-
-</form>
+            </form>
 
         </div>
 
+    </td>
 
-        <!-- Buttons -->
+
+    <!-- COLUMN 2: BUTTONS -->
+    <td class="buttonsColumn">
+
         <div class="buttons">
 
             <input type="button"
@@ -135,48 +144,52 @@
 
         </div>
 
-    </div>
+    </td>
 
 
-    <!-- SCORE CARD ROW -->
-    <div class="scoreRow">
+    <!-- COLUMN 3: SCORES -->
+    <td class="scoresColumn">
 
         <div class="scoreCard">
 
-           <table class="scoreTable">
+            <table class="scoreTable">
 
+                <tr>
 
-<tr>
+                    <!-- Correct Answers -->
+                    <td>
+                        <h3>Correct Answers</h3>
 
-    <!-- Correct Answers - Left -->
-    <td>
-        <h3>Correct Answers</h3>
-        <div class="cBlock">
-            <h5 id="correctCount"></h5>
+                        <div class="cBlock">
+                            <h5 id="correctCount"></h5>
+                        </div>
+                    </td>
+
+                    <!-- Blank Column -->
+                    <td>
+                    </td>
+
+                    <!-- Total Attempts -->
+                    <td>
+                        <h3>Total Attempts</h3>
+
+                        <div class="tBlock">
+                            <h5 id="totalCount"></h5>
+                        </div>
+                    </td>
+
+                </tr>
+
+            </table>
+
         </div>
-    </td>
 
-    <!-- Blank Column - Middle -->
-    <td>
-    </td>
-
-    <!-- Total Attempts - Right -->
-    <td>
-        <h3>Total Attempts</h3>
-        <div class="tBlock">
-            <h5 id="totalCount"></h5>
-        </div>
     </td>
 
 </tr>
 
 
 </table>
-
-
-        </div>
-
-    </div>
 
 </div>
 
