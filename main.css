@@ -1,8 +1,8 @@
 /*Assignment 3*/
 /*Author: Janice James*/
 
-/*Page Default*/
-body { font-family:  "Unkempt", "Courier New", ariel, sans-serif; background:url(card_bg.jpg) repeat;  min-width: 1050px; min-height: 328px; max-width: 1260px;  margin-left: auto; margin-right:auto;}
+/*Page Default background:url(card_bg.jpg) repeat;*/
+body { font-family:  "Unkempt", "Courier New", ariel, sans-serif;   min-width: 1050px; min-height: 328px; max-width: 1260px;  margin-left: auto; margin-right:auto;}
 h1{text-align:center; font-size: 50px; }
 h2{text-align:center; }
 h3{padding:8px 5px 8px 5px;}
