@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsenal Player Flashcards</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            background-color: #eeeeee;
+        }
+
+        #container {
+            width: 90%;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #db0007;
+            font-size: 36px;
+        }
+
+        #instructions {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        #playerCard {
+            width: 300px;
+            max-width: 90%;
+            margin: 20px auto;
+            background-color: white;
+            border: 3px solid #db0007;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 10px #999999;
+        }
+
+        #playerImage {
+            width: 100%;
+            height: 330px;
+            object-fit: cover;
+            border-radius: 5px;
+            display: block;
+        }
+
+        #answers {
+            width: 300px;
+            max-width: 90%;
+            margin: 20px auto;
+            text-align: left;
+        }
+
+        .answerOption {
+            display: block;
+            background-color: white;
+            border: 2px solid #333333;
+            border-radius: 5px;
+            padding: 12px;
+            margin: 10px 0;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .answerOption:hover {
+            background-color: #dddddd;
+        }
+
+        .answerOption input {
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 17px;
+            background-color: #db0007;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #9c0005;
+        }
+
+        #result {
+            font-size: 20px;
+            font-weight: bold;
+            min-height: 30px;
+            margin: 15px;
+        }
+
+        #score {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            border: 2px solid #333333;
+        }
+
+        #score p {
+            font-size: 18px;
+        }
+
+        @media screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            #playerCard {
+                width: 260px;
+            }
+
+            #playerImage {
+                height: 290px;
+            }
+
+            #answers {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="container">
+
+    <h1>Arsenal Player Flashcards</h1>
+
+    <p id="instructions">
+        Who is the Arsenal player shown below?
+    </p>
+
+    <div id="playerCard">
+        <img id="playerImage" src="" alt="Arsenal player">
+    </div>
+
+    <div id="answers">
+
+        <label class="answerOption">
+            <input type="radio" name="player" value="">
+            <span id="option1"></span>
+        </label>
+
+        <label class="answerOption">
+            <input type="radio" name="player" value="">
+            <span id="option2"></span>
+        </label>
+
+        <label class="answerOption">
+            <input type="radio" name="player" value="">
+            <span id="option3"></span>
+        </label>
+
+        <label class="answerOption">
+            <input type="radio" name="player" value="">
+            <span id="option4"></span>
+        </label>
+
+    </div>
+
+    <button onclick="checkAnswer()">Submit Answer</button>
+    <button onclick="nextPlayer()">Next Player</button>
+
+    <div id="result"></div>
+
+    <div id="score">
+        <h2>Score</h2>
+
+        <p>
+            Correct Answers:
+            <span id="correct">0</span>
+        </p>
+
+        <p>
+            Total Attempts:
+            <span id="attempts">0</span>
+        </p>
+    </div>
+
+</div>
+
+<script>
+    /*
+     * Arsenal 2026/27 flashcard set.
+     * Add the corresponding image files to the images folder.
+     *
+     * The summer transfer window remains open until September 1,
+     * so this list can be updated if Arsenal make another move.
+     */
+
+    var players = [
+
+        { name: "David Raya", image: "images/david-raya.jpg" },
+        { name: "William Saliba", image: "images/william-saliba.jpg" },
+        { name: "Gabriel Magalhaes", image: "images/gabriel-magalhaes.jpg" },
+        { name: "Jurrien Timber", image: "images/jurrien-timber.jpg" },
+        { name: "Piero Hincapie", image: "images/piero-hincapie.jpg" },
+        { name: "Riccardo Calafiori", image: "images/riccardo-calafiori.jpg" },
+        { name: "Declan Rice", image: "images/declan-rice.jpg" },
+        { name: "Martin Zubimendi", image: "images/martin-zubimendi.jpg" },
+        { name: "Martin Odegaard", image: "images/martin-odegaard.jpg" },
+        { name: "Eberechi Eze", image: "images/eberechi-eze.jpg" },
+        { name: "Bukayo Saka", image: "images/bukayo-saka.jpg" },
+        { name: "Noni Madueke", image: "images/noni-madueke.jpg" },
+        { name: "Gabriel Martinelli", image: "images/gabriel-martinelli.jpg" },
+        { name: "Viktor Gyokeres", image: "images/viktor-gyokeres.jpg" },
+        { name: "Christos Tzolis", image: "images/christos-tzolis.jpg" },
+        { name: "Bruno Guimaraes", image: "images/bruno-guimaraes.jpg" }
+
+    ];
+
+    var currentPlayer = 0;
+    var correctAnswers = 0;
+    var totalAttempts = 0;
+
+    function createAnswers() {
+
+        var answers = [];
+        var correctAnswer = players[currentPlayer].name;
+
+        answers.push(correctAnswer);
+
+        while (answers.length < 4) {
+
+            var randomNumber =
+                Math.floor(Math.random() * players.length);
+
+            var randomPlayer =
+                players[randomNumber].name;
+
+            if (answers.indexOf(randomPlayer) === -1) {
+                answers.push(randomPlayer);
+            }
+        }
+
+        /* Shuffle the four choices. */
+        for (var i = answers.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = answers[i];
+            answers[i] = answers[j];
+            answers[j] = temp;
+        }
+
+        var radioButtons =
+            document.getElementsByName("player");
+
+        for (var k = 0; k < 4; k++) {
+
+            radioButtons[k].value = answers[k];
+            radioButtons[k].checked = false;
+
+            document.getElementById(
+                "option" + (k + 1)
+            ).innerHTML = answers[k];
+        }
+    }
+
+    function nextPlayer() {
+
+        currentPlayer =
+            Math.floor(Math.random() * players.length);
+
+        document.getElementById("playerImage").src =
+            players[currentPlayer].image;
+
+        document.getElementById("playerImage").alt =
+            "Arsenal player";
+
+        document.getElementById("result").innerHTML = "";
+
+        createAnswers();
+    }
+
+    function checkAnswer() {
+
+        var selectedAnswer = null;
+
+        var radioButtons =
+            document.getElementsByName("player");
+
+        for (var i = 0; i < radioButtons.length; i++) {
+
+            if (radioButtons[i].checked) {
+                selectedAnswer = radioButtons[i].value;
+            }
+        }
+
+        if (selectedAnswer === null) {
+
+            document.getElementById("result").innerHTML =
+                "Please select an answer.";
+
+            return;
+        }
+
+        totalAttempts++;
+
+        if (selectedAnswer === players[currentPlayer].name) {
+
+            correctAnswers++;
+
+            document.getElementById("result").innerHTML =
+                "Correct! Great job!";
+
+        } else {
+
+            document.getElementById("result").innerHTML =
+                "Incorrect. The correct answer is " +
+                players[currentPlayer].name + ".";
+
+        }
+
+        document.getElementById("correct").innerHTML =
+            correctAnswers;
+
+        document.getElementById("attempts").innerHTML =
+            totalAttempts;
+    }
+
+    nextPlayer();
+</script>
+
+</body>
+</html>
