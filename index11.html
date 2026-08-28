@@ -1,0 +1,334 @@
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsenal FC Player Flashcards</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f2f2f2;
+            color: #222;
+            text-align: center;
+        }
+
+        header {
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            padding: 25px;
+            background: #d00000;
+            color: white;
+            border-radius: 12px;
+        }
+
+        header h1 {
+            margin: 0 0 10px;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+        }
+
+        header p {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .flashcard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 25px;
+        }
+
+        .flashcard {
+            height: 330px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.7s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            backface-visibility: hidden;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-front {
+            background: white;
+        }
+
+        .card-front img {
+            width: 100%;
+            height: 230px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-front h2 {
+            margin: 15px 5px 5px;
+            font-size: 1.4rem;
+        }
+
+        .card-front p {
+            margin: 0;
+            color: #666;
+        }
+
+        .card-back {
+            background: #063672;
+            color: white;
+            padding: 25px;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-back h2 {
+            margin-top: 0;
+            font-size: 1.6rem;
+        }
+
+        .card-back p {
+            line-height: 1.6;
+        }
+
+        .position {
+            font-weight: bold;
+            color: #ffcc00;
+        }
+
+        .instruction {
+            margin: 25px 0;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .flashcard-container {
+                grid-template-columns: 1fr;
+                max-width: 350px;
+            }
+
+            .flashcard {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Arsenal FC Player Flashcards</h1>
+        <p>Test your knowledge of the Arsenal squad!</p>
+    </header>
+
+    <p class="instruction">
+        Click or tap a player card to flip it over.
+    </p>
+
+    <main class="flashcard-container">
+
+        <!-- Bukayo Saka -->
+        <div class="flashcard" onclick="flipCard(this)">
+            <div class="flashcard-inner">
+
+                <div class="card-front">
+                    <img src="images/saka.jpg" alt="Bukayo Saka">
+                    <h2>Bukayo Saka</h2>
+                    <p>Forward</p>
+                </div>
+
+                <div class="card-back">
+                    <h2>Bukayo Saka</h2>
+                    <p>
+                        <span class="position">Position:</span> Forward
+                    </p>
+                    <p>
+                        An Arsenal academy graduate known for his
+                        creativity, pace and attacking ability.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Martin Ãdegaard -->
+        <div class="flashcard" onclick="flipCard(this)">
+            <div class="flashcard-inner">
+
+                <div class="card-front">
+                    <img src="images/odegaard.jpg" alt="Martin Odegaard">
+                    <h2>Martin Ãdegaard</h2>
+                    <p>Midfielder</p>
+                </div>
+
+                <div class="card-back">
+                    <h2>Martin Ãdegaard</h2>
+                    <p>
+                        <span class="position">Position:</span> Midfielder
+                    </p>
+                    <p>
+                        A creative midfielder and captain known for
+                        his passing, vision and technical ability.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Declan Rice -->
+        <div class="flashcard" onclick="flipCard(this)">
+            <div class="flashcard-inner">
+
+                <div class="card-front">
+                    <img src="images/rice.jpg" alt="Declan Rice">
+                    <h2>Declan Rice</h2>
+                    <p>Midfielder</p>
+                </div>
+
+                <div class="card-back">
+                    <h2>Declan Rice</h2>
+                    <p>
+                        <span class="position">Position:</span> Midfielder
+                    </p>
+                    <p>
+                        A powerful midfielder known for his
+                        defensive work, passing and ability to
+                        drive forward with the ball.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- William Saliba -->
+        <div class="flashcard" onclick="flipCard(this)">
+            <div class="flashcard-inner">
+
+                <div class="card-front">
+                    <img src="images/saliba.jpg" alt="William Saliba">
+                    <h2>William Saliba</h2>
+                    <p>Defender</p>
+                </div>
+
+                <div class="card-back">
+                    <h2>William Saliba</h2>
+                    <p>
+                        <span class="position">Position:</span> Defender
+                    </p>
+                    <p>
+                        A composed central defender known for
+                        his strength, speed and ability to read
+                        the game.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Gabriel MagalhÃ£es -->
+        <div class="flashcard" onclick="flipCard(this)">
+            <div class="flashcard-inner">
+
+                <div class="card-front">
+                    <img src="images/gabriel.jpg" alt="Gabriel Magalhaes">
+                    <h2>Gabriel</h2>
+                    <p>Defender</p>
+                </div>
+
+                <div class="card-back">
+                    <h2>Gabriel MagalhÃ£es</h2>
+                    <p>
+                        <span class="position">Position:</span> Defender
+                    </p>
+                    <p>
+                        A strong centre-back who contributes
+                        defensively and is also dangerous from
+                        set pieces.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- David Raya -->
+        <div class="flashcard" onclick="flipCard(this)">
+            <div class="flashcard-inner">
+
+                <div class="card-front">
+                    <img src="images/raya.jpg" alt="David Raya">
+                    <h2>David Raya</h2>
+                    <p>Goalkeeper</p>
+                </div>
+
+                <div class="card-back">
+                    <h2>David Raya</h2>
+                    <p>
+                        <span class="position">Position:</span> Goalkeeper
+                    </p>
+                    <p>
+                        A goalkeeper known for his shot stopping,
+                        distribution and confidence with the ball.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+
+    <footer>
+        <p>Arsenal FC Player Flashcards</p>
+        <p>Click a card to reveal player information.</p>
+    </footer>
+
+
+    <script>
+        function flipCard(card) {
+            card.classList.toggle("flipped");
+        }
+    </script>
+
+</body>
+</html>
