@@ -286,7 +286,7 @@ function random(){
 	document.getElementById("showFlag").setAttribute("src",baseUrl + arrCountry[arrRadios[correctAnswer].value].shortName + appendUrl);
 
 	// Update correctAnswer on Score Card 
-	correctAnswer = correctAnswer + 1;
+	correctTotal = correctTotal + 1;
 	document.getElementById("correctCount").innerHTML =correctTotal;	
 
 	// Update Total Attempts on Score Card 
