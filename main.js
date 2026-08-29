@@ -224,6 +224,7 @@ function register(){
 	button.addEventListener("click", random, false);
 	var button1 = document.getElementById("submit");
 	button1.addEventListener("click", checkCorrect, false);
+	
 
 	
 
