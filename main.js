@@ -233,10 +233,6 @@ function register(){
 	optC = document.getElementById("opt_c");
 	optD = document.getElementById("opt_d");
 
-	optA.addEventListener("click", function() { document.getElementById("opt_a").checked = true; }, false); 
-	optB.addEventListener("click", function() { document.getElementById("opt_b").checked = true; }, false); 
-	optC.addEventListener("click", function() { document.getElementById("opt_c").checked = true; }, false); 
-	optD.addEventListener("click", function() { document.getElementById("opt_d").checked = true; }, false);
 
 	
 } // end function 
