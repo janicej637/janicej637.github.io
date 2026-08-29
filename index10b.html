@@ -1,5 +1,6 @@
 
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -16,11 +17,12 @@
     <!-- KEEP EXISTING CSS -->
     <link rel="stylesheet" href="main.css">
 
+
     <style>
 
-        /* =====================================================
+        /* ============================================
            RESET
-        ===================================================== */
+        ============================================ */
 
         * {
             box-sizing: border-box;
@@ -29,9 +31,9 @@
         }
 
 
-        /* =====================================================
+        /* ============================================
            PAGE
-        ===================================================== */
+        ============================================ */
 
         body {
 
@@ -51,40 +53,67 @@
 
             justify-content: center;
 
-            padding: 30px 15px 50px;
+            align-items: flex-start;
+
+            padding: 25px 15px 50px;
 
         }
 
 
-        /* =====================================================
-           MAIN WRAPPER
-        ===================================================== */
+        /* ============================================
+           MAIN CONTAINER
+        ============================================ */
 
-        .page-wrapper {
+        #container {
 
             width: 100%;
 
             max-width: 900px;
 
+            margin: 0 auto;
+
         }
 
 
-        /* =====================================================
+        /* ============================================
            HEADER
-        ===================================================== */
+        ============================================ */
 
-        .page-header {
+        header {
 
             text-align: center;
 
-            padding: 35px 25px 25px;
-
-            margin-bottom: 20px;
+            padding: 20px 10px 25px;
 
         }
 
 
-        .page-header h1 {
+        header .eyebrow {
+
+            display: inline-block;
+
+            border: 1px solid #ffff00;
+
+            border-radius: 50px;
+
+            padding: 7px 18px;
+
+            margin-bottom: 14px;
+
+            color: #ffff00;
+
+            font-size: 0.7rem;
+
+            font-weight: 800;
+
+            letter-spacing: 3px;
+
+            text-transform: uppercase;
+
+        }
+
+
+        header h1 {
 
             color: #ffff00;
 
@@ -95,66 +124,103 @@
 
             letter-spacing: 2px;
 
-            text-transform: uppercase;
+            line-height: 1.1;
 
-            text-shadow:
-                0 0 10px rgba(255, 255, 0, 0.25);
+            text-transform: uppercase;
 
         }
 
 
-        .page-header p {
+        #instructions {
+
+            margin-top: 12px;
 
             color: #ffff00;
 
-            margin-top: 10px;
-
             font-size: 1rem;
 
-            letter-spacing: 0.5px;
-
-            opacity: 0.85;
+            opacity: 0.75;
 
         }
 
 
-        /* =====================================================
-           MAIN GAME CARD
-        ===================================================== */
+        /* ============================================
+           GAME CARD
+        ============================================ */
 
-        .game-card {
+        #game {
 
-            background: #0b0b0b;
+            background: #0a0a0a;
 
-            border:
-                1px solid #333333;
+            border: 1px solid #292929;
 
             border-radius: 24px;
 
             padding: 30px;
 
             box-shadow:
-                0 20px 50px rgba(0, 0, 0, 0.7);
+                0 20px 60px rgba(0, 0, 0, 0.75);
 
         }
 
 
-        /* =====================================================
-           QUESTION
-        ===================================================== */
+        /* ============================================
+           FLAG AREA
+        ============================================ */
 
-        .question-area {
+        #flagArea {
+
+            width: 100%;
+
+            max-width: 550px;
+
+            height: 330px;
+
+            margin: 0 auto 30px;
+
+            padding: 15px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #111111;
+
+            border: 1px solid #333333;
+
+            border-radius: 20px;
+
+        }
+
+
+        #showFlag {
+
+            display: block;
+
+            width: 100%;
+
+            max-width: 500px;
+
+            max-height: 290px;
+
+            object-fit: contain;
+
+            border-radius: 10px;
+
+        }
+
+
+        /* ============================================
+           ANSWER TITLE
+        ============================================ */
+
+        .answer-title {
 
             text-align: center;
 
-            margin-bottom: 25px;
-
-        }
-
-
-        .question-label {
-
-            display: block;
+            margin-bottom: 16px;
 
             color: #ffff00;
 
@@ -166,96 +232,16 @@
 
             text-transform: uppercase;
 
-            margin-bottom: 10px;
-
             opacity: 0.75;
 
         }
 
 
-        .question-area h2 {
+        /* ============================================
+           ANSWER GRID
+        ============================================ */
 
-            color: #ffff00;
-
-            font-size:
-                clamp(1.3rem, 3vw, 1.8rem);
-
-            font-weight: 700;
-
-            line-height: 1.4;
-
-        }
-
-
-        /* =====================================================
-           FLAG DISPLAY
-        ===================================================== */
-
-        .flag-area {
-
-            min-height: 300px;
-
-            background: #111111;
-
-            border:
-                1px solid #303030;
-
-            border-radius: 20px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            padding: 25px;
-
-            margin-bottom: 30px;
-
-        }
-
-
-        .flag-area img {
-
-            max-width: 100%;
-
-            max-height: 250px;
-
-            width: auto;
-
-            height: auto;
-
-            object-fit: contain;
-
-            display: block;
-
-        }
-
-
-        /* =====================================================
-           ANSWERS
-        ===================================================== */
-
-        .answers-title {
-
-            color: #ffff00;
-
-            text-align: center;
-
-            font-size: 0.85rem;
-
-            font-weight: 800;
-
-            text-transform: uppercase;
-
-            letter-spacing: 2px;
-
-            margin-bottom: 15px;
-
-        }
-
-
-        .answer-options {
+        #answers {
 
             display: grid;
 
@@ -264,61 +250,46 @@
 
             gap: 14px;
 
-        }
+            max-width: 700px;
 
-
-        /* =====================================================
-           RADIO BUTTONS
-        ===================================================== */
-
-        .answer-option {
-
-            position: relative;
+            margin: 0 auto;
 
         }
 
 
-        .answer-option input[type="radio"] {
+        /* ============================================
+           RADIO ANSWER
+        ============================================ */
 
-            position: absolute;
-
-            opacity: 0;
-
-        }
-
-
-        .answer-option label {
+        .answer {
 
             display: flex;
 
             align-items: center;
 
-            gap: 12px;
+            min-height: 64px;
 
-            min-height: 62px;
-
-            padding: 12px 18px;
+            padding: 14px 18px;
 
             background: #111111;
 
-            border:
-                1px solid #3d3d3d;
+            border: 1px solid #333333;
 
             border-radius: 14px;
 
             color: #ffff00;
 
-            font-weight: 600;
-
             cursor: pointer;
 
             transition:
-                all 0.2s ease;
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                background 0.2s ease;
 
         }
 
 
-        .answer-option label:hover {
+        .answer:hover {
 
             background: #191900;
 
@@ -330,9 +301,15 @@
         }
 
 
-        /* CUSTOM RADIO */
+        /* ============================================
+           RADIO BUTTON
+        ============================================ */
 
-        .radio-circle {
+        .answer input[type="radio"] {
+
+            appearance: none;
+
+            -webkit-appearance: none;
 
             width: 21px;
 
@@ -340,65 +317,45 @@
 
             min-width: 21px;
 
-            border:
-                2px solid #ffff00;
+            margin-right: 13px;
+
+            border: 2px solid #ffff00;
 
             border-radius: 50%;
 
             position: relative;
 
+            cursor: pointer;
+
         }
 
 
-        .answer-option
-        input[type="radio"]:checked
-        + label {
+        .answer input[type="radio"]:checked {
 
             background: #ffff00;
 
-            color: #000000;
-
             border-color: #ffff00;
 
-            box-shadow:
-                0 0 18px
-                rgba(255, 255, 0, 0.18);
-
         }
 
 
-        .answer-option
-        input[type="radio"]:checked
-        + label
-        .radio-circle {
-
-            border-color: #000000;
-
-            background: #000000;
-
-        }
-
-
-        .answer-option
-        input[type="radio"]:checked
-        + label
-        .radio-circle::after {
+        .answer input[type="radio"]:checked::after {
 
             content: "";
 
             position: absolute;
 
-            width: 8px;
+            width: 7px;
 
-            height: 8px;
+            height: 7px;
 
-            background: #ffff00;
+            background: #000000;
 
             border-radius: 50%;
 
-            top: 50%;
-
             left: 50%;
+
+            top: 50%;
 
             transform:
                 translate(-50%, -50%);
@@ -406,11 +363,140 @@
         }
 
 
-        /* =====================================================
-           SCORE AREA
-        ===================================================== */
+        /* ============================================
+           OPTION TEXT
+        ============================================ */
 
-        .score-area {
+        .answer span {
+
+            color: #ffff00;
+
+            font-size: 1rem;
+
+            font-weight: 600;
+
+        }
+
+
+        /* ============================================
+           RESULT
+        ============================================ */
+
+        #result {
+
+            min-height: 52px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin: 25px auto 0;
+
+            padding: 12px 18px;
+
+            border-radius: 12px;
+
+            background-color: transparent;
+
+            color: #ffff00;
+
+            font-size: 1rem;
+
+            font-weight: 800;
+
+            text-align: center;
+
+        }
+
+
+        /* ============================================
+           BUTTON AREA
+        ============================================ */
+
+        #buttons {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+
+            margin-top: 22px;
+
+        }
+
+
+        button {
+
+            min-width: 175px;
+
+            padding: 14px 25px;
+
+            border: 1px solid #ffff00;
+
+            border-radius: 50px;
+
+            background: #ffff00;
+
+            color: #000000;
+
+            font-family: inherit;
+
+            font-size: 0.9rem;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+
+        }
+
+
+        button:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 0 20px
+                rgba(255, 255, 0, 0.25);
+
+        }
+
+
+        #next {
+
+            background: transparent;
+
+            color: #ffff00;
+
+        }
+
+
+        #next:hover {
+
+            background: #ffff00;
+
+            color: #000000;
+
+        }
+
+
+        /* ============================================
+           SCORE
+        ============================================ */
+
+        #score {
 
             display: grid;
 
@@ -419,45 +505,48 @@
 
             gap: 15px;
 
-            margin-top: 25px;
+            max-width: 700px;
+
+            margin: 25px auto 0;
 
         }
 
 
         .score-card {
 
-            background: #0b0b0b;
-
-            border:
-                1px solid #333333;
-
-            border-radius: 18px;
-
             padding: 20px;
+
+            background: #111111;
+
+            border: 1px solid #292929;
+
+            border-radius: 17px;
 
             text-align: center;
 
         }
 
 
-        .score-card h3 {
+        .score-card h2 {
 
             color: #ffff00;
 
-            font-size: 0.75rem;
+            font-size: 0.7rem;
 
-            text-transform: uppercase;
+            font-weight: 800;
 
             letter-spacing: 2px;
 
-            margin-bottom: 8px;
+            text-transform: uppercase;
 
-            opacity: 0.75;
+            opacity: 0.7;
 
         }
 
 
         .score-card p {
+
+            margin-top: 8px;
 
             color: #ffff00;
 
@@ -468,48 +557,39 @@
         }
 
 
-        /* =====================================================
+        /* ============================================
            FOOTER
-        ===================================================== */
+        ============================================ */
 
-        .page-footer {
+        footer {
+
+            padding: 20px;
 
             text-align: center;
 
             color: #ffff00;
 
-            font-size: 0.8rem;
+            font-size: 0.75rem;
 
-            margin-top: 20px;
-
-            opacity: 0.6;
+            opacity: 0.5;
 
         }
 
 
-        /* =====================================================
+        /* ============================================
            RESPONSIVE
-        ===================================================== */
+        ============================================ */
 
-        @media (max-width: 650px) {
+        @media screen and (max-width: 650px) {
 
-            body {
+            #answers {
 
-                padding:
-                    15px 10px 30px;
-
-            }
-
-
-            .page-header {
-
-                padding:
-                    20px 10px;
+                grid-template-columns: 1fr;
 
             }
 
 
-            .game-card {
+            #game {
 
                 padding: 18px;
 
@@ -518,57 +598,77 @@
             }
 
 
-            .flag-area {
+            #flagArea {
 
-                min-height: 220px;
-
-                padding: 15px;
+                height: 260px;
 
             }
 
 
-            .flag-area img {
+            #showFlag {
 
-                max-height: 180px;
-
-            }
-
-
-            .answer-options {
-
-                grid-template-columns: 1fr;
-
-            }
-
-
-            .score-area {
-
-                grid-template-columns: 1fr;
+                max-height: 225px;
 
             }
 
         }
 
 
-        @media (max-width: 400px) {
+        @media screen and (max-width: 450px) {
 
-            .page-header h1 {
+            body {
+
+                padding:
+                    10px 8px 30px;
+
+            }
+
+
+            header h1 {
 
                 font-size: 2rem;
 
             }
 
 
-            .question-area h2 {
+            #instructions {
 
-                font-size: 1.15rem;
+                font-size: 0.85rem;
 
             }
 
 
-            .flag-area {
+            #flagArea {
 
-                min-height: 180px;
+                height: 210px;
+
+            }
+
+
+            #showFlag {
+
+                max-height: 180px;
+
+            }
+
+
+            #score {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            #buttons {
+
+                flex-direction: column;
+
+            }
+
+
+            button {
+
+                width: 100%;
 
             }
 
@@ -582,235 +682,257 @@
 <body>
 
 
-    <div class="page-wrapper">
+<div id="container">
 
 
-        <!-- =========================================
-             HEADER
-        ========================================== -->
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
 
-        <header class="page-header">
+    <header>
 
-            <h1>
-                Flag Flashcards
-            </h1>
+        <div class="eyebrow">
+            Knowledge Challenge
+        </div>
 
-            <p>
-                Test your knowledge of countries and their flags.
-            </p>
+        <h1>
+            Flag Flashcards
+        </h1>
 
-        </header>
+        <p id="instructions">
+            Identify the country represented by the flag.
+        </p>
 
-
-        <!-- =========================================
-             GAME
-        ========================================== -->
-
-        <main class="game-card">
+    </header>
 
 
-            <!-- QUESTION -->
+    <!-- ==========================================
+         GAME
+    =========================================== -->
 
-            <section class="question-area">
-
-                <span class="question-label">
-                    Identify the Flag
-                </span>
-
-                <h2>
-                    Submit the country represented
-                    by the flag below.
-                </h2>
-
-            </section>
+    <main id="game">
 
 
-            <!-- FLAG -->
+        <!-- ======================================
+             FLAG
 
-            <section class="flag-area">
+             REQUIRED BY main.js:
+             id="showFlag"
+        ======================================= -->
 
-                <!--
-                    KEEP THE IMAGE ELEMENT USED
-                    BY YOUR EXISTING main.js HERE.
+        <div id="flagArea">
 
-                    binder.png has been removed.
-                -->
+            <img
+                id="showFlag"
+                src=""
+                alt="Country flag"
+            >
 
-                <img
-                    id="flag"
-                    src=""
-                    alt="Country flag"
+        </div>
+
+
+        <!-- ======================================
+             ANSWERS
+        ======================================= -->
+
+        <h2 class="answer-title">
+            Select your answer
+        </h2>
+
+
+        <div id="answers">
+
+
+            <!-- OPTION A -->
+
+            <label
+                class="answer"
+                id="opt_a"
+            >
+
+                <input
+                    type="radio"
+                    name="rad"
+                    id="a"
+                    value=""
                 >
 
-            </section>
+                <span>
+                    Answer A
+                </span>
 
+            </label>
 
-            <!-- ANSWERS -->
 
-            <section>
+            <!-- OPTION B -->
 
-                <h3 class="answers-title">
-                    Choose an answer
-                </h3>
+            <label
+                class="answer"
+                id="opt_b"
+            >
 
+                <input
+                    type="radio"
+                    name="rad"
+                    id="b"
+                    value=""
+                >
 
-                <div class="answer-options">
+                <span>
+                    Answer B
+                </span>
 
+            </label>
 
-                    <!-- ANSWER 1 -->
 
-                    <div class="answer-option">
+            <!-- OPTION C -->
 
-                        <input
-                            type="radio"
-                            id="answer1"
-                            name="answer"
-                            value=""
-                        >
+            <label
+                class="answer"
+                id="opt_c"
+            >
 
-                        <label for="answer1">
+                <input
+                    type="radio"
+                    name="rad"
+                    id="c"
+                    value=""
+                >
 
-                            <span class="radio-circle"></span>
+                <span>
+                    Answer C
+                </span>
 
-                            <span>
-                                Answer 1
-                            </span>
+            </label>
 
-                        </label>
 
-                    </div>
+            <!-- OPTION D -->
 
+            <label
+                class="answer"
+                id="opt_d"
+            >
 
-                    <!-- ANSWER 2 -->
+                <input
+                    type="radio"
+                    name="rad"
+                    id="d"
+                    value=""
+                >
 
-                    <div class="answer-option">
+                <span>
+                    Answer D
+                </span>
 
-                        <input
-                            type="radio"
-                            id="answer2"
-                            name="answer"
-                            value=""
-                        >
+            </label>
 
-                        <label for="answer2">
 
-                            <span class="radio-circle"></span>
+        </div>
 
-                            <span>
-                                Answer 2
-                            </span>
 
-                        </label>
+        <!-- ======================================
+             RESULT
 
-                    </div>
+             REQUIRED BY main.js:
+             id="result"
+        ======================================= -->
 
+        <div
+            id="result"
+            aria-live="polite">
+        </div>
 
-                    <!-- ANSWER 3 -->
 
-                    <div class="answer-option">
+        <!-- ======================================
+             BUTTONS
 
-                        <input
-                            type="radio"
-                            id="answer3"
-                            name="answer"
-                            value=""
-                        >
+             REQUIRED BY main.js:
+             id="submit"
+             id="next"
+        ======================================= -->
 
-                        <label for="answer3">
+        <div id="buttons">
 
-                            <span class="radio-circle"></span>
+            <button
+                type="button"
+                id="submit">
 
-                            <span>
-                                Answer 3
-                            </span>
+                Submit Answer
 
-                        </label>
+            </button>
 
-                    </div>
 
+            <button
+                type="button"
+                id="next">
 
-                    <!-- ANSWER 4 -->
+                Next Flag
 
-                    <div class="answer-option">
+            </button>
 
-                        <input
-                            type="radio"
-                            id="answer4"
-                            name="answer"
-                            value=""
-                        >
+        </div>
 
-                        <label for="answer4">
 
-                            <span class="radio-circle"></span>
+        <!-- ======================================
+             SCORE
 
-                            <span>
-                                Answer 4
-                            </span>
+             REQUIRED BY main.js:
+             id="correctCount"
+             id="totalCount"
+        ======================================= -->
 
-                        </label>
+        <div id="score">
 
-                    </div>
 
+            <div class="score-card">
 
-                </div>
+                <h2>
+                    Correct Answers
+                </h2>
 
-            </section>
+                <p id="correctCount">
+                    0
+                </p>
 
+            </div>
 
-            <!-- =====================================
-                 SCORE
-            ====================================== -->
 
-            <section class="score-area">
+            <div class="score-card">
 
+                <h2>
+                    Total Attempts
+                </h2>
 
-                <div class="score-card">
+                <p id="totalCount">
+                    0
+                </p>
 
-                    <h3>
-                        Correct Answers
-                    </h3>
+            </div>
 
-                    <p id="correctAnswers">
-                        0
-                    </p>
 
-                </div>
+        </div>
 
 
-                <div class="score-card">
+    </main>
 
-                    <h3>
-                        Total Attempts
-                    </h3>
 
-                    <p id="totalAttempts">
-                        0
-                    </p>
+    <footer>
 
-                </div>
+        <p>
+            Test your knowledge. Learn as you play.
+        </p>
 
+    </footer>
 
-            </section>
 
+</div>
 
-        </main>
 
+<!-- ==============================================
+     KEEP YOUR EXISTING JAVASCRIPT
+================================================ -->
 
-        <!-- FOOTER -->
-
-        <footer class="page-footer">
-
-            Flag Flashcards
-
-        </footer>
-
-
-    </div>
-
-
-    <!-- KEEP EXISTING JAVASCRIPT -->
-    <script src="main.js"></script>
+<script src="main.js"></script>
 
 
 </body>
