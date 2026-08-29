@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Animal Match - A fun memory matching game for kids.">
+
+    <title>Animal Match Game</title>
+
+    <link rel="stylesheet" href="main.css">
+
+</head>
+
+
+<body>
+
+    <div class="page-wrapper">
+
+
+        <!-- =========================================
+             HEADER
+        ========================================== -->
+
+        <header class="page-header">
+
+            <div class="header-content">
+
+                <span class="eyebrow">
+                    MEMORY GAME
+                </span>
+
+                <h1>
+                    🐾 Animal Match
+                </h1>
+
+                <p class="subtitle">
+                    Flip two cards and find the matching animals!
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================================
+             GAME INFORMATION
+        ========================================== -->
+
+        <section class="game-info">
+
+            <div class="info-card">
+
+                <span class="info-label">
+                    Matches
+                </span>
+
+                <strong id="matches">
+                    0 / 12
+                </strong>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <span class="info-label">
+                    Moves
+                </span>
+
+                <strong id="moves">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <span class="info-label">
+                    Best
+                </span>
+
+                <strong id="best">
+                    --
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================================
+             GAME BOARD
+        ========================================== -->
+
+        <main>
+
+            <section
+                id="gameBoard"
+                class="game-board"
+                aria-label="Animal matching game">
+
+            </section>
+
+
+            <!-- =====================================
+                 GAME CONTROLS
+            ====================================== -->
+
+            <div class="game-controls">
+
+                <button
+                    id="newGame"
+                    class="new-game-button"
+                    type="button">
+
+                    🔄 New Game
+
+                </button>
+
+            </div>
+
+
+            <!-- =====================================
+                 WIN MESSAGE
+            ====================================== -->
+
+            <section
+                id="winMessage"
+                class="win-message"
+                aria-live="polite">
+
+                <div class="win-card">
+
+                    <div class="trophy">
+                        🏆
+                    </div>
+
+                    <h2>
+                        Great Job!
+                    </h2>
+
+                    <p>
+                        You matched all the animals!
+                    </p>
+
+                    <p class="final-score">
+                        You finished in
+                        <strong id="finalMoves">0</strong>
+                        moves.
+                    </p>
+
+                    <button
+                        id="playAgain"
+                        type="button">
+
+                        ⭐ Play Again
+
+                    </button>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- =========================================
+             FOOTER
+        ========================================== -->
+
+        <footer class="page-footer">
+
+            <p>
+                Match the animals and have fun! 🐾
+            </p>
+
+            <p class="credit">
+                Animal artwork by OpenMoji · CC BY-SA 4.0
+            </p>
+
+        </footer>
+
+
+    </div>
+
+
+    <script src="main.js"></script>
+
+</body>
+
+</html>
