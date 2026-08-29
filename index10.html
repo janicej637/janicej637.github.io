@@ -2,208 +2,266 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <meta name="description"
-        content="Test your knowledge with Flag Flashcards game.">
+          content="Flag Flashcards - Test your knowledge of countries and their flags.">
 
     <title>Flag Flashcards</title>
 
-    <!-- Main stylesheet -->
+    <!-- KEEP EXISTING CSS REFERENCE -->
     <link rel="stylesheet" href="main.css">
+
 </head>
+
 
 <body>
 
     <div class="page-wrapper">
 
-        <!-- ================================
+        <!-- =========================================
              HEADER
-        ================================= -->
-        <header class="site-header">
+        ========================================== -->
+
+        <header class="page-header">
 
             <div class="header-content">
 
-               
+                <span class="eyebrow">
+                    KNOWLEDGE CHALLENGE
+                </span>
 
-                <div class="header-text">
-                    <h1>Flag Flashcards</h1>
+                <h1>
+                    Flag Flashcards
+                </h1>
 
-                  
-                </div>
+                <p class="subtitle">
+                    Test your knowledge of countries and their flags.
+                </p>
 
             </div>
 
         </header>
 
 
-        <!-- ================================
+        <!-- =========================================
              MAIN CONTENT
-        ================================= -->
-        <main class="main-content">
+        ========================================== -->
 
-            <section class="game-card">
+        <main class="flashcard-container">
 
-                <!-- Game heading -->
-                <div class="game-heading">
 
-                    
+            <!-- =====================================
+                 QUESTION CARD
+            ====================================== -->
 
-                    <h2>
-                        Which country does this flag represent?
+            <section class="question-card"
+                     aria-labelledby="question-heading">
+
+                <div class="question-header">
+
+                    <span class="question-number">
+                        QUESTION
+                    </span>
+
+                    <h2 id="question-heading">
+                        Submit the country represented by
+                        the flag below.
                     </h2>
 
-                    <p>
-                        Select the correct answer below.
-                    </p>
-
                 </div>
 
 
-                <!-- ============================
-                     FLAG DISPLAY
-                ============================= -->
-                <div class="flag-section">
+                <!-- =================================
+                     FLAG / IMAGE AREA
+                ================================== -->
 
-                    <div class="flag-frame">
+                <div class="flag-card">
 
-                        <img
-                            id="flag"
-                            src=""
-                            alt="Country flag"
-                        >
+                    <div class="flag-display">
+
+                        <!--
+                            KEEP YOUR EXISTING JAVASCRIPT
+                            IMAGE FUNCTIONALITY.
+                        -->
 
                     </div>
 
                 </div>
 
 
-                <!-- ============================
+                <!-- =================================
                      ANSWER OPTIONS
-                ============================= -->
-                <form class="answer-form" id="answerForm">
+                ================================== -->
 
-                    <div class="answer-grid">
+                <div class="answer-section">
 
-                        <!-- Answer 1 -->
+                    <h3>
+                        Select your answer
+                    </h3>
+
+
+                    <div class="answer-options">
+
+                        <!-- RADIO OPTION 1 -->
+
                         <div class="answer-option">
 
-                            <input
-                                type="radio"
-                                id="answer1"
-                                name="answer"
-                                value=""
-                            >
+                            <label>
 
-                            <label for="answer1">
-                                <span class="radio-circle"></span>
-                                <span class="answer-text"></span>
+                                <input
+                                    type="radio"
+                                    name="answer"
+                                >
+
+                                <span class="radio-custom"></span>
+
+                                <span class="answer-text">
+                                </span>
+
                             </label>
 
                         </div>
 
 
-                        <!-- Answer 2 -->
+                        <!-- RADIO OPTION 2 -->
+
                         <div class="answer-option">
 
-                            <input
-                                type="radio"
-                                id="answer2"
-                                name="answer"
-                                value=""
-                            >
+                            <label>
 
-                            <label for="answer2">
-                                <span class="radio-circle"></span>
-                                <span class="answer-text"></span>
+                                <input
+                                    type="radio"
+                                    name="answer"
+                                >
+
+                                <span class="radio-custom"></span>
+
+                                <span class="answer-text">
+                                </span>
+
                             </label>
 
                         </div>
 
 
-                        <!-- Answer 3 -->
+                        <!-- RADIO OPTION 3 -->
+
                         <div class="answer-option">
 
-                            <input
-                                type="radio"
-                                id="answer3"
-                                name="answer"
-                                value=""
-                            >
+                            <label>
 
-                            <label for="answer3">
-                                <span class="radio-circle"></span>
-                                <span class="answer-text"></span>
+                                <input
+                                    type="radio"
+                                    name="answer"
+                                >
+
+                                <span class="radio-custom"></span>
+
+                                <span class="answer-text">
+                                </span>
+
                             </label>
 
                         </div>
 
 
-                        <!-- Answer 4 -->
+                        <!-- RADIO OPTION 4 -->
+
                         <div class="answer-option">
 
-                            <input
-                                type="radio"
-                                id="answer4"
-                                name="answer"
-                                value=""
-                            >
+                            <label>
 
-                            <label for="answer4">
-                                <span class="radio-circle"></span>
-                                <span class="answer-text"></span>
+                                <input
+                                    type="radio"
+                                    name="answer"
+                                >
+
+                                <span class="radio-custom"></span>
+
+                                <span class="answer-text">
+                                </span>
+
                             </label>
 
                         </div>
 
                     </div>
 
+                </div>
 
-                    <!-- Submit button -->
-                    <div class="button-area">
 
-                        <button
-                            type="button"
-                            id="submitAnswer"
-                            class="submit-button"
-                        >
-                            Submit Answer
-                        </button>
+                <!-- =================================
+                     SUBMIT AREA
+                ================================== -->
 
+                <div class="action-area">
+
+                    <button
+                        type="button"
+                        class="submit-button">
+
+                        Submit Answer
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- =====================================
+                 SCORE CARDS
+            ====================================== -->
+
+            <section class="score-section"
+                     aria-label="Game statistics">
+
+
+                <!-- CORRECT ANSWERS -->
+
+                <div class="score-card">
+
+                    <div class="score-icon">
+                        ✓
                     </div>
 
-                </form>
-
-
-                <!-- ============================
-                     SCORE
-                ============================= -->
-                <div class="score-section">
-
-                    <div class="score-card">
+                    <div class="score-information">
 
                         <span class="score-label">
                             Correct Answers
                         </span>
 
-                        <strong id="correctAnswers">
+                        <strong
+                            id="correctAnswers">
                             0
                         </strong>
 
                     </div>
 
+                </div>
 
-                    <div class="score-divider"></div>
 
+                <!-- TOTAL ATTEMPTS -->
 
-                    <div class="score-card">
+                <div class="score-card">
+
+                    <div class="score-icon">
+                        #
+                    </div>
+
+                    <div class="score-information">
 
                         <span class="score-label">
                             Total Attempts
                         </span>
 
-                        <strong id="totalAttempts">
+                        <strong
+                            id="totalAttempts">
                             0
                         </strong>
 
@@ -213,28 +271,27 @@
 
             </section>
 
+
         </main>
 
 
-        <!-- ================================
+        <!-- =========================================
              FOOTER
-        ================================= -->
-        <footer class="site-footer">
+        ========================================== -->
+
+        <footer class="page-footer">
 
             <p>
-                Arsenal Flag Flashcards
-            </p>
-
-            <p>
-                Test your knowledge • Learn • Improve
+                Test your knowledge. Learn something new.
             </p>
 
         </footer>
 
+
     </div>
 
 
-    <!-- Main JavaScript -->
+    <!-- KEEP EXISTING JAVASCRIPT REFERENCE -->
     <script src="main.js"></script>
 
 </body>
