@@ -229,33 +229,7 @@ function register(){
 	optC = document.getElementById("opt_c");
 	optD = document.getElementById("opt_d");
 
- // Answer labels
-var answers = document.querySelectorAll(".answer");
 
-answers.forEach(function(label) {
-
-    label.addEventListener("click", function() {
-
-        /* Remove selected color from all labels
-        answers.forEach(function(item) {
-            item.classList.remove("selected");
-        });*/
-
-        // Make clicked label blue
-        this.classList.add("selected");
-
-        // Find the radio button connected to this label
-        var radioButton = document.getElementById(
-            this.getAttribute("for")
-        );
-
-        // Check the radio button
-        if (radioButton) {
-            radioButton.checked = true;
-        }
-    });
-
-});
 	
 } // end function 
 
@@ -277,12 +251,6 @@ function random(){
 		
 	}
 
-	 // Return all answer labels to normal
-    var answers = document.querySelectorAll(".answer");
-
-    answers.forEach(function(label) {
-        label.classList.remove("selected");
-    });
 
 
 	// Randomly Set A & B Options
