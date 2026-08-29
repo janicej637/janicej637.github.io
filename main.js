@@ -304,7 +304,6 @@ function random(){
 	document.getElementById("result").setAttribute('style', 'background-color: none');
 
 	
-	
 }// end function 
 
 
