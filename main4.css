@@ -1,499 +1,167 @@
 ```css
 /* =========================================
-   FOOD & HEALTH QUIZ
-   Colorful • Elegant • Responsive
+   BALLOON / PLAYFUL TYPOGRAPHY
    ========================================= */
-
-* {
-  box-sizing: border-box;
-}
 
 body {
-  margin: 0;
-  min-height: 100vh;
-  background:
-    radial-gradient(circle at 15% 10%, #193b35 0, transparent 32%),
-    radial-gradient(circle at 85% 15%, #302044 0, transparent 30%),
-    linear-gradient(135deg, #071512 0%, #0b111d 48%, #160d1d 100%);
-  color: #f8faf9;
-  font: 16px Arial, sans-serif;
+  font-family:
+    "Arial Rounded MT Bold",
+    "Trebuchet MS",
+    "Verdana",
+    sans-serif;
 }
 
-/* Main container */
-.app {
-  width: min(950px, 94%);
-  margin: auto;
-  padding: 42px 0 50px;
-}
-
-/* =========================================
-   HEADER
-   ========================================= */
-
-header {
-  text-align: center;
-  margin-bottom: 28px;
-}
-
-header span {
-  display: inline-block;
-  color: #7ff0b2;
-  font-size: 12px;
-  font-weight: bold;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  background: rgba(127, 240, 178, .09);
-  border: 1px solid rgba(127, 240, 178, .25);
-  padding: 7px 13px;
-  border-radius: 999px;
-}
-
+/* Main title */
 h1 {
-  font-size: clamp(2.2rem, 6vw, 3.7rem);
-  margin: 14px 0 10px;
-  line-height: 1.05;
-  letter-spacing: -.03em;
-  background: linear-gradient(
-    90deg,
-    #ffffff,
-    #9ff5c4,
-    #b9a7ff,
-    #ffffff
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  font-family:
+    "Arial Rounded MT Bold",
+    "Trebuchet MS",
+    "Verdana",
+    sans-serif;
+  font-weight: 900;
+  letter-spacing: .01em;
 }
 
-header p {
-  max-width: 680px;
-  margin: 0 auto;
-  color: #b9c8c1;
-  line-height: 1.7;
+/* Section headings */
+h2,
+h3 {
+  font-family:
+    "Arial Rounded MT Bold",
+    "Trebuchet MS",
+    "Verdana",
+    sans-serif;
+  font-weight: 900;
 }
 
 /* =========================================
-   CARDS
+   EXTRA-BOLD COLORFUL BUTTONS
    ========================================= */
-
-.card {
-  position: relative;
-  overflow: hidden;
-  background: rgba(17, 29, 25, .88);
-  border: 1px solid rgba(135, 184, 158, .20);
-  border-radius: 22px;
-  padding: 26px;
-  margin: 20px 0;
-  box-shadow:
-    0 18px 45px rgba(0, 0, 0, .28),
-    inset 0 1px 0 rgba(255, 255, 255, .04);
-  backdrop-filter: blur(10px);
-}
-
-.card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(
-    90deg,
-    #63e6a4,
-    #72d9ff,
-    #b59cff,
-    #ff91c8,
-    #63e6a4
-  );
-  opacity: .8;
-}
-
-h2 {
-  margin-top: 0;
-  margin-bottom: 8px;
-  color: #ffffff;
-  letter-spacing: -.01em;
-}
-
-#count {
-  color: #9eb1a8;
-}
-
-/* =========================================
-   CONDITION BUTTON GRID
-   ========================================= */
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-top: 18px;
-}
 
 .grid button,
 .submit {
-  border: 1px solid rgba(126, 170, 149, .28);
-  border-radius: 14px;
-  background: linear-gradient(
-    145deg,
-    rgba(20, 37, 30, .95),
-    rgba(11, 22, 18, .95)
-  );
-  color: #f7faf8;
-  padding: 15px 12px;
-  cursor: pointer;
-  font-weight: bold;
-  transition:
-    transform .2s ease,
-    border-color .2s ease,
-    background .2s ease,
-    box-shadow .2s ease;
-}
+  font-family:
+    "Arial Rounded MT Bold",
+    "Trebuchet MS",
+    "Verdana",
+    sans-serif;
 
-.grid button:hover {
-  transform: translateY(-2px);
-  border-color: #72e6aa;
-  background: linear-gradient(
-    145deg,
-    #183b2c,
-    #11291f
-  );
-  box-shadow: 0 7px 20px rgba(74, 220, 142, .14);
-}
-
-.grid button:focus-visible,
-.submit:focus-visible,
-select:focus-visible {
-  outline: 3px solid rgba(114, 217, 255, .55);
-  outline-offset: 2px;
-}
-
-.grid button.selected {
-  background: linear-gradient(
-    135deg,
-    #236e47,
-    #174f42
-  );
-  border-color: #7ff0b2;
-  color: #ffffff;
-  box-shadow:
-    0 6px 20px rgba(63, 219, 135, .20),
-    inset 0 1px 0 rgba(255, 255, 255, .10);
-}
-
-/* =========================================
-   FOOD SELECT
-   ========================================= */
-
-select {
-  width: 100%;
-  padding: 15px;
-  border-radius: 13px;
-  border: 1px solid rgba(126, 170, 149, .30);
-  background:
-    linear-gradient(
-      145deg,
-      rgba(20, 35, 29, .98),
-      rgba(9, 20, 17, .98)
-    );
-  color: #ffffff;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: border-color .2s ease, box-shadow .2s ease;
-}
-
-select:hover {
-  border-color: #72e6aa;
-}
-
-select option {
-  background: #111e19;
-  color: #ffffff;
-}
-
-/* =========================================
-   SUBMIT BUTTON
-   ========================================= */
-
-.submit {
-  width: 100%;
-  margin-top: 16px;
-  padding: 16px;
-  border: 0;
-  background: linear-gradient(
-    90deg,
-    #63e6a4,
-    #6edcf0,
-    #a994ff
-  );
-  color: #08120e;
+  font-weight: 900;
   font-size: 1rem;
   letter-spacing: .02em;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, .18);
+}
+
+/* Condition buttons */
+.grid button {
+  min-height: 58px;
+  padding: 15px 13px;
+  border-radius: 18px;
+  border-width: 2px;
   box-shadow:
-    0 8px 24px rgba(98, 225, 167, .18);
+    0 5px 0 rgba(0, 0, 0, .20),
+    0 8px 18px rgba(0, 0, 0, .16);
+}
+
+/* Button hover */
+.grid button:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 8px 0 rgba(0, 0, 0, .18),
+    0 12px 24px rgba(99, 230, 164, .18);
+}
+
+/* Selected button */
+.grid button.selected {
+  font-weight: 900;
+  transform: translateY(1px);
+  box-shadow:
+    0 3px 0 rgba(0, 0, 0, .18),
+    0 8px 20px rgba(99, 230, 164, .22);
+}
+
+/* Submit button */
+.submit {
+  min-height: 60px;
+  border-radius: 18px;
+  font-size: 1.08rem;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  box-shadow:
+    0 6px 0 rgba(40, 80, 60, .35),
+    0 10px 25px rgba(99, 230, 164, .18);
 }
 
 .submit:hover {
-  transform: translateY(-2px);
-  background: linear-gradient(
-    90deg,
-    #8af3bb,
-    #83e7f7,
-    #c0b2ff
-  );
+  transform: translateY(-3px);
   box-shadow:
-    0 10px 28px rgba(117, 224, 183, .25);
+    0 9px 0 rgba(40, 80, 60, .30),
+    0 14px 30px rgba(99, 230, 164, .25);
 }
 
 /* =========================================
-   ERROR MESSAGE
+   ROUND / BALLOON-LIKE FORM TEXT
    ========================================= */
 
-#error {
-  min-height: 20px;
-  margin-top: 10px;
-  color: #ff9eae;
-  text-align: center;
-  font-weight: bold;
+select {
+  font-family:
+    "Arial Rounded MT Bold",
+    "Trebuchet MS",
+    "Verdana",
+    sans-serif;
+
+  font-weight: 700;
+  border-radius: 17px;
 }
 
-/* =========================================
-   RESULTS
-   ========================================= */
-
-.hidden {
-  display: none;
-}
-
-.result {
-  text-align: center;
-}
-
-.score {
-  width: 180px;
-  height: 180px;
-  border: 11px solid #63e6a4;
-  border-radius: 50%;
-  margin: 24px auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #63e6a4;
-  gap: 4px;
-  background:
-    radial-gradient(
-      circle,
-      rgba(99, 230, 164, .10),
-      transparent 68%
-    );
-  box-shadow:
-    0 0 35px rgba(99, 230, 164, .13),
-    inset 0 0 25px rgba(99, 230, 164, .05);
-}
-
-.score.negative {
-  border-color: #ff7187;
-  color: #ff7187;
-  background:
-    radial-gradient(
-      circle,
-      rgba(255, 113, 135, .10),
-      transparent 68%
-    );
-  box-shadow:
-    0 0 35px rgba(255, 113, 135, .12);
-}
-
-.score.neutral {
-  border-color: #ffd166;
-  color: #ffd166;
-  background:
-    radial-gradient(
-      circle,
-      rgba(255, 209, 102, .10),
-      transparent 68%
-    );
-  box-shadow:
-    0 0 35px rgba(255, 209, 102, .12);
-}
-
+/* Result score */
 .score b {
-  font-size: 3.2rem;
+  font-family:
+    "Arial Rounded MT Bold",
+    "Trebuchet MS",
+    "Verdana",
+    sans-serif;
+
+  font-weight: 900;
 }
 
-.score small {
-  font-size: 1rem;
-}
+/* Status pills */
+.pill {
+  font-family:
+    "Arial Rounded MT Bold",
+    "Trebuchet MS",
+    "Verdana",
+    sans-serif;
 
-.result > p {
-  max-width: 700px;
-  margin: 0 auto 24px;
-  color: #c1cec7;
-  line-height: 1.7;
+  font-weight: 900;
 }
 
 /* =========================================
-   DETAIL CARDS
+   MORE PLAYFUL CARD HEADINGS
    ========================================= */
 
-.detail-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-  text-align: left;
-}
-
-.detail {
-  padding: 18px;
-  border: 1px solid rgba(135, 184, 158, .20);
-  border-radius: 15px;
-  background:
-    linear-gradient(
-      145deg,
-      rgba(23, 39, 32, .95),
-      rgba(15, 27, 23, .95)
-    );
-  transition:
-    transform .2s ease,
-    border-color .2s ease;
-}
-
-.detail:hover {
-  transform: translateY(-2px);
-  border-color: rgba(127, 240, 178, .40);
+.card h2 {
+  font-size: 1.45rem;
+  letter-spacing: .01em;
 }
 
 .detail h3 {
-  margin: 0 0 8px;
-  color: #ffffff;
-}
-
-.detail p {
-  margin: 0;
-  color: #c9d5ce;
-  line-height: 1.6;
+  font-size: 1.1rem;
 }
 
 /* =========================================
-   STATUS PILLS
-   ========================================= */
-
-.pill {
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-weight: bold;
-  font-size: .82rem;
-  margin-bottom: 9px;
-  letter-spacing: .02em;
-}
-
-.positive {
-  color: #72efac;
-  background: rgba(72, 220, 139, .12);
-  border: 1px solid rgba(72, 220, 139, .18);
-}
-
-.negative {
-  color: #ff8497;
-  background: rgba(255, 88, 112, .12);
-  border: 1px solid rgba(255, 88, 112, .18);
-}
-
-.neutral {
-  color: #ffd66e;
-  background: rgba(255, 209, 102, .12);
-  border: 1px solid rgba(255, 209, 102, .18);
-}
-
-/* =========================================
-   INFORMATION / DISCLAIMER
-   ========================================= */
-
-aside {
-  border-left: 4px solid #ffd166;
-  border-radius: 10px;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(66, 54, 20, .42),
-      rgba(39, 33, 17, .55)
-    );
-  padding: 17px 18px;
-  color: #ded8c3;
-  line-height: 1.6;
-  font-size: .92rem;
-}
-
-/* =========================================
-   FOOTER
-   ========================================= */
-
-footer {
-  text-align: center;
-  color: #7e9188;
-  font-size: .85rem;
-  margin-top: 28px;
-}
-
-/* =========================================
-   TABLET
-   ========================================= */
-
-@media (max-width: 750px) {
-  .app {
-    padding-top: 32px;
-  }
-
-  .grid,
-  .detail-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .card {
-    padding: 22px;
-  }
-}
-
-/* =========================================
-   MOBILE
+   MOBILE BUTTONS
    ========================================= */
 
 @media (max-width: 500px) {
-  .app {
-    width: 92%;
-    padding-top: 25px;
-  }
-
-  h1 {
-    font-size: 2.25rem;
-  }
-
-  header p {
-    font-size: .95rem;
-  }
-
-  .grid,
-  .detail-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .card {
-    padding: 18px;
-    border-radius: 18px;
-  }
-
   .grid button {
-    padding: 14px;
+    min-height: 58px;
+    font-size: 1.02rem;
   }
 
-  .score {
-    width: 155px;
-    height: 155px;
-  }
-
-  .score b {
-    font-size: 2.7rem;
+  .submit {
+    min-height: 60px;
+    font-size: 1rem;
   }
 }
 ```
