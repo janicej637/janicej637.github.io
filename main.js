@@ -233,17 +233,13 @@ function register(){
 	optC = document.getElementById("opt_c");
 	optD = document.getElementById("opt_d");
 
-	document.querySelectorAll('.answer').forEach(function(label) {
-    label.addEventListener('click', function() {
-        var radio = this.querySelector('input[type="radio"]');
+	optA.addEventListener("click", function() { document.getElementById("a").checked = true; }, false); 
+	optB.addEventListener("click", function() { document.getElementById("b").checked = true; }, false); 
+	optC.addEventListener("click", function() { document.getElementById("c").checked = true; }, false); 
+	optD.addEventListener("click", function() { document.getElementById("d").checked = true; }, false);
 
-        if (radio) {
-            radio.checked = true;
-        }
-    });
-});
+	
 } // end function 
-
 
 
 
@@ -305,12 +301,16 @@ function random(){
 	document.getElementById("totalCount").innerHTML = attemptTotal;
 	
 // Update correctTotal on Score Card 
-	//correctTotal = correctTotal + 1;
 	document.getElementById("correctCount").innerHTML =correctTotal;	
 
 	// Clear Result Banner
 	document.getElementById("result").innerHTML = '';
 	document.getElementById("result").setAttribute('style', 'background-color: none');
+
+	
+});
+
+	
 }// end function 
 
 
