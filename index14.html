@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flag Flashcards</title>
+    <link rel="stylesheet" href="main3.css">
+</head>
+<body>
+<p>
+<a href=" https://janicej637.github.io/" style="color: #000080;"><img src="https://clipart-library.com/data_images/469756.png" alt="Home" width="80" height=30> </a>
+</p>
+    <main class="game">
+
+        <header class="header">
+            <h1>Flag Flashcards</h1>
+            <p>Identify the country represented by the flag.</p>
+        </header>
+
+        <section class="flag-card" aria-labelledby="flag-heading">
+            <h2 id="flag-heading">Which country is this?</h2>
+
+            <div class="flag-container">
+                <img
+                    id="showFlag"
+                    src=""
+                    alt="Country flag"
+                    width="240"
+                    height="160"
+                >
+            </div>
+
+            <div id="result" class="result" role="status" aria-live="polite"></div>
+        </section>
+
+        <section class="answers" aria-labelledby="answers-heading">
+            <h2 id="answers-heading">Select your answer</h2>
+
+            <div id="answerButtons" class="answer-grid">
+                <button type="button" class="answer" id="opt_a" value="">
+                    <span id="option1"></span>
+                </button>
+
+                <button type="button" class="answer" id="opt_b" value="">
+                    <span id="option2"></span>
+                </button>
+
+                <button type="button" class="answer" id="opt_c" value="">
+                    <span id="option3"></span>
+                </button>
+
+                <button type="button" class="answer" id="opt_d" value="">
+                    <span id="option4"></span>
+                </button>
+            </div>
+        </section>
+
+        <div class="controls">
+            <button type="button" id="next" class="control-button next-button">
+                Next Flag
+            </button>
+        </div>
+
+        <section class="score-card" aria-label="Score">
+            <div class="score-item">
+                <span class="score-label">Correct Answers</span>
+                <span id="correctCount" class="score-value">0</span>
+            </div>
+
+            <div class="score-item">
+                <span class="score-label">Total Attempts</span>
+                <span id="totalCount" class="score-value">0</span>
+            </div>
+        </section>
+
+        <footer>
+            <p>Test your knowledge. Learn as you play.</p>
+        </footer>
+
+    </main>
+
+    <script src="main3.js"></script>
+</body>
+</html>
