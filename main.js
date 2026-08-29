@@ -304,8 +304,6 @@ function random(){
 	document.getElementById("result").setAttribute('style', 'background-color: none');
 
 	
-});
-
 	
 }// end function 
 
@@ -376,8 +374,13 @@ function checkCorrect(){
 	}
 }// end function
 //window.addEventListener("load", register, false);
- window.addEventListener("load", random, false);
+// window.addEventListener("load", random, false);
 
+
+window.addEventListener("load", function () {
+    register();
+    random();
+}, false);
 
 
 
