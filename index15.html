@@ -1,17 +1,66 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Food Score</title><link rel="stylesheet" href="main4.css"></head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Food Score — an educational food and health condition checker.">
+  <title>Food Score | Food & Condition Checker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
-<main class="app">
-  <p>
+  <main class="container">
+    <header>
+        <p>
 <a href=" https://janicej637.github.io/" style="color: #000080;"><img src="https://clipart-library.com/data_images/469756.png" alt="Home" width="80" height=30> </a>
 </p>
-<header><span>FOOD • HEALTH • EDUCATION</span><h1>Food Score</h1><p>Select up to four conditions, choose a food category, and see an educational 0–100 estimate.</p></header>
-<section class="card"><h2>1. Select up to 4 conditions</h2><p id="count">0 of 4 selected</p><div id="conditions" class="grid">
-<button data-c="diabetes">Diabetes</button><button data-c="hypertension">High Blood Pressure</button><button data-c="cholesterol">High Cholesterol</button><button data-c="gerd">GERD / Acid Reflux</button><button data-c="celiac">Celiac Disease</button><button data-c="ckd">Chronic Kidney Disease</button><button data-c="ibs">IBS</button><button data-c="gout">Gout</button>
-</div></section>
-<section class="card"><h2>2. Choose the food category</h2><select id="food"><option value="">-- Select food category --</option><option>Fruit</option><option>Vegetables</option><option>Whole grains</option><option>Lean meat / poultry / fish</option><option>Processed meat</option><option>Dairy</option><option>Beans / lentils</option><option>Nuts / seeds</option><option>Sugary drinks</option><option>Desserts / candy</option><option>Fried / fast food</option><option>Spicy / acidic foods</option><option>Alcohol</option></select><button id="submit" class="submit">Check Food Effect</button><p id="error"></p></section>
-<section id="result" class="card result hidden"><h2>Estimated Food Effect</h2><div id="score" class="score"><b>--</b><small>/100</small></div><p id="summary"></p><div id="details"></div></section>
-<aside><b>Important:</b> This is an educational prototype, not a medical or dietary decision tool. Scores are simplified, non-validated estimates. Portion size, ingredients, preparation, medications, disease stage, laboratory values and individual tolerance can change the effect. Do not use it to replace your doctor or registered dietitian.</aside>
-<footer>Educational use only • Not for diagnosis or treatment</footer>
-</main><script src="main4.js"></script></body></html>
+      <p class="eyebrow">FOOD • HEALTH • EDUCATION</p>
+      <h1>Food Score</h1>
+      <p>Select up to four conditions, choose a specific food, and see an educational 0–100 estimate.</p>
+    </header>
+
+    <section id="conditions" aria-labelledby="conditions-heading">
+      <h2 id="conditions-heading">1. Select up to 4 conditions</h2>
+      <p id="count" aria-live="polite">0 of 4 selected</p>
+      <div class="condition-buttons">
+        <button type="button" data-c="diabetes">Diabetes</button>
+        <button type="button" data-c="hypertension">High Blood Pressure</button>
+        <button type="button" data-c="cholesterol">High Cholesterol</button>
+        <button type="button" data-c="gerd">GERD / Acid Reflux</button>
+        <button type="button" data-c="celiac">Celiac Disease</button>
+        <button type="button" data-c="ckd">Chronic Kidney Disease</button>
+        <button type="button" data-c="ibs">IBS</button>
+        <button type="button" data-c="gout">Gout</button>
+      </div>
+    </section>
+
+    <section aria-labelledby="food-heading">
+      <h2 id="food-heading">2. Choose a specific food</h2>
+      <label for="food">Food</label>
+      <select id="food" name="food">
+        <option value="">Select a specific food</option>
+      </select>
+      <p class="help">Foods are grouped into categories. Each category contains 10 specific foods.</p>
+      <button type="button" id="submit">Check Food Effect</button>
+      <p id="error" class="error" role="alert"></p>
+    </section>
+
+    <section id="result" class="hidden" aria-live="polite" aria-labelledby="result-heading">
+      <h2 id="result-heading">Food Effect Result</h2>
+      <div id="score" class="score neutral">
+        <span>Estimated Score</span>
+        <strong><b>0</b>/100</strong>
+      </div>
+      <p id="summary"></p>
+      <div id="details"></div>
+    </section>
+
+    <footer>
+      <p><strong>Important:</strong> This is an educational prototype, not a medical or dietary decision tool. Scores are simplified, non-validated estimates. Portion size, ingredients, preparation, medications, disease stage, laboratory values and individual tolerance can change the effect. Do not use it to replace your doctor or registered dietitian.</p>
+      <p>Educational use only • Not for diagnosis or treatment</p>
+    </footer>
+  </main>
+
+  <!-- The updated main.js dynamically fills this selector with 130 foods. -->
+  <script src="https://janicej637.github.io/main.js"></script>
+</body>
+</html>
