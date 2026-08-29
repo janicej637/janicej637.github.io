@@ -264,10 +264,6 @@ answers.forEach(function(label) {
 // Randomly Set Up New Quiz
 function random(){
 	
-// Remove selected color from all labels
-        answers.forEach(function(item) {
-            item.classList.remove("selected");
-        });
 
 	
 	// Reset clickCounter
@@ -277,6 +273,7 @@ function random(){
 	for(var i = 0; i < radio.length; i++){
 		radio[i].checked = false;
 		document.getElementById("opt_" + radio[i].id).setAttribute('style', 'background-color: none');
+		document.getElementById(radio[i].id).classList.remove("selected");
 	}
 
 	// Randomly Set A & B Options
