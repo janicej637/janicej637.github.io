@@ -5,490 +5,242 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <meta name="description"
+        content="Test your football knowledge with the Arsenal Flag Flashcards game.">
+
     <title>Arsenal Flag Flashcards</title>
 
-    <style>
-        /* =====================================================
-           RESET
-        ===================================================== */
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* =====================================================
-           PAGE
-        ===================================================== */
-
-        body {
-            min-height: 100vh;
-            font-family: "Segoe UI", Arial, Helvetica, sans-serif;
-            background:
-                linear-gradient(
-                    135deg,
-                    #8b0000 0%,
-                    #db0007 45%,
-                    #f4f4f4 45%,
-                    #ffffff 100%
-                );
-            color: #222;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 30px 15px 50px;
-        }
-
-        /* =====================================================
-           MAIN CONTAINER
-        ===================================================== */
-
-        .page-container {
-            width: 100%;
-            max-width: 900px;
-        }
-
-        /* =====================================================
-           HEADER
-        ===================================================== */
-
-        .header {
-            background: #ffffff;
-            border-radius: 18px 18px 0 0;
-            padding: 25px 30px;
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            border-bottom: 5px solid #db0007;
-        }
-
-        .header h1 {
-            color: #db0007;
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 800;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        .header p {
-            color: #555;
-            font-size: 1rem;
-        }
-
-        /* =====================================================
-           FLASHCARD AREA
-        ===================================================== */
-
-        .flashcard-container {
-            background: rgba(255, 255, 255, 0.96);
-            padding: 30px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .question-card {
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.10);
-            border: 1px solid #e5e5e5;
-        }
-
-        /* =====================================================
-           QUESTION
-        ===================================================== */
-
-        .question-card h2 {
-            color: #333;
-            font-size: clamp(1.2rem, 3vw, 1.6rem);
-            margin-bottom: 22px;
-        }
-
-        /* =====================================================
-           FLAG
-        ===================================================== */
-
-        .flag-container {
-            width: 100%;
-            min-height: 220px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f7f7f7;
-            border-radius: 14px;
-            padding: 20px;
-            margin-bottom: 25px;
-            border: 1px solid #e8e8e8;
-        }
-
-        .flag-container img {
-            display: block;
-            max-width: 100%;
-            width: auto;
-            max-height: 220px;
-            object-fit: contain;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-        }
-
-        /* =====================================================
-           ANSWERS
-        ===================================================== */
-
-        .answers {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            margin-top: 20px;
-        }
-
-        .answer-option {
-            position: relative;
-        }
-
-        .answer-option input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .answer-option label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 58px;
-            padding: 12px 18px;
-            background: #ffffff;
-            color: #333;
-            border: 2px solid #d8d8d8;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition:
-                background 0.2s ease,
-                border-color 0.2s ease,
-                color 0.2s ease,
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
-        }
-
-        .answer-option label:hover {
-            border-color: #db0007;
-            color: #db0007;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.10);
-        }
-
-        .answer-option input[type="radio"]:checked + label {
-            background: #db0007;
-            border-color: #db0007;
-            color: #ffffff;
-            box-shadow: 0 5px 14px rgba(219, 0, 7, 0.25);
-        }
-
-        .answer-option input[type="radio"]:focus-visible + label {
-            outline: 3px solid rgba(219, 0, 7, 0.35);
-            outline-offset: 3px;
-        }
-
-        /* =====================================================
-           BUTTON
-        ===================================================== */
-
-        .submit-area {
-            text-align: center;
-            margin-top: 25px;
-        }
-
-        button {
-            border: none;
-            border-radius: 10px;
-            padding: 14px 34px;
-            background: #db0007;
-            color: #ffffff;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(219, 0, 7, 0.25);
-            transition:
-                background 0.2s ease,
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
-        }
-
-        button:hover {
-            background: #a90005;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 18px rgba(219, 0, 7, 0.30);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        /* =====================================================
-           SCORE PANEL
-        ===================================================== */
-
-        .score-panel {
-            background: #ffffff;
-            border-radius: 0 0 18px 18px;
-            padding: 25px 30px 30px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .score-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 18px;
-        }
-
-        .score-card {
-            background: #f7f7f7;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid #e3e3e3;
-        }
-
-        .score-card h3 {
-            color: #777;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        .score-card p {
-            color: #db0007;
-            font-size: 2rem;
-            font-weight: 800;
-        }
-
-        /* =====================================================
-           FOOTER
-        ===================================================== */
-
-        .footer {
-            text-align: center;
-            margin-top: 18px;
-            color: #ffffff;
-            font-size: 0.85rem;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-        }
-
-        /* =====================================================
-           RESPONSIVE DESIGN
-        ===================================================== */
-
-        @media (max-width: 650px) {
-
-            body {
-                padding: 15px 10px 30px;
-            }
-
-            .header {
-                padding: 20px 15px;
-            }
-
-            .flashcard-container {
-                padding: 18px;
-            }
-
-            .question-card {
-                padding: 18px;
-            }
-
-            .flag-container {
-                min-height: 180px;
-            }
-
-            .flag-container img {
-                max-height: 180px;
-            }
-
-            .answers {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .score-panel {
-                padding: 18px;
-            }
-
-            .score-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 400px) {
-
-            .header h1 {
-                font-size: 1.8rem;
-            }
-
-            .question-card h2 {
-                font-size: 1.1rem;
-            }
-
-            .flag-container {
-                min-height: 150px;
-            }
-
-            .flag-container img {
-                max-height: 150px;
-            }
-        }
-    </style>
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="main.css">
 </head>
-
 
 <body>
 
-    <div class="page-container">
+    <div class="page-wrapper">
 
-        <!-- HEADER -->
-        <header class="header">
+        <!-- ================================
+             HEADER
+        ================================= -->
+        <header class="site-header">
 
-            <h1>Arsenal Flag Flashcards</h1>
+            <div class="header-content">
 
-            <p>
-                Test your football knowledge by identifying the country
-                represented by each flag.
-            </p>
+                <div class="arsenal-badge">
+                    AFC
+                </div>
+
+                <div class="header-text">
+                    <h1>Flag Flashcards</h1>
+
+                    <p>
+                        Test your football knowledge
+                    </p>
+                </div>
+
+            </div>
 
         </header>
 
 
-        <!-- MAIN FLASHCARD AREA -->
-        <main class="flashcard-container">
+        <!-- ================================
+             MAIN CONTENT
+        ================================= -->
+        <main class="main-content">
 
-            <div class="question-card">
+            <section class="game-card">
 
-                <h2>
-                    Submit the country represented by the flag below.
-                </h2>
+                <!-- Game heading -->
+                <div class="game-heading">
 
+                    <span class="game-label">
+                        FOOTBALL CHALLENGE
+                    </span>
 
-                <!-- FLAG -->
-                <div class="flag-container">
+                    <h2>
+                        Which country does this flag represent?
+                    </h2>
 
-                    <!--
-                        Keep your existing JavaScript-controlled
-                        image here.
-                    -->
-                    <img
-                        id="flag"
-                        src=""
-                        alt="Country flag"
-                    >
+                    <p>
+                        Select the correct answer below.
+                    </p>
 
                 </div>
 
 
-                <!-- ANSWER OPTIONS -->
-                <div class="answers">
+                <!-- ============================
+                     FLAG DISPLAY
+                ============================= -->
+                <div class="flag-section">
 
-                    <div class="answer-option">
-                        <input
-                            type="radio"
-                            id="answer1"
-                            name="answer"
-                            value=""
+                    <div class="flag-frame">
+
+                        <img
+                            id="flag"
+                            src=""
+                            alt="Country flag"
                         >
-                        <label for="answer1"></label>
-                    </div>
 
-
-                    <div class="answer-option">
-                        <input
-                            type="radio"
-                            id="answer2"
-                            name="answer"
-                            value=""
-                        >
-                        <label for="answer2"></label>
-                    </div>
-
-
-                    <div class="answer-option">
-                        <input
-                            type="radio"
-                            id="answer3"
-                            name="answer"
-                            value=""
-                        >
-                        <label for="answer3"></label>
-                    </div>
-
-
-                    <div class="answer-option">
-                        <input
-                            type="radio"
-                            id="answer4"
-                            name="answer"
-                            value=""
-                        >
-                        <label for="answer4"></label>
                     </div>
 
                 </div>
 
 
-                <!-- SUBMIT -->
-                <div class="submit-area">
+                <!-- ============================
+                     ANSWER OPTIONS
+                ============================= -->
+                <form class="answer-form" id="answerForm">
 
-                    <button type="button" id="submitAnswer">
-                        Submit Answer
-                    </button>
+                    <div class="answer-grid">
+
+                        <!-- Answer 1 -->
+                        <div class="answer-option">
+
+                            <input
+                                type="radio"
+                                id="answer1"
+                                name="answer"
+                                value=""
+                            >
+
+                            <label for="answer1">
+                                <span class="radio-circle"></span>
+                                <span class="answer-text"></span>
+                            </label>
+
+                        </div>
+
+
+                        <!-- Answer 2 -->
+                        <div class="answer-option">
+
+                            <input
+                                type="radio"
+                                id="answer2"
+                                name="answer"
+                                value=""
+                            >
+
+                            <label for="answer2">
+                                <span class="radio-circle"></span>
+                                <span class="answer-text"></span>
+                            </label>
+
+                        </div>
+
+
+                        <!-- Answer 3 -->
+                        <div class="answer-option">
+
+                            <input
+                                type="radio"
+                                id="answer3"
+                                name="answer"
+                                value=""
+                            >
+
+                            <label for="answer3">
+                                <span class="radio-circle"></span>
+                                <span class="answer-text"></span>
+                            </label>
+
+                        </div>
+
+
+                        <!-- Answer 4 -->
+                        <div class="answer-option">
+
+                            <input
+                                type="radio"
+                                id="answer4"
+                                name="answer"
+                                value=""
+                            >
+
+                            <label for="answer4">
+                                <span class="radio-circle"></span>
+                                <span class="answer-text"></span>
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Submit button -->
+                    <div class="button-area">
+
+                        <button
+                            type="button"
+                            id="submitAnswer"
+                            class="submit-button"
+                        >
+                            Submit Answer
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+                <!-- ============================
+                     SCORE
+                ============================= -->
+                <div class="score-section">
+
+                    <div class="score-card">
+
+                        <span class="score-label">
+                            Correct Answers
+                        </span>
+
+                        <strong id="correctAnswers">
+                            0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="score-divider"></div>
+
+
+                    <div class="score-card">
+
+                        <span class="score-label">
+                            Total Attempts
+                        </span>
+
+                        <strong id="totalAttempts">
+                            0
+                        </strong>
+
+                    </div>
 
                 </div>
 
-            </div>
+            </section>
 
         </main>
 
 
-        <!-- SCORE -->
-        <section class="score-panel">
+        <!-- ================================
+             FOOTER
+        ================================= -->
+        <footer class="site-footer">
 
-            <div class="score-grid">
+            <p>
+                Arsenal Flag Flashcards
+            </p>
 
-                <div class="score-card">
+            <p>
+                Test your knowledge • Learn • Improve
+            </p>
 
-                    <h3>Correct Answers</h3>
-
-                    <p id="correctAnswers">
-                        0
-                    </p>
-
-                </div>
-
-
-                <div class="score-card">
-
-                    <h3>Total Attempts</h3>
-
-                    <p id="totalAttempts">
-                        0
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <footer class="footer">
-            Arsenal Flag Flashcards
         </footer>
 
     </div>
 
 
-    <!-- KEEP YOUR EXISTING JAVASCRIPT -->
+    <!-- Main JavaScript -->
     <script src="main.js"></script>
 
 </body>
