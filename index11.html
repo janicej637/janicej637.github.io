@@ -44,14 +44,14 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
             gap: 25px;
-            height: 330px;
+           
         }
 
         .flashcard {
-            height: 100%;
+         
             perspective: 1000px;
             cursor: pointer;
-             object-fit: cover;
+              height: 330px;
         }
 
         .flashcard-inner {
@@ -59,7 +59,7 @@
             width: 100%;
             height: 100%;
             transition: transform 0.7s;
-            transform-style: preserve-3d;
+            transform-style: preserve-3d;object-fit: cover;
         }
 
         .flashcard.flipped .flashcard-inner {
