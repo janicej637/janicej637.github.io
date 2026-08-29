@@ -1,6 +1,5 @@
 
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -12,15 +11,11 @@
 
     <title>Flag Flashcards</title>
 
-    <!-- KEEP EXISTING CSS -->
+    <!-- YOUR EXISTING CSS -->
     <link rel="stylesheet" href="main.css">
 
 
     <style>
-
-        /* ============================================
-           RESET
-        ============================================ */
 
         * {
             box-sizing: border-box;
@@ -28,10 +23,6 @@
             padding: 0;
         }
 
-
-        /* ============================================
-           PAGE
-        ============================================ */
 
         body {
 
@@ -47,20 +38,10 @@
                 Helvetica,
                 sans-serif;
 
-            display: flex;
-
-            justify-content: center;
-
-            align-items: flex-start;
-
-            padding: 25px 15px 50px;
+            padding: 25px 15px 45px;
 
         }
 
-
-        /* ============================================
-           MAIN CONTAINER
-        ============================================ */
 
         #container {
 
@@ -73,9 +54,9 @@
         }
 
 
-        /* ============================================
+        /* ===============================
            HEADER
-        ============================================ */
+        =============================== */
 
         header {
 
@@ -86,17 +67,17 @@
         }
 
 
-        header .eyebrow {
+        .eyebrow {
 
             display: inline-block;
+
+            padding: 7px 18px;
+
+            margin-bottom: 15px;
 
             border: 1px solid #ffff00;
 
             border-radius: 50px;
-
-            padding: 7px 18px;
-
-            margin-bottom: 14px;
 
             color: #ffff00;
 
@@ -142,13 +123,13 @@
         }
 
 
-        /* ============================================
-           GAME CARD
-        ============================================ */
+        /* ===============================
+           GAME PANEL
+        =============================== */
 
         #game {
 
-            background: #0a0a0a;
+            background: #090909;
 
             border: 1px solid #292929;
 
@@ -162,21 +143,21 @@
         }
 
 
-        /* ============================================
-           FLAG AREA
-        ============================================ */
+        /* ===============================
+           FLAG
+        =============================== */
 
         #flagArea {
 
             width: 100%;
 
-            max-width: 550px;
+            max-width: 600px;
 
-            height: 330px;
+            height: 340px;
 
             margin: 0 auto 30px;
 
-            padding: 15px;
+            padding: 18px;
 
             display: flex;
 
@@ -193,15 +174,22 @@
         }
 
 
+        /*
+           main.js puts the flag URL
+           into this image.
+        */
+
         #showFlag {
 
             display: block;
 
-            width: 100%;
+            max-width: 100%;
 
-            max-width: 500px;
+            max-height: 300px;
 
-            max-height: 290px;
+            width: auto;
+
+            height: auto;
 
             object-fit: contain;
 
@@ -210,9 +198,9 @@
         }
 
 
-        /* ============================================
-           ANSWER TITLE
-        ============================================ */
+        /* ===============================
+           ANSWERS
+        =============================== */
 
         .answer-title {
 
@@ -235,11 +223,11 @@
         }
 
 
-        /* ============================================
-           ANSWER GRID
-        ============================================ */
-
         #answers {
+
+            max-width: 700px;
+
+            margin: 0 auto;
 
             display: grid;
 
@@ -248,16 +236,12 @@
 
             gap: 14px;
 
-            max-width: 700px;
-
-            margin: 0 auto;
-
         }
 
 
-        /* ============================================
-           RADIO ANSWER
-        ============================================ */
+        /* ===============================
+           ANSWER LABELS
+        =============================== */
 
         .answer {
 
@@ -265,7 +249,7 @@
 
             align-items: center;
 
-            min-height: 64px;
+            min-height: 65px;
 
             padding: 14px 18px;
 
@@ -281,8 +265,8 @@
 
             transition:
                 transform 0.2s ease,
-                border-color 0.2s ease,
-                background 0.2s ease;
+                background 0.2s ease,
+                border-color 0.2s ease;
 
         }
 
@@ -299,9 +283,17 @@
         }
 
 
-        /* ============================================
-           RADIO BUTTON
-        ============================================ */
+        /*
+           IMPORTANT:
+
+           main.js changes the background
+           color of #opt_a, #opt_b,
+           #opt_c and #opt_d.
+
+           Therefore these IDs must remain
+           exactly as written.
+        */
+
 
         .answer input[type="radio"] {
 
@@ -361,10 +353,6 @@
         }
 
 
-        /* ============================================
-           OPTION TEXT
-        ============================================ */
-
         .answer span {
 
             color: #ffff00;
@@ -376,13 +364,13 @@
         }
 
 
-        /* ============================================
+        /* ===============================
            RESULT
-        ============================================ */
+        =============================== */
 
         #result {
 
-            min-height: 52px;
+            min-height: 50px;
 
             display: flex;
 
@@ -396,8 +384,6 @@
 
             border-radius: 12px;
 
-            background-color: transparent;
-
             color: #ffff00;
 
             font-size: 1rem;
@@ -409,9 +395,9 @@
         }
 
 
-        /* ============================================
-           BUTTON AREA
-        ============================================ */
+        /* ===============================
+           BUTTONS
+        =============================== */
 
         #buttons {
 
@@ -421,11 +407,11 @@
 
             align-items: center;
 
-            flex-wrap: wrap;
-
             gap: 12px;
 
-            margin-top: 22px;
+            flex-wrap: wrap;
+
+            margin-top: 20px;
 
         }
 
@@ -454,8 +440,7 @@
 
             transition:
                 transform 0.2s ease,
-                box-shadow 0.2s ease,
-                background 0.2s ease;
+                box-shadow 0.2s ease;
 
         }
 
@@ -490,11 +475,15 @@
         }
 
 
-        /* ============================================
+        /* ===============================
            SCORE
-        ============================================ */
+        =============================== */
 
         #score {
+
+            max-width: 700px;
+
+            margin: 25px auto 0;
 
             display: grid;
 
@@ -502,10 +491,6 @@
                 repeat(2, 1fr);
 
             gap: 15px;
-
-            max-width: 700px;
-
-            margin: 25px auto 0;
 
         }
 
@@ -555,9 +540,9 @@
         }
 
 
-        /* ============================================
+        /* ===============================
            FOOTER
-        ============================================ */
+        =============================== */
 
         footer {
 
@@ -574,9 +559,9 @@
         }
 
 
-        /* ============================================
+        /* ===============================
            RESPONSIVE
-        ============================================ */
+        =============================== */
 
         @media screen and (max-width: 650px) {
 
@@ -598,14 +583,14 @@
 
             #flagArea {
 
-                height: 260px;
+                height: 270px;
 
             }
 
 
             #showFlag {
 
-                max-height: 225px;
+                max-height: 235px;
 
             }
 
@@ -690,7 +675,7 @@
     <header>
 
         <div >
-                <p>
+             <p>
 <a href=" https://janicej637.github.io/" style="color: #000080;"><img src="https://clipart-library.com/data_images/469756.png" alt="Home" width="80" height=30> </a>
 </p>
         </div>
@@ -714,10 +699,9 @@
 
 
         <!-- ======================================
-             FLAG
+             FLAG IMAGE
 
-             REQUIRED BY main.js:
-             id="showFlag"
+             main.js fills the src attribute.
         ======================================= -->
 
         <div id="flagArea">
@@ -747,13 +731,12 @@
 
             <label
                 class="answer"
-                id="opt_a"
-            >
+                id="opt_a">
 
                 <input
                     type="radio"
-                    name="rad"
                     id="a"
+                    name="rad"
                     value=""
                 >
 
@@ -768,18 +751,17 @@
 
             <label
                 class="answer"
-                id="opt_b" for="b"
-            >
+                id="opt_b">
 
                 <input
                     type="radio"
-                    name="rad"
                     id="b"
+                    name="rad"
                     value=""
                 >
 
                 <span>
-                  
+                    Answer B
                 </span>
 
             </label>
@@ -789,13 +771,12 @@
 
             <label
                 class="answer"
-                id="opt_c"
-            >
+                id="opt_c">
 
                 <input
                     type="radio"
-                    name="rad"
                     id="c"
+                    name="rad"
                     value=""
                 >
 
@@ -810,13 +791,12 @@
 
             <label
                 class="answer"
-                id="opt_d"
-            >
+                id="opt_d">
 
                 <input
                     type="radio"
-                    name="rad"
                     id="d"
+                    name="rad"
                     value=""
                 >
 
@@ -832,9 +812,6 @@
 
         <!-- ======================================
              RESULT
-
-             REQUIRED BY main.js:
-             id="result"
         ======================================= -->
 
         <div
@@ -845,10 +822,6 @@
 
         <!-- ======================================
              BUTTONS
-
-             REQUIRED BY main.js:
-             id="submit"
-             id="next"
         ======================================= -->
 
         <div id="buttons">
@@ -875,13 +848,9 @@
 
         <!-- ======================================
              SCORE
-
-             REQUIRED BY main.js:
-             id="correctCount"
-             id="totalCount"
         ======================================= -->
 
-        <div id="score">
+        <section id="score">
 
 
             <div class="score-card">
@@ -910,7 +879,7 @@
             </div>
 
 
-        </div>
+        </section>
 
 
     </main>
@@ -929,10 +898,10 @@
 
 
 <!-- ==============================================
-     KEEP YOUR EXISTING JAVASCRIPT
+     REFERENCE YOUR GITHUB main.js
 ================================================ -->
 
-<script src="main.js"></script>
+<script src="https://janicej637.github.io/main.js"></script>
 
 
 </body>
