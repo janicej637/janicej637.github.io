@@ -225,6 +225,8 @@ function register(){
 	var button1 = document.getElementById("submit");
 	button1.addEventListener("click", checkCorrect, false);
 
+	 window.addEventListener("load", random, false);
+
 	optA = document.getElementById("opt_a");
 	optB= document.getElementById("opt_b");
 	optC = document.getElementById("opt_c");
@@ -360,7 +362,7 @@ function checkCorrect(){
 	else{
 
 		// If user clicked Submit more than once
-		document.getElementById("result").innerHTML = 'Click Next to Continue';
+		document.getElementById("result").innerHTML = 'Click Next Flag to Continue';
 		document.getElementById("result").setAttribute('style', 'background-color: #0000A0');
 	}
 }// end function
