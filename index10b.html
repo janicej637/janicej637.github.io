@@ -1,203 +1,817 @@
-<!-- Assignment 3 -->
-
-<!-- Author: Janice James -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "https://www.w3.org/TR/html4/strict.dtd">
-
-<html>
+```html
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
 
-<meta charset="utf-8"> <title>Flag Flashcards</title>
+    <meta charset="UTF-8">
 
-<meta name="keywords" content="landmarks"> <meta name="description" content="This site contains images of flags from different countries around the world and requires the user to identify the country represented by each flag."> <meta name="author" content="Janice James">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-<!-- Link Scripts -->
+    <title>Flag Flashcards</title>
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <!-- KEEP EXISTING CSS -->
+    <link rel="stylesheet" href="main.css">
 
-<script type="text/javascript" src="imagescroll.js"></script>
+    <style>
 
-<script type="text/javascript" src="main.js"></script>
+        /* =====================================================
+           RESET
+        ===================================================== */
 
-<!-- Link Stylesheets -->
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-<link href="main.css" rel="stylesheet" type="text/css"> <link href="https://fonts.googleapis.com/css?family=Unkempt" rel="stylesheet" type="text/css">
 
-<!-- Embedded Script -->
+        /* =====================================================
+           PAGE
+        ===================================================== */
 
-<script type="text/javascript"> window.addEventListener("load", random, false); </script>
+        body {
+
+            min-height: 100vh;
+
+            background: #000000;
+
+            color: #ffff00;
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            display: flex;
+
+            justify-content: center;
+
+            padding: 30px 15px 50px;
+
+        }
+
+
+        /* =====================================================
+           MAIN WRAPPER
+        ===================================================== */
+
+        .page-wrapper {
+
+            width: 100%;
+
+            max-width: 900px;
+
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .page-header {
+
+            text-align: center;
+
+            padding: 35px 25px 25px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .page-header h1 {
+
+            color: #ffff00;
+
+            font-size:
+                clamp(2.2rem, 6vw, 4rem);
+
+            font-weight: 800;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+            text-shadow:
+                0 0 10px rgba(255, 255, 0, 0.25);
+
+        }
+
+
+        .page-header p {
+
+            color: #ffff00;
+
+            margin-top: 10px;
+
+            font-size: 1rem;
+
+            letter-spacing: 0.5px;
+
+            opacity: 0.85;
+
+        }
+
+
+        /* =====================================================
+           MAIN GAME CARD
+        ===================================================== */
+
+        .game-card {
+
+            background: #0b0b0b;
+
+            border:
+                1px solid #333333;
+
+            border-radius: 24px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.7);
+
+        }
+
+
+        /* =====================================================
+           QUESTION
+        ===================================================== */
+
+        .question-area {
+
+            text-align: center;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .question-label {
+
+            display: block;
+
+            color: #ffff00;
+
+            font-size: 0.75rem;
+
+            font-weight: 800;
+
+            letter-spacing: 3px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 10px;
+
+            opacity: 0.75;
+
+        }
+
+
+        .question-area h2 {
+
+            color: #ffff00;
+
+            font-size:
+                clamp(1.3rem, 3vw, 1.8rem);
+
+            font-weight: 700;
+
+            line-height: 1.4;
+
+        }
+
+
+        /* =====================================================
+           FLAG DISPLAY
+        ===================================================== */
+
+        .flag-area {
+
+            min-height: 300px;
+
+            background: #111111;
+
+            border:
+                1px solid #303030;
+
+            border-radius: 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 25px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .flag-area img {
+
+            max-width: 100%;
+
+            max-height: 250px;
+
+            width: auto;
+
+            height: auto;
+
+            object-fit: contain;
+
+            display: block;
+
+        }
+
+
+        /* =====================================================
+           ANSWERS
+        ===================================================== */
+
+        .answers-title {
+
+            color: #ffff00;
+
+            text-align: center;
+
+            font-size: 0.85rem;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .answer-options {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 14px;
+
+        }
+
+
+        /* =====================================================
+           RADIO BUTTONS
+        ===================================================== */
+
+        .answer-option {
+
+            position: relative;
+
+        }
+
+
+        .answer-option input[type="radio"] {
+
+            position: absolute;
+
+            opacity: 0;
+
+        }
+
+
+        .answer-option label {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            min-height: 62px;
+
+            padding: 12px 18px;
+
+            background: #111111;
+
+            border:
+                1px solid #3d3d3d;
+
+            border-radius: 14px;
+
+            color: #ffff00;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                all 0.2s ease;
+
+        }
+
+
+        .answer-option label:hover {
+
+            background: #191900;
+
+            border-color: #ffff00;
+
+            transform:
+                translateY(-2px);
+
+        }
+
+
+        /* CUSTOM RADIO */
+
+        .radio-circle {
+
+            width: 21px;
+
+            height: 21px;
+
+            min-width: 21px;
+
+            border:
+                2px solid #ffff00;
+
+            border-radius: 50%;
+
+            position: relative;
+
+        }
+
+
+        .answer-option
+        input[type="radio"]:checked
+        + label {
+
+            background: #ffff00;
+
+            color: #000000;
+
+            border-color: #ffff00;
+
+            box-shadow:
+                0 0 18px
+                rgba(255, 255, 0, 0.18);
+
+        }
+
+
+        .answer-option
+        input[type="radio"]:checked
+        + label
+        .radio-circle {
+
+            border-color: #000000;
+
+            background: #000000;
+
+        }
+
+
+        .answer-option
+        input[type="radio"]:checked
+        + label
+        .radio-circle::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 8px;
+
+            height: 8px;
+
+            background: #ffff00;
+
+            border-radius: 50%;
+
+            top: 50%;
+
+            left: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+        }
+
+
+        /* =====================================================
+           SCORE AREA
+        ===================================================== */
+
+        .score-area {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+
+            margin-top: 25px;
+
+        }
+
+
+        .score-card {
+
+            background: #0b0b0b;
+
+            border:
+                1px solid #333333;
+
+            border-radius: 18px;
+
+            padding: 20px;
+
+            text-align: center;
+
+        }
+
+
+        .score-card h3 {
+
+            color: #ffff00;
+
+            font-size: 0.75rem;
+
+            text-transform: uppercase;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 8px;
+
+            opacity: 0.75;
+
+        }
+
+
+        .score-card p {
+
+            color: #ffff00;
+
+            font-size: 2.2rem;
+
+            font-weight: 800;
+
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .page-footer {
+
+            text-align: center;
+
+            color: #ffff00;
+
+            font-size: 0.8rem;
+
+            margin-top: 20px;
+
+            opacity: 0.6;
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 650px) {
+
+            body {
+
+                padding:
+                    15px 10px 30px;
+
+            }
+
+
+            .page-header {
+
+                padding:
+                    20px 10px;
+
+            }
+
+
+            .game-card {
+
+                padding: 18px;
+
+                border-radius: 18px;
+
+            }
+
+
+            .flag-area {
+
+                min-height: 220px;
+
+                padding: 15px;
+
+            }
+
+
+            .flag-area img {
+
+                max-height: 180px;
+
+            }
+
+
+            .answer-options {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .score-area {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+
+        @media (max-width: 400px) {
+
+            .page-header h1 {
+
+                font-size: 2rem;
+
+            }
+
+
+            .question-area h2 {
+
+                font-size: 1.15rem;
+
+            }
+
+
+            .flag-area {
+
+                min-height: 180px;
+
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<!-- Page Wrapper -->
-     <p>
-<a href=" https://janicej637.github.io/" style="color: #000080;"><img src="https://clipart-library.com/data_images/469756.png" alt="Home" width="80" height=30> </a>
-</p><div class="page">
 
-<!-- Page Header width: calc(100vw); height: calc(90vh); -->
-     <div style=" text-align: center; align: center;  text-size: 24; padding:0;">
-
- 
-      
-       
-    
-    
-         
-<div class="header"> 
-    <h1><span class="underline">Flag Flashcards</span></h1>
-</div>
-
-<!-- Instructions -->
-<h2>Submit the country represented by the flag below.</h2>
-
-<!-- Application Contents -->
-<div class="contents" id="main" >
-
-    <!-- FLAG ROW -->
-    <div class="flagRow">
-<br>
-        <div class="flagDiv">
-
-            <!-- Flag Image -->
-            <div class="flag"><br>
-                <img id="showFlag" src="" alt="" width="100%" height="92%">
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- OPTIONS / BUTTONS / SCORES -->
-
-<table class="mainTable" align="center">
+    <div class="page-wrapper">
 
 
-<tr >
+        <!-- =========================================
+             HEADER
+        ========================================== -->
 
-    
+        <header class="page-header">
+
+            <h1>
+                Flag Flashcards
+            </h1>
+
+            <p>
+                Test your knowledge of countries and their flags.
+            </p>
+
+        </header>
 
 
-    <!-- COLUMN 3: SCORES -->
-    <td class="scoresColumn" >
+        <!-- =========================================
+             GAME
+        ========================================== -->
 
-        <div class="scoreCard">
+        <main class="game-card">
 
-            <table class="scoreTable" >
 
-                <tr>
+            <!-- QUESTION -->
 
-                    <!-- Correct Answers -->
-                    <td align="center">
-                        
+            <section class="question-area">
 
-                        <div class="cBlock">
-                            <h5 id="correctCount"></h5>
-                        </div>
-                         <h3>Correct Answers</h3>
-                    </td>
+                <span class="question-label">
+                    Identify the Flag
+                </span>
 
-                    <!-- Blank Column -->
-                    <td>
-                         <!-- COLUMN 1: OPTIONS -->
-    <td class="optionsColumn"  align="left">
+                <h2>
+                    Submit the country represented
+                    by the flag below.
+                </h2>
 
-        <div class="options" >
+            </section>
 
-            <!-- Show Result -->
-           <div class="resultContainer">
-    <div id="result" class="resultText"></div>
-</div>
 
-            <br>
+            <!-- FLAG -->
 
-            <!-- Options -->
-            <form>
+            <section class="flag-area">
 
-                <!-- Left Options -->
-                <div >
+                <!--
+                    KEEP THE IMAGE ELEMENT USED
+                    BY YOUR EXISTING main.js HERE.
 
-                    <input type="radio" name="rad" id="a">
-                    <label for="a" id="opt_a"></label>
+                    binder.png has been removed.
+                -->
 
-                   <br>
+                <img
+                    id="flag"
+                    src=""
+                    alt="Country flag"
+                >
 
-                    <input type="radio" name="rad" id="b">
-                    <label for="b" id="opt_b"></label>
-<br>
-              
+            </section>
 
-                    <input type="radio" name="rad" id="c">
-                    <label for="c" id="opt_c"></label>
 
-                   <br>
+            <!-- ANSWERS -->
 
-                    <input type="radio" name="rad" id="d">
-                    <label for="d" id="opt_d"></label>
+            <section>
+
+                <h3 class="answers-title">
+                    Choose an answer
+                </h3>
+
+
+                <div class="answer-options">
+
+
+                    <!-- ANSWER 1 -->
+
+                    <div class="answer-option">
+
+                        <input
+                            type="radio"
+                            id="answer1"
+                            name="answer"
+                            value=""
+                        >
+
+                        <label for="answer1">
+
+                            <span class="radio-circle"></span>
+
+                            <span>
+                                Answer 1
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- ANSWER 2 -->
+
+                    <div class="answer-option">
+
+                        <input
+                            type="radio"
+                            id="answer2"
+                            name="answer"
+                            value=""
+                        >
+
+                        <label for="answer2">
+
+                            <span class="radio-circle"></span>
+
+                            <span>
+                                Answer 2
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- ANSWER 3 -->
+
+                    <div class="answer-option">
+
+                        <input
+                            type="radio"
+                            id="answer3"
+                            name="answer"
+                            value=""
+                        >
+
+                        <label for="answer3">
+
+                            <span class="radio-circle"></span>
+
+                            <span>
+                                Answer 3
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- ANSWER 4 -->
+
+                    <div class="answer-option">
+
+                        <input
+                            type="radio"
+                            id="answer4"
+                            name="answer"
+                            value=""
+                        >
+
+                        <label for="answer4">
+
+                            <span class="radio-circle"></span>
+
+                            <span>
+                                Answer 4
+                            </span>
+
+                        </label>
+
+                    </div>
+
 
                 </div>
 
-            </form>
-
-        </div>
-
-    
+            </section>
 
 
-    <!-- COLUMN 2: BUTTONS -->
-   
-        <div class="buttons">
+            <!-- =====================================
+                 SCORE
+            ====================================== -->
 
-            <input type="button"
-                   id="submit"
-                   class="button"
-                   value="Submit">
-
-            <input type="button"
-                   id="next"
-                   class="button"
-                   value="Next  ">
-
-        </div>
-
-    </td>
-                    </td>
-
-                    <!-- Total Attempts -->
-                    <td align="center">
-                       
-
-                        <div class="tBlock">
-                            <h5 id="totalCount"></h5>
-                        </div> 
-                         <h3>Total Attempts</h3>
-                    </td>
-
-                </tr>
-
-            </table>
-
-        </div>
-
-    </td>
-
-</tr>
+            <section class="score-area">
 
 
-</table></div>
-<!-- Image Scroller -->
+                <div class="score-card">
+
+                    <h3>
+                        Correct Answers
+                    </h3>
+
+                    <p id="correctAnswers">
+                        0
+                    </p>
+
+                </div>
 
 
-<div class="imagescroll">
-    <div class="scrollContent" id="img"></div>
+                <div class="score-card">
 
-</div>
+                    <h3>
+                        Total Attempts
+                    </h3>
+
+                    <p id="totalAttempts">
+                        0
+                    </p>
+
+                </div>
 
 
+            </section>
 
 
+        </main>
 
 
-</body> </html>
+        <!-- FOOTER -->
+
+        <footer class="page-footer">
+
+            Flag Flashcards
+
+        </footer>
+
+
+    </div>
+
+
+    <!-- KEEP EXISTING JAVASCRIPT -->
+    <script src="main.js"></script>
+
+
+</body>
+
+</html>
+```
