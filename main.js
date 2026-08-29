@@ -10,7 +10,7 @@ var correctAnswer = 0; 							// Position of correct answer
 var optA, optB, optC, optD; 					// Option variables for each radio button
 var arrRadios = new Array(); 					// Create array of radio options
 var arrCountry = new Array(); 					// Create array of countries
-var  radio = document.getElementsByName('rad'); 	// Radio buttons group
+var radio = document.getElementsByName('rad'); 	// Radio buttons group
 
 // Create URL base and append variables
 var baseUrl = 'https://www.worldometers.info/images/flags/original/';
