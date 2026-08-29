@@ -65,6 +65,10 @@ height:900;
 padding: 80px 0px 0 10px;
 }
 
+input[type="radio"] {
+    display: none;
+}
+
 /*Image*/
 .flag {
 width:100%;
