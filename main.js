@@ -375,7 +375,7 @@ function checkCorrect(){
 		document.getElementById("result").setAttribute('style', 'background-color: #0000A0');
 	}
 }// end function
-window.addEventListener("load", register, false);
+//window.addEventListener("load", register, false);
  window.addEventListener("load", random, false);
 
 
