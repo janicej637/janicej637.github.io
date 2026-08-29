@@ -1,22 +1,14 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="description"
-          content="Interactive flag flashcards quiz">
-
-    <title>Flag Flashcards</title>
+    <title>Arsenal Player Flashcards</title>
 
     <style>
-
-        /* ==============================
-           GLOBAL STYLES
-        ============================== */
 
         * {
             box-sizing: border-box;
@@ -25,61 +17,57 @@
         }
 
         body {
-            font-family:
-                "Segoe UI",
-                Arial,
-                Helvetica,
-                sans-serif;
-
+            font-family: "Segoe UI", Arial, sans-serif;
             min-height: 100vh;
 
             background:
                 linear-gradient(
                     135deg,
-                    #0b1f3a 0%,
-                    #123b67 50%,
-                    #071525 100%
+                    #071d35,
+                    #123b67
                 );
 
-            color: #ffffff;
+            color: #172033;
 
             display: flex;
             justify-content: center;
             align-items: center;
 
-            padding: 30px 15px;
+            padding: 25px 15px;
         }
 
 
-        /* ==============================
+        /* =========================
            MAIN CONTAINER
-        ============================== */
+        ========================= */
 
         .quiz-container {
             width: 100%;
-            max-width: 900px;
+            max-width: 850px;
 
-            background: rgba(255, 255, 255, 0.97);
-
-            color: #172033;
+            background: #ffffff;
 
             border-radius: 24px;
 
-            padding: 40px;
+            padding: 35px;
 
             box-shadow:
-                0 25px 70px rgba(0, 0, 0, 0.35);
-
-            text-align: center;
+                0 25px 60px rgba(0, 0, 0, 0.35);
         }
 
 
-        /* ==============================
+        /* =========================
            HEADER
-        ============================== */
+        ========================= */
 
         .header {
-            margin-bottom: 30px;
+            text-align: center;
+
+            margin-bottom: 25px;
+
+            padding-bottom: 22px;
+
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .header h1 {
@@ -87,158 +75,147 @@
 
             font-weight: 800;
 
+            color: #d71920;
+
             letter-spacing: -1px;
-
-            color: #0b1f3a;
-
-            margin-bottom: 10px;
         }
 
         .header h1 span {
-            color: #d4a72c;
+            color: #071d35;
         }
 
         .header p {
+            margin-top: 8px;
+
             color: #667085;
 
-            font-size: 1.05rem;
+            font-size: 1rem;
         }
 
 
-        /* ==============================
-           SCORE BAR
-        ============================== */
+        /* =========================
+           SCORE
+        ========================= */
 
         .score-bar {
             display: grid;
 
-            grid-template-columns:
-                repeat(2, 1fr);
+            grid-template-columns: 1fr 1fr;
 
             gap: 15px;
-
-            margin-bottom: 30px;
-        }
-
-        .score-box {
-            background: #f4f6f9;
-
-            border: 1px solid #e2e6ec;
-
-            border-radius: 14px;
-
-            padding: 15px;
-        }
-
-        .score-box .label {
-            display: block;
-
-            font-size: 0.78rem;
-
-            text-transform: uppercase;
-
-            letter-spacing: 1px;
-
-            color: #667085;
-
-            margin-bottom: 5px;
-        }
-
-        .score-box .value {
-            font-size: 1.6rem;
-
-            font-weight: 800;
-
-            color: #0b1f3a;
-        }
-
-
-        /* ==============================
-           FLASHCARD
-        ============================== */
-
-        .flashcard-wrapper {
-            perspective: 1200px;
-
-            margin: 0 auto 30px;
-
-            width: 100%;
-
-            max-width: 620px;
-        }
-
-        .flashcard {
-            position: relative;
-
-            width: 100%;
-
-            min-height: 360px;
-
-            border-radius: 22px;
-
-            overflow: hidden;
-
-            background: #ffffff;
-
-            border: 1px solid #e2e6ec;
-
-            box-shadow:
-                0 15px 35px rgba(11, 31, 58, 0.15);
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-
-            padding: 30px;
-
-            transition:
-                transform 0.25s ease,
-                box-shadow 0.25s ease;
-        }
-
-        .flashcard:hover {
-            transform: translateY(-4px);
-
-            box-shadow:
-                0 20px 45px rgba(11, 31, 58, 0.20);
-        }
-
-
-        /* ==============================
-           FLAG AREA
-        ============================== */
-
-        .flag-area {
-            width: 100%;
-
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-            justify-content: center;
-        }
-
-        .flag-area img {
-            width: min(360px, 85%);
-
-            max-height: 220px;
-
-            object-fit: contain;
-
-            border-radius: 10px;
-
-            box-shadow:
-                0 8px 25px rgba(0, 0, 0, 0.18);
 
             margin-bottom: 25px;
         }
 
+        .score-box {
+            text-align: center;
+
+            background: #f5f7fa;
+
+            border: 1px solid #e4e7ec;
+
+            border-radius: 14px;
+
+            padding: 14px;
+        }
+
+        .score-label {
+            display: block;
+
+            color: #667085;
+
+            font-size: 0.75rem;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+        }
+
+        .score-value {
+            display: block;
+
+            margin-top: 3px;
+
+            color: #071d35;
+
+            font-size: 1.5rem;
+
+            font-weight: 800;
+        }
+
+
+        /* =========================
+           PLAYER CARD
+        ========================= */
+
+        .player-card {
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #ffffff,
+                    #f7f8fa
+                );
+
+            border: 1px solid #e3e6eb;
+
+            border-radius: 20px;
+
+            padding: 25px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .player-card img {
+            width: 240px;
+
+            height: 240px;
+
+            object-fit: cover;
+
+            border-radius: 50%;
+
+            border: 6px solid #d71920;
+
+            background: #eeeeee;
+
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.18);
+
+            margin-bottom: 15px;
+        }
+
+        .player-card h2 {
+            font-size: 1.7rem;
+
+            color: #071d35;
+
+            margin-bottom: 5px;
+        }
+
+        .position {
+            color: #667085;
+
+            font-size: 0.95rem;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           QUESTION
+        ========================= */
+
         .question {
-            font-size: 1.35rem;
+            text-align: center;
+
+            margin: 25px 0 15px;
+
+            font-size: 1.15rem;
 
             font-weight: 700;
 
@@ -246,74 +223,100 @@
         }
 
 
-        /* ==============================
-           ANSWER AREA
-        ============================== */
+        /* =========================
+           RADIO ANSWERS
+        ========================= */
 
-        .answer-section {
-            margin-top: 25px;
+        .answers {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 12px;
+
+            max-width: 650px;
+
+            margin: 0 auto;
         }
 
-        .answer-section label {
-            display: block;
-
-            font-weight: 700;
-
-            margin-bottom: 10px;
-
-            color: #344054;
+        .answer-option {
+            position: relative;
         }
 
-        .answer-input {
-            width: 100%;
+        .answer-option input {
+            position: absolute;
 
-            max-width: 500px;
+            opacity: 0;
 
-            padding: 15px 18px;
+            pointer-events: none;
+        }
+
+        .answer-option label {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-height: 58px;
+
+            padding: 12px 15px;
+
+            background: #ffffff;
 
             border: 2px solid #d0d5dd;
 
             border-radius: 12px;
 
-            font-size: 1rem;
+            cursor: pointer;
 
-            outline: none;
+            font-weight: 600;
+
+            color: #344054;
 
             transition:
-                border-color 0.2s ease,
-                box-shadow 0.2s ease;
+                0.2s ease;
         }
 
-        .answer-input:focus {
-            border-color: #123b67;
+        .answer-option label:hover {
+            border-color: #d71920;
+
+            background: #fff5f5;
+        }
+
+        .answer-option input:checked + label {
+            background: #d71920;
+
+            border-color: #d71920;
+
+            color: #ffffff;
 
             box-shadow:
-                0 0 0 4px rgba(18, 59, 103, 0.12);
+                0 5px 15px rgba(215, 25, 32, 0.25);
         }
 
 
-        /* ==============================
+        /* =========================
            BUTTONS
-        ============================== */
+        ========================= */
 
         .button-row {
             display: flex;
-
-            flex-wrap: wrap;
 
             justify-content: center;
 
             gap: 12px;
 
-            margin-top: 18px;
+            margin-top: 22px;
         }
 
         button {
             border: none;
 
-            border-radius: 12px;
+            border-radius: 11px;
 
-            padding: 13px 24px;
+            padding: 13px 25px;
 
             font-size: 0.95rem;
 
@@ -323,61 +326,46 @@
 
             transition:
                 transform 0.2s ease,
-                box-shadow 0.2s ease,
-                background 0.2s ease;
+                box-shadow 0.2s ease;
         }
 
         button:hover {
             transform: translateY(-2px);
         }
 
-        button:active {
-            transform: translateY(0);
-        }
-
-        .submit-btn {
-            background: #0b1f3a;
+        .check-button {
+            background: #d71920;
 
             color: #ffffff;
 
             box-shadow:
-                0 6px 15px rgba(11, 31, 58, 0.25);
+                0 5px 15px rgba(215, 25, 32, 0.25);
         }
 
-        .submit-btn:hover {
-            background: #123b67;
-        }
+        .next-button {
+            background: #071d35;
 
-        .next-btn {
-            background: #d4a72c;
-
-            color: #172033;
+            color: #ffffff;
 
             box-shadow:
-                0 6px 15px rgba(212, 167, 44, 0.25);
+                0 5px 15px rgba(7, 29, 53, 0.25);
         }
 
-        .next-btn:hover {
-            background: #e2b93f;
-        }
-
-        .reset-btn {
+        .reset-button {
             background: #eef1f5;
 
             color: #344054;
         }
 
-        .reset-btn:hover {
-            background: #e3e7ed;
-        }
 
-
-        /* ==============================
+        /* =========================
            FEEDBACK
-        ============================== */
+        ========================= */
 
         .feedback {
-            min-height: 28px;
+            min-height: 30px;
+
+            text-align: center;
 
             margin-top: 18px;
 
@@ -395,46 +383,52 @@
         }
 
 
-        /* ==============================
+        /* =========================
            FOOTER
-        ============================== */
+        ========================= */
 
         footer {
-            margin-top: 30px;
-
-            padding-top: 20px;
-
-            border-top: 1px solid #e5e7eb;
+            text-align: center;
 
             color: #667085;
 
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+
+            margin-top: 25px;
+
+            padding-top: 18px;
+
+            border-top: 1px solid #e5e7eb;
         }
 
 
-        /* ==============================
-           RESPONSIVE DESIGN
-        ============================== */
+        /* =========================
+           MOBILE
+        ========================= */
 
-        @media (max-width: 650px) {
+        @media (max-width: 600px) {
 
             body {
-                padding: 15px;
+                padding: 12px;
             }
 
             .quiz-container {
-                padding: 25px 18px;
+                padding: 22px 15px;
 
                 border-radius: 18px;
             }
 
-            .flashcard {
-                min-height: 300px;
-
-                padding: 20px;
+            .player-card {
+                padding: 18px;
             }
 
-            .score-bar {
+            .player-card img {
+                width: 190px;
+
+                height: 190px;
+            }
+
+            .answers {
                 grid-template-columns: 1fr;
             }
 
@@ -445,18 +439,6 @@
             button {
                 width: 100%;
             }
-
-        }
-
-
-        @media (prefers-reduced-motion: reduce) {
-
-            * {
-                scroll-behavior: auto !important;
-                transition: none !important;
-                animation: none !important;
-            }
-
         }
 
     </style>
@@ -465,423 +447,567 @@
 
 <body>
 
-    <main class="quiz-container">
-
-        <!-- HEADER -->
-
-        <header class="header">
-
-            <h1>
-                Flag <span>Flashcards</span>
-            </h1>
-
-            <p>
-                Test your knowledge of countries and their flags.
-            </p>
-
-        </header>
+<main class="quiz-container">
 
 
-        <!-- SCORE -->
+    <!-- HEADER -->
 
-        <section class="score-bar"
-                 aria-label="Quiz statistics">
+    <header class="header">
 
-            <div class="score-box">
+        <h1>
+            Arsenal <span>Player Quiz</span>
+        </h1>
 
-                <span class="label">
-                    Correct Answers
-                </span>
+        <p>
+            Test your knowledge of the Arsenal squad
+        </p>
 
-                <span class="value"
-                      id="correct-count">
-                    0
-                </span>
-
-            </div>
+    </header>
 
 
-            <div class="score-box">
+    <!-- SCORE -->
 
-                <span class="label">
-                    Total Attempts
-                </span>
+    <section class="score-bar">
 
-                <span class="value"
-                      id="attempt-count">
-                    0
-                </span>
+        <div class="score-box">
 
-            </div>
+            <span class="score-label">
+                Correct
+            </span>
 
-        </section>
+            <span
+                class="score-value"
+                id="correct-count">
+                0
+            </span>
 
-
-        <!-- FLASHCARD -->
-
-        <section class="flashcard-wrapper">
-
-            <div class="flashcard">
-
-                <div class="flag-area">
-
-                    <img
-                        id="flag-image"
-                        src=""
-                        alt="Country flag"
-                    >
-
-                    <p class="question">
-                        Which country does this flag represent?
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
+        </div>
 
 
-        <!-- ANSWER -->
+        <div class="score-box">
 
-        <section class="answer-section">
+            <span class="score-label">
+                Attempts
+            </span>
 
-            <label for="answer">
-                Enter your answer
-            </label>
+            <span
+                class="score-value"
+                id="attempt-count">
+                0
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- PLAYER -->
+
+    <section class="player-card">
+
+        <img
+            id="player-image"
+            src=""
+            alt="Arsenal player">
+
+        <h2 id="player-name">
+            Player Name
+        </h2>
+
+        <p
+            class="position"
+            id="player-position">
+            Position
+        </p>
+
+    </section>
+
+
+    <!-- QUESTION -->
+
+    <p class="question">
+        Who is this Arsenal player?
+    </p>
+
+
+    <!-- FOUR RADIO BUTTON ANSWERS -->
+
+    <section
+        class="answers"
+        aria-label="Answer choices">
+
+
+        <div class="answer-option">
 
             <input
-                type="text"
-                id="answer"
-                class="answer-input"
-                placeholder="Type the country name..."
-                autocomplete="off"
-            >
+                type="radio"
+                id="answer1"
+                name="player-answer"
+                value="">
 
+            <label for="answer1">
+                <span id="answer1-text">
+                    Answer 1
+                </span>
+            </label>
 
-            <div class="button-row">
+        </div>
 
-                <button
-                    type="button"
-                    class="submit-btn"
-                    onclick="checkAnswer()">
-                    Check Answer
-                </button>
 
-                <button
-                    type="button"
-                    class="next-btn"
-                    onclick="nextCard()">
-                    Next Flag
-                </button>
+        <div class="answer-option">
 
-                <button
-                    type="button"
-                    class="reset-btn"
-                    onclick="resetQuiz()">
-                    Reset
-                </button>
+            <input
+                type="radio"
+                id="answer2"
+                name="player-answer"
+                value="">
 
-            </div>
+            <label for="answer2">
+                <span id="answer2-text">
+                    Answer 2
+                </span>
+            </label>
 
+        </div>
 
-            <div
-                id="feedback"
-                class="feedback"
-                aria-live="polite">
-            </div>
 
-        </section>
+        <div class="answer-option">
 
+            <input
+                type="radio"
+                id="answer3"
+                name="player-answer"
+                value="">
 
-        <!-- FOOTER -->
+            <label for="answer3">
+                <span id="answer3-text">
+                    Answer 3
+                </span>
+            </label>
 
-        <footer>
+        </div>
 
-            <p>
-                Flag Flashcards &bull; Test your geography knowledge
-            </p>
 
-        </footer>
+        <div class="answer-option">
 
-    </main>
+            <input
+                type="radio"
+                id="answer4"
+                name="player-answer"
+                value="">
 
+            <label for="answer4">
+                <span id="answer4-text">
+                    Answer 4
+                </span>
+            </label>
 
-    <script>
+        </div>
 
-        /* =================================
-           FLAG DATA
-        ================================= */
+    </section>
 
-        const flags = [
 
-            {
-                country: "United States",
-                image: "images/united-states.png"
-            },
+    <!-- BUTTONS -->
 
-            {
-                country: "Canada",
-                image: "images/canada.png"
-            },
+    <div class="button-row">
 
-            {
-                country: "Brazil",
-                image: "images/brazil.png"
-            },
+        <button
+            class="check-button"
+            type="button"
+            onclick="checkAnswer()">
+            Check Answer
+        </button>
 
-            {
-                country: "France",
-                image: "images/france.png"
-            },
+        <button
+            class="next-button"
+            type="button"
+            onclick="nextPlayer()">
+            Next Player
+        </button>
 
-            {
-                country: "Germany",
-                image: "images/germany.png"
-            },
+        <button
+            class="reset-button"
+            type="button"
+            onclick="resetQuiz()">
+            Reset
+        </button>
 
-            {
-                country: "Italy",
-                image: "images/italy.png"
-            },
+    </div>
 
-            {
-                country: "Japan",
-                image: "images/japan.png"
-            },
 
-            {
-                country: "United Kingdom",
-                image: "images/united-kingdom.png"
-            }
+    <!-- FEEDBACK -->
 
-        ];
+    <div
+        id="feedback"
+        class="feedback"
+        aria-live="polite">
+    </div>
 
 
-        /* =================================
-           QUIZ VARIABLES
-        ================================= */
+    <!-- FOOTER -->
 
-        let currentIndex = 0;
+    <footer>
 
-        let correctAnswers = 0;
+        Arsenal Player Flashcards
 
-        let totalAttempts = 0;
+    </footer>
 
-        let answered = false;
 
+</main>
 
-        /* =================================
-           LOAD FLASHCARD
-        ================================= */
 
-        function loadCard() {
+<script>
 
-            const currentFlag =
-                flags[currentIndex];
+/* =====================================
+   ARSENAL PLAYERS
+===================================== */
 
-            document
-                .getElementById("flag-image")
-                .src = currentFlag.image;
+const players = [
 
-            document
-                .getElementById("flag-image")
-                .alt =
-                currentFlag.country + " flag";
+    {
+        name: "Bukayo Saka",
+        position: "Forward",
+        image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/1_bukayo_saka_arsenal_2025_(cropped).jpg"
+    },
 
-            document
-                .getElementById("answer")
-                .value = "";
+    {
+        name: "Martin Odegaard",
+        position: "Midfielder",
+        image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Martin_Odegaard_France_v_Norway_26_June_26-011.jpg"
+    },
 
-            document
-                .getElementById("feedback")
-                .textContent = "";
+    {
+        name: "Declan Rice",
+        position: "Midfielder",
+        image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Declan_Rice_England_v_Ghana_23_June_2026-143.jpg"
+    },
 
-            document
-                .getElementById("feedback")
-                .className = "feedback";
+    {
+        name: "William Saliba",
+        position: "Defender",
+        image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/1_william_saliba_arsenal_2025_(cropped).jpg"
+    },
 
-            answered = false;
+    {
+        name: "Gabriel Magalhaes",
+        position: "Defender",
+        image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/1_Gabriel_Magalhães_2026_(cropped).jpg"
+    },
 
-            document
-                .getElementById("answer")
-                .focus();
-        }
+    {
+        name: "David Raya",
+        position: "Goalkeeper",
+        image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/David_Raya_Argentina_v_Spain_19_July_2026-003_(cropped).jpg"
 
+    },
 
-        /* =================================
-           CHECK ANSWER
-        ================================= */
+    {
+        name: "Jurrien Timber",
+        position: "Defender",
+        image: "https://cdn1.arsenalinsider.com/uploads/19/2024/03/GettyImages-1593911047-1024x683.jpg"
+    },
 
-        function checkAnswer() {
+    {
+        name: "Piero Hincapie",
+        position: "Defender",
+        image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/1_Piero_Hincapié_2026.jpg"
+    }
 
-            if (answered) {
-                return;
-            }
+];
 
-            const input =
-                document
-                    .getElementById("answer")
-                    .value
-                    .trim();
 
-            if (!input) {
+let currentPlayer = 0;
 
-                showFeedback(
-                    "Please enter an answer.",
-                    "incorrect"
-                );
+let correctAnswers = 0;
 
-                return;
-            }
+let totalAttempts = 0;
 
+let answered = false;
 
-            totalAttempts++;
 
+/* =====================================
+   SHUFFLE
+===================================== */
 
-            const correctAnswer =
-                flags[currentIndex]
-                    .country;
+function shuffle(array) {
 
+    return array.sort(
+        () => Math.random() - 0.5
+    );
 
-            if (
-                input.toLowerCase() ===
-                correctAnswer.toLowerCase()
-            ) {
+}
 
-                correctAnswers++;
 
-                showFeedback(
-                    "Correct! Great job!",
-                    "correct"
-                );
+/* =====================================
+   LOAD PLAYER
+===================================== */
 
-                answered = true;
+function loadPlayer() {
 
-            } else {
+    const player =
+        players[currentPlayer];
 
-                showFeedback(
-                    "Not quite. Try again!",
-                    "incorrect"
-                );
 
-            }
+    document.getElementById(
+        "player-image"
+    ).src = player.image;
 
 
-            updateScore();
+    document.getElementById(
+        "player-image"
+    ).alt =
+        player.name;
 
-        }
 
+    document.getElementById(
+        "player-name"
+    ).textContent =
+        player.name;
 
-        /* =================================
-           NEXT CARD
-        ================================= */
 
-        function nextCard() {
+    document.getElementById(
+        "player-position"
+    ).textContent =
+        player.position;
 
-            currentIndex++;
 
-            if (currentIndex >= flags.length) {
+    createAnswers(player);
 
-                currentIndex = 0;
 
-            }
+    document.getElementById(
+        "feedback"
+    ).textContent = "";
 
-            loadCard();
 
-        }
+    document.getElementById(
+        "feedback"
+    ).className =
+        "feedback";
 
 
-        /* =================================
-           FEEDBACK
-        ================================= */
+    answered = false;
 
-        function showFeedback(
-            message,
-            type
-        ) {
+}
 
-            const feedback =
-                document
-                    .getElementById("feedback");
 
-            feedback.textContent =
-                message;
+/* =====================================
+   CREATE FOUR ANSWERS
+===================================== */
 
-            feedback.className =
-                "feedback " + type;
+function createAnswers(player) {
 
-        }
+    let choices = [player.name];
 
 
-        /* =================================
-           UPDATE SCORE
-        ================================= */
+    const otherPlayers =
+        players.filter(
+            p => p.name !== player.name
+        );
 
-        function updateScore() {
 
-            document
-                .getElementById("correct-count")
-                .textContent =
-                correctAnswers;
+    shuffle(otherPlayers);
 
-            document
-                .getElementById("attempt-count")
-                .textContent =
-                totalAttempts;
 
-        }
+    choices.push(
+        otherPlayers[0].name
+    );
 
+    choices.push(
+        otherPlayers[1].name
+    );
 
-        /* =================================
-           RESET QUIZ
-        ================================= */
+    choices.push(
+        otherPlayers[2].name
+    );
 
-        function resetQuiz() {
 
-            currentIndex = 0;
+    shuffle(choices);
 
-            correctAnswers = 0;
 
-            totalAttempts = 0;
+    for (
+        let i = 0;
+        i < 4;
+        i++
+    ) {
 
-            updateScore();
+        const radio =
+            document.getElementById(
+                "answer" + (i + 1)
+            );
 
-            loadCard();
-
-        }
-
-
-        /* =================================
-           ENTER KEY SUPPORT
-        ================================= */
-
-        document
-            .getElementById("answer")
-            .addEventListener(
-                "keydown",
-                function(event) {
-
-                    if (
-                        event.key === "Enter"
-                    ) {
-
-                        checkAnswer();
-
-                    }
-
-                }
+        const text =
+            document.getElementById(
+                "answer" + (i + 1) + "-text"
             );
 
 
-        /* =================================
-           START QUIZ
-        ================================= */
+        radio.value =
+            choices[i];
 
-        loadCard();
+        radio.checked = false;
 
-    </script>
+        text.textContent =
+            choices[i];
+
+    }
+
+}
+
+
+/* =====================================
+   CHECK ANSWER
+===================================== */
+
+function checkAnswer() {
+
+    if (answered) {
+        return;
+    }
+
+
+    const selected =
+        document.querySelector(
+            'input[name="player-answer"]:checked'
+        );
+
+
+    if (!selected) {
+
+        showFeedback(
+            "Please select an answer.",
+            "incorrect"
+        );
+
+        return;
+    }
+
+
+    totalAttempts++;
+
+
+    if (
+        selected.value ===
+        players[currentPlayer].name
+    ) {
+
+        correctAnswers++;
+
+        showFeedback(
+            "Correct! COYG! 🔴⚪",
+            "correct"
+        );
+
+        answered = true;
+
+    } else {
+
+        showFeedback(
+            "Incorrect. Try again!",
+            "incorrect"
+        );
+
+    }
+
+
+    updateScore();
+
+}
+
+
+/* =====================================
+   NEXT PLAYER
+===================================== */
+
+function nextPlayer() {
+
+    currentPlayer++;
+
+    if (
+        currentPlayer >= players.length
+    ) {
+
+        currentPlayer = 0;
+
+    }
+
+
+    loadPlayer();
+
+}
+
+
+/* =====================================
+   FEEDBACK
+===================================== */
+
+function showFeedback(
+    message,
+    type
+) {
+
+    const feedback =
+        document.getElementById(
+            "feedback"
+        );
+
+
+    feedback.textContent =
+        message;
+
+
+    feedback.className =
+        "feedback " + type;
+
+}
+
+
+/* =====================================
+   SCORE
+===================================== */
+
+function updateScore() {
+
+    document.getElementById(
+        "correct-count"
+    ).textContent =
+        correctAnswers;
+
+
+    document.getElementById(
+        "attempt-count"
+    ).textContent =
+        totalAttempts;
+
+}
+
+
+/* =====================================
+   RESET
+===================================== */
+
+function resetQuiz() {
+
+    currentPlayer = 0;
+
+    correctAnswers = 0;
+
+    totalAttempts = 0;
+
+    updateScore();
+
+    loadPlayer();
+
+}
+
+
+/* =====================================
+   START
+===================================== */
+
+loadPlayer();
+
+</script>
 
 </body>
 </html>
-```
+
