@@ -282,6 +282,17 @@
 
         }
 
+        .answer:hover {
+
+            background: #191900;
+
+            border-color: #ffff00;
+
+            transform:
+                translateY(-2px);
+
+        }
+
 
         /*
            IMPORTANT:
@@ -293,11 +304,16 @@
            Therefore these IDs must remain
            exactly as written.
         */
-
+/* Selected answer */
+.answer.selected {
+    background: #191900;
+    border-color: #ffff00;
+    transform: translateY(-2px);
+}
 
         .answer input[type="radio"] {
 
-            appearance: none;
+            display: none;
 
             -webkit-appearance: none;
 
@@ -339,7 +355,7 @@
 
             height: 7px;
 
-            background: #000000;
+            background: #ffff00;
 
             border-radius: 50%;
 
