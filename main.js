@@ -225,7 +225,7 @@ function register(){
 	var button1 = document.getElementById("submit");
 	button1.addEventListener("click", checkCorrect, false);
 
-	 window.addEventListener("load", random, false);
+	
 
 	optA = document.getElementById("opt_a");
 	optB= document.getElementById("opt_b");
@@ -367,7 +367,8 @@ function checkCorrect(){
 	}
 }// end function
 
-
+ window.addEventListener("load", random, false);
 window.addEventListener("load", register, false);
+
 
 
