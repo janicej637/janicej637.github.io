@@ -1,0 +1,887 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Interactive flag flashcards quiz">
+
+    <title>Flag Flashcards</title>
+
+    <style>
+
+        /* ==============================
+           GLOBAL STYLES
+        ============================== */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family:
+                "Segoe UI",
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            min-height: 100vh;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0b1f3a 0%,
+                    #123b67 50%,
+                    #071525 100%
+                );
+
+            color: #ffffff;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 30px 15px;
+        }
+
+
+        /* ==============================
+           MAIN CONTAINER
+        ============================== */
+
+        .quiz-container {
+            width: 100%;
+            max-width: 900px;
+
+            background: rgba(255, 255, 255, 0.97);
+
+            color: #172033;
+
+            border-radius: 24px;
+
+            padding: 40px;
+
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.35);
+
+            text-align: center;
+        }
+
+
+        /* ==============================
+           HEADER
+        ============================== */
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+
+            font-weight: 800;
+
+            letter-spacing: -1px;
+
+            color: #0b1f3a;
+
+            margin-bottom: 10px;
+        }
+
+        .header h1 span {
+            color: #d4a72c;
+        }
+
+        .header p {
+            color: #667085;
+
+            font-size: 1.05rem;
+        }
+
+
+        /* ==============================
+           SCORE BAR
+        ============================== */
+
+        .score-bar {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 30px;
+        }
+
+        .score-box {
+            background: #f4f6f9;
+
+            border: 1px solid #e2e6ec;
+
+            border-radius: 14px;
+
+            padding: 15px;
+        }
+
+        .score-box .label {
+            display: block;
+
+            font-size: 0.78rem;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            color: #667085;
+
+            margin-bottom: 5px;
+        }
+
+        .score-box .value {
+            font-size: 1.6rem;
+
+            font-weight: 800;
+
+            color: #0b1f3a;
+        }
+
+
+        /* ==============================
+           FLASHCARD
+        ============================== */
+
+        .flashcard-wrapper {
+            perspective: 1200px;
+
+            margin: 0 auto 30px;
+
+            width: 100%;
+
+            max-width: 620px;
+        }
+
+        .flashcard {
+            position: relative;
+
+            width: 100%;
+
+            min-height: 360px;
+
+            border-radius: 22px;
+
+            overflow: hidden;
+
+            background: #ffffff;
+
+            border: 1px solid #e2e6ec;
+
+            box-shadow:
+                0 15px 35px rgba(11, 31, 58, 0.15);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 30px;
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 20px 45px rgba(11, 31, 58, 0.20);
+        }
+
+
+        /* ==============================
+           FLAG AREA
+        ============================== */
+
+        .flag-area {
+            width: 100%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+        .flag-area img {
+            width: min(360px, 85%);
+
+            max-height: 220px;
+
+            object-fit: contain;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 8px 25px rgba(0, 0, 0, 0.18);
+
+            margin-bottom: 25px;
+        }
+
+        .question {
+            font-size: 1.35rem;
+
+            font-weight: 700;
+
+            color: #172033;
+        }
+
+
+        /* ==============================
+           ANSWER AREA
+        ============================== */
+
+        .answer-section {
+            margin-top: 25px;
+        }
+
+        .answer-section label {
+            display: block;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+
+            color: #344054;
+        }
+
+        .answer-input {
+            width: 100%;
+
+            max-width: 500px;
+
+            padding: 15px 18px;
+
+            border: 2px solid #d0d5dd;
+
+            border-radius: 12px;
+
+            font-size: 1rem;
+
+            outline: none;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .answer-input:focus {
+            border-color: #123b67;
+
+            box-shadow:
+                0 0 0 4px rgba(18, 59, 103, 0.12);
+        }
+
+
+        /* ==============================
+           BUTTONS
+        ============================== */
+
+        .button-row {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            gap: 12px;
+
+            margin-top: 18px;
+        }
+
+        button {
+            border: none;
+
+            border-radius: 12px;
+
+            padding: 13px 24px;
+
+            font-size: 0.95rem;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn {
+            background: #0b1f3a;
+
+            color: #ffffff;
+
+            box-shadow:
+                0 6px 15px rgba(11, 31, 58, 0.25);
+        }
+
+        .submit-btn:hover {
+            background: #123b67;
+        }
+
+        .next-btn {
+            background: #d4a72c;
+
+            color: #172033;
+
+            box-shadow:
+                0 6px 15px rgba(212, 167, 44, 0.25);
+        }
+
+        .next-btn:hover {
+            background: #e2b93f;
+        }
+
+        .reset-btn {
+            background: #eef1f5;
+
+            color: #344054;
+        }
+
+        .reset-btn:hover {
+            background: #e3e7ed;
+        }
+
+
+        /* ==============================
+           FEEDBACK
+        ============================== */
+
+        .feedback {
+            min-height: 28px;
+
+            margin-top: 18px;
+
+            font-size: 1rem;
+
+            font-weight: 700;
+        }
+
+        .correct {
+            color: #15803d;
+        }
+
+        .incorrect {
+            color: #dc2626;
+        }
+
+
+        /* ==============================
+           FOOTER
+        ============================== */
+
+        footer {
+            margin-top: 30px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #e5e7eb;
+
+            color: #667085;
+
+            font-size: 0.85rem;
+        }
+
+
+        /* ==============================
+           RESPONSIVE DESIGN
+        ============================== */
+
+        @media (max-width: 650px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .quiz-container {
+                padding: 25px 18px;
+
+                border-radius: 18px;
+            }
+
+            .flashcard {
+                min-height: 300px;
+
+                padding: 20px;
+            }
+
+            .score-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+        }
+
+
+        @media (prefers-reduced-motion: reduce) {
+
+            * {
+                scroll-behavior: auto !important;
+                transition: none !important;
+                animation: none !important;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <main class="quiz-container">
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <h1>
+                Flag <span>Flashcards</span>
+            </h1>
+
+            <p>
+                Test your knowledge of countries and their flags.
+            </p>
+
+        </header>
+
+
+        <!-- SCORE -->
+
+        <section class="score-bar"
+                 aria-label="Quiz statistics">
+
+            <div class="score-box">
+
+                <span class="label">
+                    Correct Answers
+                </span>
+
+                <span class="value"
+                      id="correct-count">
+                    0
+                </span>
+
+            </div>
+
+
+            <div class="score-box">
+
+                <span class="label">
+                    Total Attempts
+                </span>
+
+                <span class="value"
+                      id="attempt-count">
+                    0
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- FLASHCARD -->
+
+        <section class="flashcard-wrapper">
+
+            <div class="flashcard">
+
+                <div class="flag-area">
+
+                    <img
+                        id="flag-image"
+                        src=""
+                        alt="Country flag"
+                    >
+
+                    <p class="question">
+                        Which country does this flag represent?
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ANSWER -->
+
+        <section class="answer-section">
+
+            <label for="answer">
+                Enter your answer
+            </label>
+
+            <input
+                type="text"
+                id="answer"
+                class="answer-input"
+                placeholder="Type the country name..."
+                autocomplete="off"
+            >
+
+
+            <div class="button-row">
+
+                <button
+                    type="button"
+                    class="submit-btn"
+                    onclick="checkAnswer()">
+                    Check Answer
+                </button>
+
+                <button
+                    type="button"
+                    class="next-btn"
+                    onclick="nextCard()">
+                    Next Flag
+                </button>
+
+                <button
+                    type="button"
+                    class="reset-btn"
+                    onclick="resetQuiz()">
+                    Reset
+                </button>
+
+            </div>
+
+
+            <div
+                id="feedback"
+                class="feedback"
+                aria-live="polite">
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+
+        <footer>
+
+            <p>
+                Flag Flashcards &bull; Test your geography knowledge
+            </p>
+
+        </footer>
+
+    </main>
+
+
+    <script>
+
+        /* =================================
+           FLAG DATA
+        ================================= */
+
+        const flags = [
+
+            {
+                country: "United States",
+                image: "images/united-states.png"
+            },
+
+            {
+                country: "Canada",
+                image: "images/canada.png"
+            },
+
+            {
+                country: "Brazil",
+                image: "images/brazil.png"
+            },
+
+            {
+                country: "France",
+                image: "images/france.png"
+            },
+
+            {
+                country: "Germany",
+                image: "images/germany.png"
+            },
+
+            {
+                country: "Italy",
+                image: "images/italy.png"
+            },
+
+            {
+                country: "Japan",
+                image: "images/japan.png"
+            },
+
+            {
+                country: "United Kingdom",
+                image: "images/united-kingdom.png"
+            }
+
+        ];
+
+
+        /* =================================
+           QUIZ VARIABLES
+        ================================= */
+
+        let currentIndex = 0;
+
+        let correctAnswers = 0;
+
+        let totalAttempts = 0;
+
+        let answered = false;
+
+
+        /* =================================
+           LOAD FLASHCARD
+        ================================= */
+
+        function loadCard() {
+
+            const currentFlag =
+                flags[currentIndex];
+
+            document
+                .getElementById("flag-image")
+                .src = currentFlag.image;
+
+            document
+                .getElementById("flag-image")
+                .alt =
+                currentFlag.country + " flag";
+
+            document
+                .getElementById("answer")
+                .value = "";
+
+            document
+                .getElementById("feedback")
+                .textContent = "";
+
+            document
+                .getElementById("feedback")
+                .className = "feedback";
+
+            answered = false;
+
+            document
+                .getElementById("answer")
+                .focus();
+        }
+
+
+        /* =================================
+           CHECK ANSWER
+        ================================= */
+
+        function checkAnswer() {
+
+            if (answered) {
+                return;
+            }
+
+            const input =
+                document
+                    .getElementById("answer")
+                    .value
+                    .trim();
+
+            if (!input) {
+
+                showFeedback(
+                    "Please enter an answer.",
+                    "incorrect"
+                );
+
+                return;
+            }
+
+
+            totalAttempts++;
+
+
+            const correctAnswer =
+                flags[currentIndex]
+                    .country;
+
+
+            if (
+                input.toLowerCase() ===
+                correctAnswer.toLowerCase()
+            ) {
+
+                correctAnswers++;
+
+                showFeedback(
+                    "Correct! Great job!",
+                    "correct"
+                );
+
+                answered = true;
+
+            } else {
+
+                showFeedback(
+                    "Not quite. Try again!",
+                    "incorrect"
+                );
+
+            }
+
+
+            updateScore();
+
+        }
+
+
+        /* =================================
+           NEXT CARD
+        ================================= */
+
+        function nextCard() {
+
+            currentIndex++;
+
+            if (currentIndex >= flags.length) {
+
+                currentIndex = 0;
+
+            }
+
+            loadCard();
+
+        }
+
+
+        /* =================================
+           FEEDBACK
+        ================================= */
+
+        function showFeedback(
+            message,
+            type
+        ) {
+
+            const feedback =
+                document
+                    .getElementById("feedback");
+
+            feedback.textContent =
+                message;
+
+            feedback.className =
+                "feedback " + type;
+
+        }
+
+
+        /* =================================
+           UPDATE SCORE
+        ================================= */
+
+        function updateScore() {
+
+            document
+                .getElementById("correct-count")
+                .textContent =
+                correctAnswers;
+
+            document
+                .getElementById("attempt-count")
+                .textContent =
+                totalAttempts;
+
+        }
+
+
+        /* =================================
+           RESET QUIZ
+        ================================= */
+
+        function resetQuiz() {
+
+            currentIndex = 0;
+
+            correctAnswers = 0;
+
+            totalAttempts = 0;
+
+            updateScore();
+
+            loadCard();
+
+        }
+
+
+        /* =================================
+           ENTER KEY SUPPORT
+        ================================= */
+
+        document
+            .getElementById("answer")
+            .addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (
+                        event.key === "Enter"
+                    ) {
+
+                        checkAnswer();
+
+                    }
+
+                }
+            );
+
+
+        /* =================================
+           START QUIZ
+        ================================= */
+
+        loadCard();
+
+    </script>
+
+</body>
+</html>
+```
