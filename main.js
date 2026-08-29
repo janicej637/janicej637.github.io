@@ -232,7 +232,19 @@ function register(){
 	optB= document.getElementById("opt_b");
 	optC = document.getElementById("opt_c");
 	optD = document.getElementById("opt_d");
+
+	document.querySelectorAll('.answer').forEach(function(label) {
+    label.addEventListener('click', function() {
+        var radio = this.querySelector('input[type="radio"]');
+
+        if (radio) {
+            radio.checked = true;
+        }
+    });
+});
 } // end function 
+
+
 
 
 // Randomly Set Up New Quiz
@@ -367,9 +379,9 @@ function checkCorrect(){
 		document.getElementById("result").setAttribute('style', 'background-color: #0000A0');
 	}
 }// end function
-
- window.addEventListener("load", random, false);
 window.addEventListener("load", register, false);
+ window.addEventListener("load", random, false);
+
 
 
 
