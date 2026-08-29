@@ -44,12 +44,14 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
             gap: 25px;
+            height: 330px;
         }
 
         .flashcard {
-            height: 330px;
+            height: 100%;
             perspective: 1000px;
             cursor: pointer;
+             object-fit: cover;
         }
 
         .flashcard-inner {
