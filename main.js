@@ -233,22 +233,7 @@ function register(){
 	optC = document.getElementById("opt_c");
 	optD = document.getElementById("opt_d");
 
-    // Make clicking the country name select the radio button
-    optA.onclick = function () {
-        document.getElementById("a").checked = true;
-    };
-
-    optB.onclick = function () {
-        document.getElementById("b").checked = true;
-    };
-
-    optC.onclick = function () {
-        document.getElementById("c").checked = true;
-    };
-
-    optD.onclick = function () {
-       document.getElementById("d").checked = true;
-    };
+ 
 	
 } // end function 
 
@@ -318,6 +303,22 @@ function random(){
 	document.getElementById("result").innerHTML = '';
 	document.getElementById("result").setAttribute('style', 'background-color: none');
 
+	   // Make clicking the country name select the radio button
+    optA.onclick = function () {
+        document.getElementById("a").checked = true;
+    };
+
+    optB.onclick = function () {
+        document.getElementById("b").checked = true;
+    };
+
+    optC.onclick = function () {
+        document.getElementById("c").checked = true;
+    };
+
+    optD.onclick = function () {
+       document.getElementById("d").checked = true;
+    };
 	
 }// end function 
 
