@@ -236,10 +236,10 @@ answers.forEach(function(label) {
 
     label.addEventListener("click", function() {
 
-        // Remove selected color from all labels
+        /* Remove selected color from all labels
         answers.forEach(function(item) {
             item.classList.remove("selected");
-        });
+        });*/
 
         // Make clicked label blue
         this.classList.add("selected");
