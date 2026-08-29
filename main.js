@@ -273,6 +273,23 @@ function random(){
 	// Test for Duplicates
 	while(optD.getAttribute('value') == optA.getAttribute('value') || optD.getAttribute('value') == optB.getAttribute('value')|| optD.getAttribute('value') == optC.getAttribute('value')){
 		setRandom(optD);
+
+		   // Make clicking the country name select the radio button
+    optA.onclick = function () {
+        document.getElementById("a").checked = true;
+    };
+
+    optB.onclick = function () {
+        document.getElementById("b").checked = true;
+    };
+
+    optC.onclick = function () {
+        document.getElementById("c").checked = true;
+    };
+
+    optD.onclick = function () {
+       document.getElementById("d").checked = true;
+    };
 	}
 
 
@@ -302,22 +319,7 @@ function random(){
 	document.getElementById("result").innerHTML = '';
 	document.getElementById("result").setAttribute('style', 'background-color: none');
 
-	   // Make clicking the country name select the radio button
-    optA.onclick = function () {
-        document.getElementById("a").checked = true;
-    };
-
-    optB.onclick = function () {
-        document.getElementById("b").checked = true;
-    };
-
-    optC.onclick = function () {
-        document.getElementById("c").checked = true;
-    };
-
-    optD.onclick = function () {
-       document.getElementById("d").checked = true;
-    };
+	
 	
 }// end function 
 
