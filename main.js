@@ -235,19 +235,19 @@ function register(){
 
     // Make clicking the country name select the radio button
     optA.onclick = function () {
-        radio[0].checked = true;
+        document.getElementById("a").checked = true;
     };
 
     optB.onclick = function () {
-        radio[1].checked = true;
+        document.getElementById("b").checked = true;
     };
 
     optC.onclick = function () {
-        radio[2].checked = true;
+        document.getElementById("c").checked = true;
     };
 
     optD.onclick = function () {
-        radio[3].checked = true;
+       document.getElementById("d").checked = true;
     };
 	
 } // end function 
