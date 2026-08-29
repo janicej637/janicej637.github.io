@@ -290,7 +290,7 @@ function random(){
 	document.getElementById("totalCount").innerHTML = attemptTotal;
 	
 // Update correctTotal on Score Card 
-	correctTotal = correctTotal + 1;
+	//correctTotal = correctTotal + 1;
 	document.getElementById("correctCount").innerHTML =correctTotal;	
 
 	// Clear Result Banner
