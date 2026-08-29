@@ -273,8 +273,17 @@ function random(){
 	for(var i = 0; i < radio.length; i++){
 		radio[i].checked = false;
 		document.getElementById("opt_" + radio[i].id).setAttribute('style', 'background-color: none');
-		document.getElementById(radio[i].id).classList.remove("selected");
+		
+		
 	}
+
+	 // Return all answer labels to normal
+    var answers = document.querySelectorAll(".answer");
+
+    answers.forEach(function(label) {
+        label.classList.remove("selected");
+    });
+
 
 	// Randomly Set A & B Options
 	setRandom(optA);
