@@ -16,7 +16,6 @@ var radio; 	// Radio buttons group
 var baseUrl = 'https://www.worldometers.info/images/flags/original/';
 var appendUrl = '.webp';
 
-
 // Populate arrCountry with Country Names and Abbreviations
 arrCountry[0]={name:"Afghanistan", shortName:"af"};                                                   
 arrCountry[1]={name:"Albania", shortName:"al"};                                                   
