@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Flag Flashcards</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <!-- Keep your existing JavaScript reference -->
+    <meta name="description"
+          content="Arsenal Flag Flashcards - Test your football knowledge">
+
+    <title>Arsenal Flag Flashcards</title>
+
+    <!-- Main JavaScript - KEEP THIS REFERENCE -->
     <script src="main.js" defer></script>
 
     <style>
-        /* ================================
-           GLOBAL STYLES
-        ================================= */
+        /* ============================================
+           RESET
+        ============================================ */
 
         * {
             box-sizing: border-box;
@@ -21,124 +25,297 @@
             padding: 0;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             min-height: 100vh;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family:
+                Inter,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
+
+            color: #1a1a1a;
+
             background:
-                linear-gradient(135deg, #071a2f 0%, #0b2d4d 50%, #071a2f 100%);
+                radial-gradient(
+                    circle at top left,
+                    rgba(219, 0, 7, 0.16),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #f8f9fb 0%,
+                    #ffffff 50%,
+                    #f1f3f6 100%
+                );
+        }
+
+
+        /* ============================================
+           HEADER
+        ============================================ */
+
+        .site-header {
+            width: 100%;
+            background:
+                linear-gradient(
+                    135deg,
+                    #db0007 0%,
+                    #a50000 100%
+                );
+
             color: #ffffff;
+
+            box-shadow:
+                0 4px 18px rgba(0, 0, 0, 0.18);
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .site-header::after {
+            content: "";
+            position: absolute;
+            width: 260px;
+            height: 260px;
+
+            right: -100px;
+            top: -140px;
+
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .header-content {
+            width: min(1100px, 92%);
+            margin: 0 auto;
+
+            padding: 28px 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-badge {
+            width: 54px;
+            height: 54px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 50%;
+
+            background: #ffffff;
+            color: #db0007;
+
+            font-size: 25px;
+            font-weight: 900;
+
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .brand-text h1 {
+            font-size: clamp(1.35rem, 3vw, 2rem);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text p {
+            margin-top: 4px;
+
+            font-size: 0.88rem;
+
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+
+        /* ============================================
+           MAIN CONTENT
+        ============================================ */
+
+        main {
+            width: min(1100px, 92%);
+            margin: 0 auto;
+        }
+
+        .quiz-intro {
+            text-align: center;
+
+            padding: 42px 20px 28px;
+        }
+
+        .quiz-intro h2 {
+            color: #202020;
+
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+
+            font-weight: 800;
+
+            letter-spacing: -0.8px;
+        }
+
+        .quiz-intro p {
+            max-width: 600px;
+
+            margin: 10px auto 0;
+
+            color: #626873;
+
+            font-size: 1rem;
+
+            line-height: 1.6;
+        }
+
+
+        /* ============================================
+           FLASHCARD
+        ============================================ */
+
+        .flashcard-container {
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 30px 15px;
+
+            padding: 10px 0 35px;
         }
-
-        /* ================================
-           MAIN CONTAINER
-        ================================= */
-
-        .quiz-container {
-            width: 100%;
-            max-width: 900px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 24px;
-            padding: 35px;
-            box-shadow:
-                0 25px 60px rgba(0, 0, 0, 0.35),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px);
-        }
-
-        /* ================================
-           HEADER
-        ================================= */
-
-        .quiz-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .quiz-header h1 {
-            font-size: clamp(2rem, 5vw, 3.2rem);
-            font-weight: 800;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .quiz-header h1 span {
-            color: #ef233c;
-        }
-
-        .quiz-header p {
-            color: #cbd5e1;
-            font-size: 1.05rem;
-        }
-
-        /* ================================
-           FLASHCARD
-        ================================= */
 
         .flashcard {
+            width: min(560px, 100%);
+
             background: #ffffff;
-            color: #14213d;
-            border-radius: 20px;
-            padding: 25px;
-            margin: 0 auto 30px;
-            max-width: 700px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+            border-radius: 24px;
+
+            padding: 30px;
+
+            border: 1px solid rgba(0, 0, 0, 0.07);
+
+            box-shadow:
+                0 20px 45px rgba(0, 0, 0, 0.09);
+
+            position: relative;
+
+            overflow: hidden;
         }
 
-        .flashcard:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        .flashcard::before {
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            top: 0;
+
+            width: 100%;
+            height: 6px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #db0007,
+                    #a50000,
+                    #db0007
+                );
         }
 
-        .flag-container {
+
+        /* ============================================
+           FLAG AREA
+        ============================================ */
+
+        .flag-section {
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 220px;
-            padding: 15px;
-            background: #f1f5f9;
-            border-radius: 16px;
+
             margin-bottom: 25px;
         }
 
-        .flag-container img {
+        .flag-frame {
+            width: min(340px, 90%);
+
+            min-height: 210px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f8f9fb;
+
+            border-radius: 18px;
+
+            border: 1px solid #e5e7eb;
+
+            padding: 20px;
+
+            box-shadow:
+                inset 0 0 0 1px rgba(255,255,255,0.7);
+        }
+
+        .flag-frame img {
             max-width: 100%;
-            width: 360px;
-            max-height: 220px;
+            max-height: 170px;
+
             object-fit: contain;
+
+            display: block;
+
             border-radius: 8px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+
+            filter:
+                drop-shadow(
+                    0 8px 12px rgba(0, 0, 0, 0.12)
+                );
         }
 
-        /* ================================
+
+        /* ============================================
            QUESTION
-        ================================= */
+        ============================================ */
 
-        .question {
+        .question-label {
             text-align: center;
-            margin-bottom: 22px;
+
+            margin-bottom: 20px;
+
+            color: #34373c;
+
+            font-size: 1.05rem;
+
+            font-weight: 700;
         }
 
-        .question h2 {
-            font-size: clamp(1.2rem, 3vw, 1.6rem);
-            color: #14213d;
-        }
 
-        /* ================================
-           RADIO BUTTON ANSWERS
-        ================================= */
+        /* ============================================
+           RADIO ANSWERS
+        ============================================ */
 
         .answers {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            max-width: 600px;
-            margin: 0 auto;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 12px;
+
+            margin-top: 15px;
         }
 
         .answer-option {
@@ -147,280 +324,562 @@
 
         .answer-option input[type="radio"] {
             position: absolute;
+
             opacity: 0;
+
             pointer-events: none;
         }
 
         .answer-option label {
+            min-height: 58px;
+
+            padding: 12px 15px;
+
             display: flex;
             align-items: center;
-            justify-content: center;
-            min-height: 58px;
-            padding: 12px 18px;
-            background: #f8fafc;
-            color: #14213d;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
+
+            border: 2px solid #e5e7eb;
+
+            border-radius: 14px;
+
+            background: #ffffff;
+
+            color: #35383d;
+
+            font-size: 0.95rem;
+
+            font-weight: 650;
+
             cursor: pointer;
-            text-align: center;
+
             transition:
-                background 0.2s ease,
                 border-color 0.2s ease,
-                transform 0.2s ease,
-                color 0.2s ease;
-        }
-
-        .answer-option label:hover {
-            border-color: #ef233c;
-            transform: translateY(-2px);
-            background: #fff5f6;
-        }
-
-        .answer-option input[type="radio"]:checked + label {
-            background: #ef233c;
-            border-color: #ef233c;
-            color: #ffffff;
-            box-shadow: 0 6px 15px rgba(239, 35, 60, 0.3);
-        }
-
-        /* ================================
-           BUTTON
-        ================================= */
-
-        .submit-area {
-            text-align: center;
-            margin-top: 25px;
-        }
-
-        button {
-            border: none;
-            border-radius: 12px;
-            padding: 14px 35px;
-            background: #ef233c;
-            color: #ffffff;
-            font-size: 1rem;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(239, 35, 60, 0.3);
-            transition:
-                transform 0.2s ease,
                 background 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease,
                 box-shadow 0.2s ease;
         }
 
-        button:hover {
-            background: #d90429;
-            transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(239, 35, 60, 0.4);
+        .answer-option label::before {
+            content: "";
+
+            width: 18px;
+            height: 18px;
+
+            flex: 0 0 18px;
+
+            margin-right: 10px;
+
+            border: 2px solid #b8bdc5;
+
+            border-radius: 50%;
+
+            transition: all 0.2s ease;
         }
 
-        button:active {
+        .answer-option label:hover {
+            border-color: #db0007;
+
+            background: #fff7f7;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 6px 15px rgba(219, 0, 7, 0.08);
+        }
+
+        .answer-option input[type="radio"]:checked + label {
+            border-color: #db0007;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fff1f2,
+                    #ffffff
+                );
+
+            color: #a50000;
+
+            box-shadow:
+                0 6px 16px rgba(219, 0, 7, 0.12);
+        }
+
+        .answer-option input[type="radio"]:checked + label::before {
+            border-color: #db0007;
+
+            background:
+                radial-gradient(
+                    circle,
+                    #db0007 0 45%,
+                    transparent 48%
+                );
+        }
+
+
+        /* ============================================
+           BUTTON
+        ============================================ */
+
+        .button-area {
+            margin-top: 24px;
+        }
+
+        button,
+        input[type="submit"] {
+            width: 100%;
+
+            border: none;
+
+            padding: 15px 22px;
+
+            border-radius: 14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #db0007,
+                    #a50000
+                );
+
+            color: #ffffff;
+
+            font-size: 1rem;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 8px 18px rgba(165, 0, 0, 0.22);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                filter 0.2s ease;
+        }
+
+        button:hover,
+        input[type="submit"]:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 24px rgba(165, 0, 0, 0.28);
+
+            filter: brightness(1.04);
+        }
+
+        button:active,
+        input[type="submit"]:active {
             transform: translateY(0);
         }
 
-        /* ================================
-           RESULTS
-        ================================= */
 
-        .results {
+        /* ============================================
+           SCORE PANEL
+        ============================================ */
+
+        .score-panel {
+            width: min(560px, 100%);
+
+            margin: 0 auto 50px;
+
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 25px;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 14px;
         }
 
-        .result-box {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 14px;
+        .score-box {
+            background: #ffffff;
+
+            border: 1px solid #e6e8eb;
+
+            border-radius: 16px;
+
             padding: 18px;
+
             text-align: center;
+
+            box-shadow:
+                0 8px 22px rgba(0, 0, 0, 0.06);
         }
 
-        .result-box span {
+        .score-box span {
             display: block;
-            color: #94a3b8;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
 
-        .result-box strong {
-            font-size: 1.7rem;
-            color: #ffffff;
-        }
+            color: #737983;
 
-        /* ================================
-           FEEDBACK
-        ================================= */
+            font-size: 0.8rem;
 
-        #feedback {
-            text-align: center;
-            min-height: 28px;
-            margin-top: 18px;
-            font-size: 1rem;
             font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.8px;
         }
 
-        /* ================================
+        .score-box strong {
+            display: block;
+
+            margin-top: 5px;
+
+            color: #db0007;
+
+            font-size: 1.7rem;
+
+            font-weight: 850;
+        }
+
+
+        /* ============================================
            FOOTER
-        ================================= */
+        ============================================ */
 
         footer {
+            border-top: 1px solid #e5e7eb;
+
+            background: #ffffff;
+
+            padding: 25px 20px;
+
             text-align: center;
-            margin-top: 25px;
-            color: #94a3b8;
-            font-size: 0.85rem;
+
+            color: #777d86;
+
+            font-size: 0.82rem;
         }
 
-        /* ================================
-           RESPONSIVE DESIGN
-        ================================= */
+
+        /* ============================================
+           ACCESSIBILITY
+        ============================================ */
+
+        .answer-option input[type="radio"]:focus-visible + label,
+        button:focus-visible {
+            outline: 3px solid rgba(219, 0, 7, 0.35);
+
+            outline-offset: 3px;
+        }
+
+
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
 
         @media (max-width: 650px) {
 
-            body {
-                padding: 15px;
-                align-items: flex-start;
+            .header-content {
+                justify-content: center;
+
+                text-align: center;
             }
 
-            .quiz-container {
-                padding: 22px 16px;
-                margin-top: 15px;
-                border-radius: 18px;
+            .brand {
+                flex-direction: column;
+            }
+
+            .quiz-intro {
+                padding-top: 30px;
             }
 
             .flashcard {
-                padding: 16px;
+                padding: 22px 18px;
+                border-radius: 20px;
             }
 
-            .flag-container {
-                min-height: 170px;
+            .flag-frame {
+                min-height: 175px;
             }
 
-            .flag-container img {
-                max-height: 170px;
+            .flag-frame img {
+                max-height: 135px;
             }
 
             .answers {
                 grid-template-columns: 1fr;
             }
 
-            .results {
+            .score-panel {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+
+        @media (max-width: 400px) {
+
+            .brand-badge {
+                width: 46px;
+                height: 46px;
+                font-size: 21px;
+            }
+
+            .score-panel {
                 grid-template-columns: 1fr;
             }
         }
 
-        @media (max-width: 400px) {
 
-            .quiz-header h1 {
-                font-size: 1.8rem;
-            }
+        /* ============================================
+           REDUCED MOTION
+        ============================================ */
 
-            .quiz-header p {
-                font-size: 0.9rem;
-            }
+        @media (prefers-reduced-motion: reduce) {
 
-            .answer-option label {
-                min-height: 52px;
-                font-size: 0.95rem;
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+
+                transition-duration: 0.01ms !important;
+
+                animation-duration: 0.01ms !important;
             }
         }
     </style>
 </head>
 
+
 <body>
 
-    <main class="quiz-container">
+    <!-- ============================================
+         HEADER
+    ============================================ -->
 
-        <header class="quiz-header">
-            <h1>Flag <span>Flashcards</span></h1>
-            <p>Identify the country represented by the flag.</p>
-        </header>
+    <header class="site-header">
 
-        <section class="flashcard">
+        <div class="header-content">
 
-            <div class="flag-container">
-                <!-- Keep the image ID/src used by your main.js -->
-                <img id="flagImage"
-                     src=""
-                     alt="Country flag">
-            </div>
+            <div class="brand">
 
-            <div class="question">
-                <h2>Which country does this flag represent?</h2>
-            </div>
-
-            <!-- RADIO BUTTONS KEPT -->
-            <div class="answers">
-
-                <div class="answer-option">
-                    <input type="radio"
-                           id="answer1"
-                           name="answer"
-                           value="">
-                    <label for="answer1"></label>
+                <div class="brand-badge">
+                    ⚽
                 </div>
 
-                <div class="answer-option">
-                    <input type="radio"
-                           id="answer2"
-                           name="answer"
-                           value="">
-                    <label for="answer2"></label>
-                </div>
+                <div class="brand-text">
 
-                <div class="answer-option">
-                    <input type="radio"
-                           id="answer3"
-                           name="answer"
-                           value="">
-                    <label for="answer3"></label>
-                </div>
+                    <h1>Arsenal Flag Flashcards</h1>
 
-                <div class="answer-option">
-                    <input type="radio"
-                           id="answer4"
-                           name="answer"
-                           value="">
-                    <label for="answer4"></label>
+                    <p>
+                        Test your football knowledge
+                    </p>
+
                 </div>
 
             </div>
 
-            <div class="submit-area">
-                <button type="button" id="submitAnswer">
-                    Submit Answer
-                </button>
-            </div>
+        </div>
 
-            <div id="feedback"></div>
+    </header>
+
+
+    <!-- ============================================
+         MAIN
+    ============================================ -->
+
+    <main>
+
+        <section class="quiz-intro">
+
+            <h2>
+                Can You Identify the Flag?
+            </h2>
+
+            <p>
+                Choose the country represented by the
+                flag shown below.
+            </p>
 
         </section>
 
-        <section class="results">
 
-            <div class="result-box">
-                <span>Correct Answers</span>
-                <strong id="correctAnswers">0</strong>
-            </div>
+        <!-- ========================================
+             FLASHCARD
+        ======================================== -->
 
-            <div class="result-box">
-                <span>Total Attempts</span>
-                <strong id="totalAttempts">0</strong>
+        <section class="flashcard-container">
+
+            <div class="flashcard">
+
+                <div class="flag-section">
+
+                    <div class="flag-frame">
+
+                        <!--
+                            KEEP YOUR EXISTING FLAG IMAGE
+                            OR LET main.js UPDATE IT
+                        -->
+
+                        <img
+                            id="flag"
+                            src=""
+                            alt="Country flag"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <p class="question-label">
+                    Select your answer
+                </p>
+
+
+                <!-- ==================================
+                     RADIO BUTTON ANSWERS
+                     KEEP THESE FOR main.js
+                ================================== -->
+
+                <div class="answers">
+
+                    <div class="answer-option">
+
+                        <input
+                            type="radio"
+                            name="answer"
+                            id="answer1"
+                            value=""
+                        >
+
+                        <label for="answer1">
+                            <span id="answer1Text">
+                                Answer 1
+                            </span>
+                        </label>
+
+                    </div>
+
+
+                    <div class="answer-option">
+
+                        <input
+                            type="radio"
+                            name="answer"
+                            id="answer2"
+                            value=""
+                        >
+
+                        <label for="answer2">
+                            <span id="answer2Text">
+                                Answer 2
+                            </span>
+                        </label>
+
+                    </div>
+
+
+                    <div class="answer-option">
+
+                        <input
+                            type="radio"
+                            name="answer"
+                            id="answer3"
+                            value=""
+                        >
+
+                        <label for="answer3">
+                            <span id="answer3Text">
+                                Answer 3
+                            </span>
+                        </label>
+
+                    </div>
+
+
+                    <div class="answer-option">
+
+                        <input
+                            type="radio"
+                            name="answer"
+                            id="answer4"
+                            value=""
+                        >
+
+                        <label for="answer4">
+                            <span id="answer4Text">
+                                Answer 4
+                            </span>
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div class="button-area">
+
+                    <button
+                        type="button"
+                        id="submitAnswer">
+                        Submit Answer
+                    </button>
+
+                </div>
+
             </div>
 
         </section>
 
-        <footer>
-            Flag Flashcards &bull; Test your geography knowledge
-        </footer>
+
+        <!-- ========================================
+             SCORE
+        ======================================== -->
+
+        <section class="score-panel">
+
+            <div class="score-box">
+
+                <span>
+                    Correct Answers
+                </span>
+
+                <strong id="correctAnswers">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="score-box">
+
+                <span>
+                    Total Attempts
+                </span>
+
+                <strong id="totalAttempts">
+                    0
+                </strong>
+
+            </div>
+
+        </section>
 
     </main>
 
-</body>
 
+    <!-- ============================================
+         FOOTER
+    ============================================ -->
+
+    <footer>
+
+        <p>
+            Arsenal Flag Flashcards
+            &nbsp;•&nbsp;
+            Football Knowledge Challenge
+        </p>
+
+    </footer>
+
+
+    <!-- ============================================
+         MAIN JAVASCRIPT
+         KEEP THIS REFERENCE
+    ============================================ -->
+
+    <script src="main.js"></script>
+
+</body>
 </html>
