@@ -378,7 +378,7 @@ function checkCorrect(){
 
 window.addEventListener("load", function () {
     register();
-    //random();
+    random();
 }, false);
 
 
