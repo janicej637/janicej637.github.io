@@ -10,7 +10,7 @@ var correctAnswer = 0; 							// Position of correct answer
 var optA, optB, optC, optD; 					// Option variables for each radio button
 var arrRadios = new Array(); 					// Create array of radio options
 var arrCountry = new Array(); 					// Create array of countries
-var radio; 	// Radio buttons group
+var radio radio = document.getElementsByName('rad'); 	// Radio buttons group
 
 // Create URL base and append variables
 var baseUrl = 'https://www.worldometers.info/images/flags/original/';
@@ -224,10 +224,7 @@ function register(){
 	var button1 = document.getElementById("submit");
 	button1.addEventListener("click", checkCorrect, false);
 	
-   radio = document.getElementsByName('rad');
-	
-
-	optA = document.getElementById("opt_a");
+   	optA = document.getElementById("opt_a");
 	optB= document.getElementById("opt_b");
 	optC = document.getElementById("opt_c");
 	optD = document.getElementById("opt_d");
