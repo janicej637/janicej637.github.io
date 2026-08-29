@@ -1,23 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <meta name="description"
-          content="Arsenal Flag Flashcards - Test your football knowledge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Arsenal Flag Flashcards</title>
 
-    <!-- Main JavaScript - KEEP THIS REFERENCE -->
-    <script src="main.js" defer></script>
-
     <style>
-        /* ============================================
+        /* =====================================================
            RESET
-        ============================================ */
+        ===================================================== */
 
         * {
             box-sizing: border-box;
@@ -25,297 +18,128 @@
             padding: 0;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        /* =====================================================
+           PAGE
+        ===================================================== */
 
         body {
             min-height: 100vh;
-            font-family:
-                Inter,
-                "Segoe UI",
-                Roboto,
-                Helvetica,
-                Arial,
-                sans-serif;
-
-            color: #1a1a1a;
-
+            font-family: "Segoe UI", Arial, Helvetica, sans-serif;
             background:
-                radial-gradient(
-                    circle at top left,
-                    rgba(219, 0, 7, 0.16),
-                    transparent 35%
-                ),
                 linear-gradient(
                     135deg,
-                    #f8f9fb 0%,
-                    #ffffff 50%,
-                    #f1f3f6 100%
+                    #8b0000 0%,
+                    #db0007 45%,
+                    #f4f4f4 45%,
+                    #ffffff 100%
                 );
+            color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px 15px 50px;
         }
 
+        /* =====================================================
+           MAIN CONTAINER
+        ===================================================== */
 
-        /* ============================================
-           HEADER
-        ============================================ */
-
-        .site-header {
+        .page-container {
             width: 100%;
-            background:
-                linear-gradient(
-                    135deg,
-                    #db0007 0%,
-                    #a50000 100%
-                );
-
-            color: #ffffff;
-
-            box-shadow:
-                0 4px 18px rgba(0, 0, 0, 0.18);
-
-            position: relative;
-            overflow: hidden;
+            max-width: 900px;
         }
 
-        .site-header::after {
-            content: "";
-            position: absolute;
-            width: 260px;
-            height: 260px;
+        /* =====================================================
+           HEADER
+        ===================================================== */
 
-            right: -100px;
-            top: -140px;
-
-            border-radius: 50%;
-
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .header-content {
-            width: min(1100px, 92%);
-            margin: 0 auto;
-
-            padding: 28px 0;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            gap: 20px;
-
-            position: relative;
-            z-index: 1;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .brand-badge {
-            width: 54px;
-            height: 54px;
-
-            display: grid;
-            place-items: center;
-
-            border-radius: 50%;
-
+        .header {
             background: #ffffff;
-            color: #db0007;
-
-            font-size: 25px;
-            font-weight: 900;
-
-            box-shadow:
-                0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .brand-text h1 {
-            font-size: clamp(1.35rem, 3vw, 2rem);
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .brand-text p {
-            margin-top: 4px;
-
-            font-size: 0.88rem;
-
-            color: rgba(255, 255, 255, 0.85);
-        }
-
-
-        /* ============================================
-           MAIN CONTENT
-        ============================================ */
-
-        main {
-            width: min(1100px, 92%);
-            margin: 0 auto;
-        }
-
-        .quiz-intro {
+            border-radius: 18px 18px 0 0;
+            padding: 25px 30px;
             text-align: center;
-
-            padding: 42px 20px 28px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-bottom: 5px solid #db0007;
         }
 
-        .quiz-intro h2 {
-            color: #202020;
-
-            font-size: clamp(1.6rem, 4vw, 2.4rem);
-
+        .header h1 {
+            color: #db0007;
+            font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 800;
-
-            letter-spacing: -0.8px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
         }
 
-        .quiz-intro p {
-            max-width: 600px;
-
-            margin: 10px auto 0;
-
-            color: #626873;
-
+        .header p {
+            color: #555;
             font-size: 1rem;
-
-            line-height: 1.6;
         }
 
-
-        /* ============================================
-           FLASHCARD
-        ============================================ */
+        /* =====================================================
+           FLASHCARD AREA
+        ===================================================== */
 
         .flashcard-container {
-            display: flex;
-            justify-content: center;
-
-            padding: 10px 0 35px;
-        }
-
-        .flashcard {
-            width: min(560px, 100%);
-
-            background: #ffffff;
-
-            border-radius: 24px;
-
+            background: rgba(255, 255, 255, 0.96);
             padding: 30px;
-
-            border: 1px solid rgba(0, 0, 0, 0.07);
-
-            box-shadow:
-                0 20px 45px rgba(0, 0, 0, 0.09);
-
-            position: relative;
-
-            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
-        .flashcard::before {
-            content: "";
+        .question-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.10);
+            border: 1px solid #e5e5e5;
+        }
 
-            position: absolute;
+        /* =====================================================
+           QUESTION
+        ===================================================== */
 
-            left: 0;
-            top: 0;
+        .question-card h2 {
+            color: #333;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            margin-bottom: 22px;
+        }
 
+        /* =====================================================
+           FLAG
+        ===================================================== */
+
+        .flag-container {
             width: 100%;
-            height: 6px;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    #db0007,
-                    #a50000,
-                    #db0007
-                );
-        }
-
-
-        /* ============================================
-           FLAG AREA
-        ============================================ */
-
-        .flag-section {
-            display: flex;
-            justify-content: center;
-
-            margin-bottom: 25px;
-        }
-
-        .flag-frame {
-            width: min(340px, 90%);
-
-            min-height: 210px;
-
+            min-height: 220px;
             display: flex;
             align-items: center;
             justify-content: center;
-
-            background: #f8f9fb;
-
-            border-radius: 18px;
-
-            border: 1px solid #e5e7eb;
-
+            background: #f7f7f7;
+            border-radius: 14px;
             padding: 20px;
-
-            box-shadow:
-                inset 0 0 0 1px rgba(255,255,255,0.7);
+            margin-bottom: 25px;
+            border: 1px solid #e8e8e8;
         }
 
-        .flag-frame img {
-            max-width: 100%;
-            max-height: 170px;
-
-            object-fit: contain;
-
+        .flag-container img {
             display: block;
-
+            max-width: 100%;
+            width: auto;
+            max-height: 220px;
+            object-fit: contain;
             border-radius: 8px;
-
-            filter:
-                drop-shadow(
-                    0 8px 12px rgba(0, 0, 0, 0.12)
-                );
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
 
-
-        /* ============================================
-           QUESTION
-        ============================================ */
-
-        .question-label {
-            text-align: center;
-
-            margin-bottom: 20px;
-
-            color: #34373c;
-
-            font-size: 1.05rem;
-
-            font-weight: 700;
-        }
-
-
-        /* ============================================
-           RADIO ANSWERS
-        ============================================ */
+        /* =====================================================
+           ANSWERS
+        ===================================================== */
 
         .answers {
             display: grid;
-
-            grid-template-columns:
-                repeat(2, minmax(0, 1fr));
-
-            gap: 12px;
-
-            margin-top: 15px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 20px;
         }
 
         .answer-option {
@@ -324,317 +148,196 @@
 
         .answer-option input[type="radio"] {
             position: absolute;
-
             opacity: 0;
-
             pointer-events: none;
         }
 
         .answer-option label {
-            min-height: 58px;
-
-            padding: 12px 15px;
-
             display: flex;
             align-items: center;
-
-            border: 2px solid #e5e7eb;
-
-            border-radius: 14px;
-
+            justify-content: center;
+            min-height: 58px;
+            padding: 12px 18px;
             background: #ffffff;
-
-            color: #35383d;
-
-            font-size: 0.95rem;
-
-            font-weight: 650;
-
+            color: #333;
+            border: 2px solid #d8d8d8;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-
             transition:
-                border-color 0.2s ease,
                 background 0.2s ease,
+                border-color 0.2s ease,
                 color 0.2s ease,
                 transform 0.2s ease,
                 box-shadow 0.2s ease;
         }
 
-        .answer-option label::before {
-            content: "";
-
-            width: 18px;
-            height: 18px;
-
-            flex: 0 0 18px;
-
-            margin-right: 10px;
-
-            border: 2px solid #b8bdc5;
-
-            border-radius: 50%;
-
-            transition: all 0.2s ease;
-        }
-
         .answer-option label:hover {
             border-color: #db0007;
-
-            background: #fff7f7;
-
+            color: #db0007;
             transform: translateY(-2px);
-
-            box-shadow:
-                0 6px 15px rgba(219, 0, 7, 0.08);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.10);
         }
 
         .answer-option input[type="radio"]:checked + label {
+            background: #db0007;
             border-color: #db0007;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #fff1f2,
-                    #ffffff
-                );
-
-            color: #a50000;
-
-            box-shadow:
-                0 6px 16px rgba(219, 0, 7, 0.12);
-        }
-
-        .answer-option input[type="radio"]:checked + label::before {
-            border-color: #db0007;
-
-            background:
-                radial-gradient(
-                    circle,
-                    #db0007 0 45%,
-                    transparent 48%
-                );
-        }
-
-
-        /* ============================================
-           BUTTON
-        ============================================ */
-
-        .button-area {
-            margin-top: 24px;
-        }
-
-        button,
-        input[type="submit"] {
-            width: 100%;
-
-            border: none;
-
-            padding: 15px 22px;
-
-            border-radius: 14px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #db0007,
-                    #a50000
-                );
-
             color: #ffffff;
-
-            font-size: 1rem;
-
-            font-weight: 800;
-
-            cursor: pointer;
-
-            box-shadow:
-                0 8px 18px rgba(165, 0, 0, 0.22);
-
-            transition:
-                transform 0.2s ease,
-                box-shadow 0.2s ease,
-                filter 0.2s ease;
+            box-shadow: 0 5px 14px rgba(219, 0, 7, 0.25);
         }
 
-        button:hover,
-        input[type="submit"]:hover {
-            transform: translateY(-2px);
-
-            box-shadow:
-                0 12px 24px rgba(165, 0, 0, 0.28);
-
-            filter: brightness(1.04);
-        }
-
-        button:active,
-        input[type="submit"]:active {
-            transform: translateY(0);
-        }
-
-
-        /* ============================================
-           SCORE PANEL
-        ============================================ */
-
-        .score-panel {
-            width: min(560px, 100%);
-
-            margin: 0 auto 50px;
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(2, 1fr);
-
-            gap: 14px;
-        }
-
-        .score-box {
-            background: #ffffff;
-
-            border: 1px solid #e6e8eb;
-
-            border-radius: 16px;
-
-            padding: 18px;
-
-            text-align: center;
-
-            box-shadow:
-                0 8px 22px rgba(0, 0, 0, 0.06);
-        }
-
-        .score-box span {
-            display: block;
-
-            color: #737983;
-
-            font-size: 0.8rem;
-
-            font-weight: 700;
-
-            text-transform: uppercase;
-
-            letter-spacing: 0.8px;
-        }
-
-        .score-box strong {
-            display: block;
-
-            margin-top: 5px;
-
-            color: #db0007;
-
-            font-size: 1.7rem;
-
-            font-weight: 850;
-        }
-
-
-        /* ============================================
-           FOOTER
-        ============================================ */
-
-        footer {
-            border-top: 1px solid #e5e7eb;
-
-            background: #ffffff;
-
-            padding: 25px 20px;
-
-            text-align: center;
-
-            color: #777d86;
-
-            font-size: 0.82rem;
-        }
-
-
-        /* ============================================
-           ACCESSIBILITY
-        ============================================ */
-
-        .answer-option input[type="radio"]:focus-visible + label,
-        button:focus-visible {
+        .answer-option input[type="radio"]:focus-visible + label {
             outline: 3px solid rgba(219, 0, 7, 0.35);
-
             outline-offset: 3px;
         }
 
+        /* =====================================================
+           BUTTON
+        ===================================================== */
 
-        /* ============================================
-           RESPONSIVE
-        ============================================ */
+        .submit-area {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 14px 34px;
+            background: #db0007;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(219, 0, 7, 0.25);
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            background: #a90005;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(219, 0, 7, 0.30);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* =====================================================
+           SCORE PANEL
+        ===================================================== */
+
+        .score-panel {
+            background: #ffffff;
+            border-radius: 0 0 18px 18px;
+            padding: 25px 30px 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .score-card {
+            background: #f7f7f7;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #e3e3e3;
+        }
+
+        .score-card h3 {
+            color: #777;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .score-card p {
+            color: #db0007;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+            text-align: center;
+            margin-top: 18px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+        }
+
+        /* =====================================================
+           RESPONSIVE DESIGN
+        ===================================================== */
 
         @media (max-width: 650px) {
 
-            .header-content {
-                justify-content: center;
-
-                text-align: center;
+            body {
+                padding: 15px 10px 30px;
             }
 
-            .brand {
-                flex-direction: column;
+            .header {
+                padding: 20px 15px;
             }
 
-            .quiz-intro {
-                padding-top: 30px;
+            .flashcard-container {
+                padding: 18px;
             }
 
-            .flashcard {
-                padding: 22px 18px;
-                border-radius: 20px;
+            .question-card {
+                padding: 18px;
             }
 
-            .flag-frame {
-                min-height: 175px;
+            .flag-container {
+                min-height: 180px;
             }
 
-            .flag-frame img {
-                max-height: 135px;
+            .flag-container img {
+                max-height: 180px;
             }
 
             .answers {
                 grid-template-columns: 1fr;
+                gap: 10px;
             }
 
             .score-panel {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-
-        @media (max-width: 400px) {
-
-            .brand-badge {
-                width: 46px;
-                height: 46px;
-                font-size: 21px;
+                padding: 18px;
             }
 
-            .score-panel {
+            .score-grid {
                 grid-template-columns: 1fr;
             }
         }
 
+        @media (max-width: 400px) {
 
-        /* ============================================
-           REDUCED MOTION
-        ============================================ */
+            .header h1 {
+                font-size: 1.8rem;
+            }
 
-        @media (prefers-reduced-motion: reduce) {
+            .question-card h2 {
+                font-size: 1.1rem;
+            }
 
-            *,
-            *::before,
-            *::after {
-                scroll-behavior: auto !important;
+            .flag-container {
+                min-height: 150px;
+            }
 
-                transition-duration: 0.01ms !important;
-
-                animation-duration: 0.01ms !important;
+            .flag-container img {
+                max-height: 150px;
             }
         }
     </style>
@@ -643,176 +346,100 @@
 
 <body>
 
-    <!-- ============================================
-         HEADER
-    ============================================ -->
+    <div class="page-container">
 
-    <header class="site-header">
+        <!-- HEADER -->
+        <header class="header">
 
-        <div class="header-content">
-
-            <div class="brand">
-
-                <div class="brand-badge">
-                    ⚽
-                </div>
-
-                <div class="brand-text">
-
-                    <h1>Arsenal Flag Flashcards</h1>
-
-                    <p>
-                        Test your football knowledge
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </header>
-
-
-    <!-- ============================================
-         MAIN
-    ============================================ -->
-
-    <main>
-
-        <section class="quiz-intro">
-
-            <h2>
-                Can You Identify the Flag?
-            </h2>
+            <h1>Arsenal Flag Flashcards</h1>
 
             <p>
-                Choose the country represented by the
-                flag shown below.
+                Test your football knowledge by identifying the country
+                represented by each flag.
             </p>
 
-        </section>
+        </header>
 
 
-        <!-- ========================================
-             FLASHCARD
-        ======================================== -->
+        <!-- MAIN FLASHCARD AREA -->
+        <main class="flashcard-container">
 
-        <section class="flashcard-container">
+            <div class="question-card">
 
-            <div class="flashcard">
+                <h2>
+                    Submit the country represented by the flag below.
+                </h2>
 
-                <div class="flag-section">
 
-                    <div class="flag-frame">
+                <!-- FLAG -->
+                <div class="flag-container">
 
-                        <!--
-                            KEEP YOUR EXISTING FLAG IMAGE
-                            OR LET main.js UPDATE IT
-                        -->
-
-                        <img
-                            id="flag"
-                            src=""
-                            alt="Country flag"
-                        >
-
-                    </div>
+                    <!--
+                        Keep your existing JavaScript-controlled
+                        image here.
+                    -->
+                    <img
+                        id="flag"
+                        src=""
+                        alt="Country flag"
+                    >
 
                 </div>
 
 
-                <p class="question-label">
-                    Select your answer
-                </p>
-
-
-                <!-- ==================================
-                     RADIO BUTTON ANSWERS
-                     KEEP THESE FOR main.js
-                ================================== -->
-
+                <!-- ANSWER OPTIONS -->
                 <div class="answers">
 
                     <div class="answer-option">
-
                         <input
                             type="radio"
-                            name="answer"
                             id="answer1"
+                            name="answer"
                             value=""
                         >
-
-                        <label for="answer1">
-                            <span id="answer1Text">
-                                Answer 1
-                            </span>
-                        </label>
-
+                        <label for="answer1"></label>
                     </div>
 
 
                     <div class="answer-option">
-
                         <input
                             type="radio"
-                            name="answer"
                             id="answer2"
+                            name="answer"
                             value=""
                         >
-
-                        <label for="answer2">
-                            <span id="answer2Text">
-                                Answer 2
-                            </span>
-                        </label>
-
+                        <label for="answer2"></label>
                     </div>
 
 
                     <div class="answer-option">
-
                         <input
                             type="radio"
-                            name="answer"
                             id="answer3"
+                            name="answer"
                             value=""
                         >
-
-                        <label for="answer3">
-                            <span id="answer3Text">
-                                Answer 3
-                            </span>
-                        </label>
-
+                        <label for="answer3"></label>
                     </div>
 
 
                     <div class="answer-option">
-
                         <input
                             type="radio"
-                            name="answer"
                             id="answer4"
+                            name="answer"
                             value=""
                         >
-
-                        <label for="answer4">
-                            <span id="answer4Text">
-                                Answer 4
-                            </span>
-                        </label>
-
+                        <label for="answer4"></label>
                     </div>
 
                 </div>
 
 
-                <div class="button-area">
+                <!-- SUBMIT -->
+                <div class="submit-area">
 
-                    <button
-                        type="button"
-                        id="submitAnswer">
+                    <button type="button" id="submitAnswer">
                         Submit Answer
                     </button>
 
@@ -820,66 +447,50 @@
 
             </div>
 
-        </section>
+        </main>
 
 
-        <!-- ========================================
-             SCORE
-        ======================================== -->
-
+        <!-- SCORE -->
         <section class="score-panel">
 
-            <div class="score-box">
+            <div class="score-grid">
 
-                <span>
-                    Correct Answers
-                </span>
+                <div class="score-card">
 
-                <strong id="correctAnswers">
-                    0
-                </strong>
+                    <h3>Correct Answers</h3>
 
-            </div>
+                    <p id="correctAnswers">
+                        0
+                    </p>
+
+                </div>
 
 
-            <div class="score-box">
+                <div class="score-card">
 
-                <span>
-                    Total Attempts
-                </span>
+                    <h3>Total Attempts</h3>
 
-                <strong id="totalAttempts">
-                    0
-                </strong>
+                    <p id="totalAttempts">
+                        0
+                    </p>
+
+                </div>
 
             </div>
 
         </section>
 
-    </main>
 
-
-    <!-- ============================================
-         FOOTER
-    ============================================ -->
-
-    <footer>
-
-        <p>
+        <footer class="footer">
             Arsenal Flag Flashcards
-            &nbsp;•&nbsp;
-            Football Knowledge Challenge
-        </p>
+        </footer>
 
-    </footer>
+    </div>
 
 
-    <!-- ============================================
-         MAIN JAVASCRIPT
-         KEEP THIS REFERENCE
-    ============================================ -->
-
+    <!-- KEEP YOUR EXISTING JAVASCRIPT -->
     <script src="main.js"></script>
 
 </body>
+
 </html>
