@@ -739,29 +739,31 @@
     <!-- Options -->
             <form>        
           
-<label class="answer" for="a"  id="opt_a">
+<label class="answer"   id="opt_a">
      <input type="radio" id="a" name="rad" > 
       <span id="option1"></span>
 </label>
 
          
-                <label  class="answer" for="b"  id="opt_b">
+                <label  class="answer"  id="opt_b">
      <input type="radio" id="b" name="rad" > 
                       <span id="option2"></span>
 </label>
                 
 
-<label class="answer" for="c" id="opt_c">
+<label class="answer"  id="opt_c">
   <input type="radio" id="c" name="rad" > 
       <span id="option3"></span>
 </label>
                 
 
-<label class="answer"  for="d"  id="opt_d">
+<label class="answer"   id="opt_d">
  <input type="radio" id="d" name="rad" >  
       <span id="option4"></span>
 </label>
 
+  <button onclick="checkAnswer()">Submit Answer</button>
+    <button onclick="nextPlayer()">Next Player</button>
 
           </form>       
 
@@ -778,7 +780,7 @@
 
             <button
                 type="button"
-                id="submit">
+                id="submit" class="button">
 
                 Submit Answer
 
@@ -787,7 +789,7 @@
 
             <button
                 type="button"
-                id="next">
+                id="next" class="button">
 
                 Next Flag
 
