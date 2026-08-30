@@ -32,21 +32,26 @@ body {
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     box-sizing: border-box;
 }
-
+/* Heads-Up Display (HUD) - Center Aligned */
 .hud {
     display: flex;
- 
-    align-items: center;
-    margin-bottom: 16px;
+    flex-direction: column; /* Stack logo above controls */
+    align-items: center;    /* Center everything horizontally */
+    gap: 12px;              /* Spacing between logo and controls */
+    margin-bottom: 24px;
     font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 1.5rem;      /* Slightly larger font for prominence */
 }
 
+/* Ensure the control buttons wrap nicely under the logo */
 .hud-controls {
     display: flex;
-    align: center;
+    align-items: center;
+    justify-content: center;
     gap: 12px;
+    width: 100%;
 }
+
 
 .hud-toggle {
     background-color: #334155;
