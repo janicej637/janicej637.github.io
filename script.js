@@ -139,4 +139,59 @@ function evaluateMatrixScoreStatus() {
             setTimeout(() => osc.frequency.setValueAtTime(659.25, ctx.currentTime), 80); // E5
             gain.gain.setValueAtTime(0.04, ctx.currentTime);
             osc.connect(gain);
-gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime + 0.2);} catch(e) {}}}function applyCharacterPersonalization() {const nameInput = document.getElementById("user-name").value.trim();const roleInput = document.getElementById("user-role").value;if(nameInput !== "") {bookState.userName = nameInput;bookState.userRole = roleInput;renderActivePage();try {const ctx = new (window.AudioContext || window.webkitAudioContext)();const osc = ctx.createOscillator();const gain = ctx.createGain();osc.frequency.setValueAtTime(698.46, ctx.currentTime);gain.gain.setValueAtTime(0.04, ctx.currentTime);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime + 0.1);} catch(e) {}}}function shiftPage(offset) {bookState.currentPageIndex += offset;renderActivePage();}function controlSpeechRuntime() {if (bookState.audioPlaying) {stopCurrentSpeech();} else {const textToRead = getProcessedText(bookState.storyPages[bookState.currentPageIndex].template);bookState.speechUtterance = new SpeechSynthesisUtterance(textToRead);bookState.speechUtterance.rate = 0.95;bookState.speechUtterance.pitch = 1.1;bookState.speechUtterance.onend = () => {bookState.audioPlaying = false;btnAudio.innerText = "🔊 Read Aloud";};window.speechSynthesis.speak(bookState.speechUtterance);bookState.audioPlaying = true;btnAudio.innerText = "🛑 Stop Reading";}}function stopCurrentSpeech() {window.speechSynthesis.cancel();bookState.audioPlaying = false;btnAudio.innerText = "🔊 Read Aloud";}function compileCustomLabJellybean() {const coreSpark = document.getElementById("color-mix").value;const challengeTarget = document.getElementById("problem-mix").value;let magicResolutionText = "";switch(challengeTarget) {case "bullying":magicResolutionText = Jayla activates her Jellybean Vision! Highlighting a target grid, she fires the ${coreSpark} projectile from her Jellybean Gauntlet while ${bookState.userName} locks down coordinates. It bursts into a shimmering wave of neon glitter, creating a giant sandbox for everyone to share.;break;case "environment":magicResolutionText = Jayla triggers advanced Jellybean Generation! She creates a special customized variant, allowing her and ${bookState.userRole} ${bookState.userName} to plant the ${coreSpark} treat deep into the soil to instantly sprout rainbow sunflowers across the town square!;break;case "animals":magicResolutionText = Jayla spots a liquorice-styled line path using her lenses! Firing a soft ${coreSpark} cloud from her gauntlet, she creates a bouncy safety cushion below the tree while ${bookState.userName} guides the scared kitten down safely.;break;}craftedJellyText.innerText = magicResolutionText;labOutput.classList.remove("hidden");}function exportHighQualityStoryPDF() {stopCurrentSpeech();const pdfWindow = window.open("", "_blank");if (!pdfWindow) return alert("Please allow popups to view your printable book format!");let htmlContent = <!DOCTYPE html> <html> <head> <title>The Adventures of Jayla Jellybean</title> <style> body { font-family: 'Comic Sans MS', sans-serif; padding: 40px; color: #4c1d95; line-height: 1.6; max-width: 700px; margin: auto; } .book-header { text-align: center; border-bottom: 5px solid #fbcfe8; padding-bottom: 20px; margin-bottom: 40px; } h1 { color: #ec4899; margin: 0; } .page-block { background: #ffffff; border: 3px solid #fbcfe8; border-radius: 16px; padding: 30px; margin-bottom: 40px; page-break-inside: avoid; } .chapter-title { color: #8b5cf6; margin-top: 0; font-size: 1.5rem; border-bottom: 1px dashed #fbcfe8; padding-bottom: 8px; } .narrative { font-size: 1.2rem; text-align: justify; } .footer { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 50px; } </style> </head> <body> <div class="book-header"> <h1>🌈 The Adventures of Jayla Jellybean</h1> <p>Superpower Edition featuring Co-Inventor ${bookState.userName}</p> </div>;bookState.storyPages.forEach(p => {htmlContent += <div class="page-block"> <div class="chapter-title">${p.chapter}: ${p.title}</div> <p class="narrative">${getProcessedText(p.template)}</p> </div>;});htmlContent += <div class="footer">© 2026 Jayla Jellybean Universe | All Rights Reserved.</div> <script> window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); }; <\/script> </body> </html>;pdfWindow.document.write(htmlContent);pdfWindow.document.close();}
+gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime + 0.2);} catch(e) {}}}function applyCharacterPersonalization() {const nameInput = document.getElementById("user-name").value.trim();const roleInput = document.getElementById("user-role").value;if(nameInput !== "") {bookState.userName = nameInput;bookState.userRole = roleInput;renderActivePage();try {const ctx = new (window.AudioContext || window.webkitAudioContext)();const osc = ctx.createOscillator();const gain = ctx.createGain();osc.frequency.setValueAtTime(698.46, ctx.currentTime);gain.gain.setValueAtTime(0.04, ctx.currentTime);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime + 0.1);} catch(e) {}}}function shiftPage(offset) {bookState.currentPageIndex += offset;renderActivePage();}function controlSpeechRuntime() {if (bookState.audioPlaying) {stopCurrentSpeech();} else {const textToRead = getProcessedText(bookState.storyPages[bookState.currentPageIndex].template);bookState.speechUtterance = new SpeechSynthesisUtterance(textToRead);bookState.speechUtterance.rate = 0.95;bookState.speechUtterance.pitch = 1.1;bookState.speechUtterance.onend = () => {bookState.audioPlaying = false;btnAudio.innerText = "🔊 Read Aloud";};window.speechSynthesis.speak(bookState.speechUtterance);bookState.audioPlaying = true;btnAudio.innerText = "🛑 Stop Reading";}}function stopCurrentSpeech() {window.speechSynthesis.cancel();bookState.audioPlaying = false;btnAudio.innerText = "🔊 Read Aloud";}function compileCustomLabJellybean() {const coreSpark = document.getElementById("color-mix").value;const challengeTarget = document.getElementById("problem-mix").value;let magicResolutionText = "";switch(challengeTarget) {case "bullying":magicResolutionText = Jayla activates her Jellybean Vision! Highlighting a target grid, she fires the ${coreSpark} projectile from her Jellybean Gauntlet while ${bookState.userName} locks down coordinates. It bursts into a shimmering wave of neon glitter, creating a giant sandbox for everyone to share.;break;case "environment":magicResolutionText = Jayla triggers advanced Jellybean Generation! She creates a special customized variant, allowing her and ${bookState.userRole} ${bookState.userName} to plant the ${coreSpark} treat deep into the soil to instantly sprout rainbow sunflowers across the town square!;break;case "animals":magicResolutionText = Jayla spots a liquorice-styled line path using her lenses! Firing a soft ${coreSpark} cloud from her gauntlet, she creates a bouncy safety cushion below the tree while ${bookState.userName} guides the scared kitten down safely.;break;}craftedJellyText.innerText = magicResolutionText;labOutput.classList.remove("hidden");}
+
+
+
+function exportHighQualityStoryPDF() {
+    stopCurrentSpeech();
+    const pdfWindow = window.open("", "_blank");
+    if (!pdfWindow) return alert("Please allow popups to view your printable book format!");
+    
+    let htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>The Adventures of Jayla Jellybean</title>
+            <style>
+                body { font-family: 'Comic Sans MS', sans-serif; padding: 40px; color: #4c1d95; line-height: 1.6; max-width: 700px; margin: auto; }
+                .book-header { text-align: center; border-bottom: 5px solid #fbcfe8; padding-bottom: 20px; margin-bottom: 40px; }
+                h1 { color: #ec4899; margin: 0; }
+                .page-block { background: #ffffff; border: 3px solid #fbcfe8; border-radius: 16px; padding: 30px; margin-bottom: 40px; page-break-inside: avoid; }
+                .chapter-title { color: #8b5cf6; margin-top: 0; font-size: 1.5rem; border-bottom: 1px dashed #fbcfe8; padding-bottom: 8px; }
+                .narrative { font-size: 1.2rem; text-align: justify; }
+                .footer { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 50px; }
+            </style>
+        </head>
+        <body>
+            <div class="book-header">
+                <h1>🌈 The Adventures of Jayla Jellybean</h1>
+                <p>Superpower Edition featuring Co-Inventor ${bookState.userName}</p>
+            </div>
+    `;
+
+    bookState.storyPages.forEach(p => {
+        htmlContent += `
+            <div class="page-block">
+                <div class="chapter-title">${p.chapter}: ${p.title}</div>
+                <p class="narrative">${getProcessedText(p.template)}</p>
+            </div>
+        `;
+    });
+
+    htmlContent += `
+            <div class="footer">© 2026 Jayla Jellybean Universe | All Rights Reserved.</div>
+            <script>
+                window.onload = function() {
+                    window.print();
+                    setTimeout(function() { window.close(); }, 500);
+                };
+            <\/script>
+        </body>
+        </html>
+    `;
+
+    pdfWindow.document.write(htmlContent);
+    pdfWindow.document.close();
+}
