@@ -5,7 +5,6 @@ const bookState = {
     speechUtterance: null,
     userName: "Alex",
     userRole: "Chief Assistant",
-    // Base book structures with tracking markers for clean runtime replacement adjustments
     storyPages: [
         {
             chapter: "Chapter 1",
@@ -15,24 +14,31 @@ const bookState = {
         },
         {
             chapter: "Chapter 2",
+            title: "The Festival of Joy",
+            visualClass: "visual-p4",
+            template: "The annual Coral Springs Candy Festival was in full swing! The air buzzed with excitement, a cacophony of laughter, chattering children, and the rhythmic thump of a candy cane band. Jayla Jellybean, alongside her brilliant {ROLE} {NAME}, skipped down the street, their colorful costumes sparkling in the afternoon sun. Everywhere they looked, smiles bloomed like sunflowers. Children chased after them, their pockets overflowing with the exotic jellybeans they'd dispensed from their trusty Jellybean Gauntlet. A grumpy old man, known for his perpetual frown, even cracked a grin as Jayla offered him a sunshine-yellow jellybean that made him erupt in a fit of giggles (it was her new 'laughter-laced lemon drop' formula). This was Jayla and {NAME}'s happy place. The joy they brought to others fueled them like a sugar rush! Today, their pockets held not just jellybeans, but tiny bursts of happiness – a joke-telling jellybean for the shy boy, a melody-infused jellybean for the aspiring musician, a confidence-boosting jellybean for the girl about to give a speech. As they rounded a corner, a group of children crowded around a crying toddler. The little one clutched a crumpled ice cream cone, tears streaming down his face. Jayla's heart melted. Kneeling down, she offered the toddler a glimmering rainbow jellybean. 'This isn't just any jellybean,' {NAME} explained with a wink. 'It's a pick-me-up jellybean, filled with all the happiness of a summer day!' The toddler, hesitant at first, popped the jellybean into his mouth. His eyes widened in surprise, then crinkled at the corners in a hesitant smile. A giggle escaped his lips, growing louder until he was full-on belly laughing, the memory of his melted ice cream forgotten. The group of children erupted in cheers! This was the magic of their powers – not just solving problems, but creating moments of pure, unadulterated joy. As the sun dipped below the horizon, painting the sky in hues of orange and pink, Jayla and {NAME} knew this was just another chapter in their ongoing quest to spread happiness, one delicious jellybean at a time."
+        },
+        {
+            chapter: "Chapter 3",
             title: "The Stormy Playground",
             visualClass: "visual-p2",
             template: "Walking to the local playground, Jayla and {NAME} noticed their friend Toby sitting all alone under a dark rain cloud on the swings. A group of older kids had accidentally kicked a soccer ball over his structural drawing. Toby was crying, and his drawing was fading under the gray drizzle."
         },
         {
-            chapter: "Chapter 3",
+            chapter: "Chapter 4",
             title: "The Neon Magic Pop",
             visualClass: "visual-p3",
             template: "Jayla reached into her candy pouch and pulled out a shimmering Neon Blue bean, while {NAME} cheered her on. 'Here, eat this!' Jayla smiled. Toby took a bite, and instantly, a glowing energy umbrella popped over his head, blocking out the rain! The blue sparkles flew onto the other kids' soccer ball, transforming it into a soft bubble."
         },
         {
-            chapter: "Chapter 4",
+            chapter: "Chapter 5",
             title: "Stronger Together",
-            visualClass: "visual-p4",
+            visualClass: "visual-p1",
             template: "Seeing the sparkling bubble, the other children laughed and ran over to help Toby rebuild his block fortress. Jayla and her brilliant {ROLE}, {NAME}, watched happily as new friendships grew right before their eyes. With a snap and a pop, her pouch began charging up with new sugar magic!"
         }
     ]
 };
+
 
 // Selectors Matrix
 const pBadge = document.getElementById("page-badge");
@@ -178,7 +184,7 @@ function exportHighQualityStoryPDF() {
         </head>
         <body>
             <div class="book-header">
-                <h1>🌈 The Adventures of Jayla Jellybean</h1>
+                <h1>The Adventures of Jayla Jellybean</h1>
                 <p>Special Interactive Edition for Co-Inventor ${bookState.userName}</p>
             </div>
     `;
