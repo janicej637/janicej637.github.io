@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Adventures of Jayla Jellybean</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="book-universe">
+        <!-- HUD Header -->
+        <header class="story-hud">
+            <div class="logo">🌈 Jayla Jellybean</div>
+            <div class="hud-actions">
+                <button id="btn-audio" class="hud-btn">🔊 Read Aloud</button>
+                <button id="btn-pdf" class="hud-btn highlight">💾 Save PDF Book</button>
+            </div>
+        </header>
+
+        <!-- Onboarding Character Personalizer -->
+        <section class="customizer-box">
+            <h4>🎭 Personalize the Story Adventure!</h4>
+            <div class="customizer-inputs">
+                <input type="text" id="user-name" placeholder="Enter your name (e.g., Alex)" value="Alex">
+                <select id="user-role">
+                    <option value="Chief Assistant">Chief Assistant 🧪</option>
+                    <option value="Magic Scientist">Magic Scientist 🧠</option>
+                    <option value="Best Friend">Best Friend 🪄</option>
+                </select>
+                <button id="btn-apply" class="btn-craft">Update Story ✨</button>
+            </div>
+        </section>
+
+        <!-- Main Book Component -->
+        <main class="book-container">
+            <div id="story-book" class="book-page">
+                <div class="page-content">
+                    <span class="chapter-badge" id="page-badge">Chapter 1</span>
+                    <h2 class="page-title" id="story-title">The Sparkly Kitchen</h2>
+                    <div class="story-layout">
+                        <div class="illustration-container">
+                            <div id="story-art" class="magic-art visual-visual"></div>
+                        </div>
+                        <p class="story-text" id="story-narrative">Loading the magical journey...</p>
+                    </div>
+                </div>
+
+                <!-- Page Navigation Controls -->
+                <div class="page-nav-row">
+                    <button id="btn-prev" class="nav-arrow" disabled>◀ Back</button>
+                    <span id="page-indicator" class="page-num">Page 1 / 4</span>
+                    <button id="btn-next" class="nav-arrow">Next ▶</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Dynamic Lab Engine Interface -->
+        <section class="lab-container">
+            <h3>🧪 Jayla's Magical Jellybean Lab</h3>
+            <p>Help Jayla invent a new magical solution! Combine ingredients below to power up her next adventure.</p>
+            
+            <div class="lab-controls">
+                <div class="control-box">
+                    <label for="color-mix">Choose Jellybean Spark:</label>
+                    <select id="color-mix">
+                        <option value="🔴 Ruby Red">Ruby Red (Gives Endless Courage)</option>
+                        <option value="🔵 Neon Blue">Neon Blue (Calms Stormy Weather)</option>
+                        <option value="🟢 Emerald Green">Emerald Green (Grows Plants Instantly)</option>
+                        <option value="🟡 Sunshine Yellow">Sunshine Yellow (Brings Bright Smiles)</option>
+                    </select>
+                </div>
+
+                <div class="control-box">
+                    <label for="problem-mix">Select Target Problem:</label>
+                    <select id="problem-mix">
+                        <option value="bullying">Help someone feeling lonely at recess</option>
+                        <option value="environment">Clean up a withered community garden</option>
+                        <option value="animals">Help a scared kitten down from a tall oak tree</option>
+                    </select>
+                </div>
+
+                <button id="btn-craft" class="btn-craft">✨ Craft Magical Jellybean</button>
+            </div>
+
+            <div id="lab-output" class="lab-output-box hidden">
+                <h4>✨ Alchemy Success! ✨</h4>
+                <p id="crafted-jelly-text"></p>
+            </div>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
