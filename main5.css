@@ -44,7 +44,7 @@ body {
 
 .hud-controls {
     display: flex;
-    align-items: center;
+    align: center;
     gap: 12px;
 }
 
