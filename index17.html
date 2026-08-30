@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <p>
+    <a href=" https://janicej637.github.io/" style="color: #000080;"><img src="https://clipart-library.com/data_images/469756.png" alt="Home" width="80" height="30"> </a>
+  </p>
+    <title>MindQuest: Discover Your Learning Power!</title>
+    <link rel="stylesheet" href="main5.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header HUD -->
+        <header class="hud">
+            <div class="logo">🧠 MindQuest</div>
+            <div class="hud-controls">
+                <button id="btn-sfx" class="hud-toggle">🔊 SFX: ON</button>
+                <div class="score-board">XP: <span id="xp-counter">0</span></div>
+            </div>
+        </header>
+
+        <!-- Progress Tracker Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <!-- Start Screen Component -->
+        <div id="start-screen" class="screen active">
+            <h1>Ready for your MindQuest?</h1>
+            <p>Answer 5 quick, interactive mini-challenges to discover how your brain naturally processes information and unlock your ultimate learning superpower!</p>
+            <button id="btn-start" class="btn-primary">Launch Quest 🚀</button>
+            <p class="disclaimer">Note: This is an educational tool designed to highlight processing preferences and retention styles, not a formal medical diagnosis.</p>
+        </div>
+
+        <!-- Quiz Screen Component -->
+        <div id="quiz-screen" class="screen">
+            <div class="quest-card">
+                <span class="badge" id="question-number">Challenge 1 of 5</span>
+                <h2 id="question-text">Loading challenge...</h2>
+                <div id="options-container" class="options-grid"></div>
+            </div>
+        </div>
+
+        <!-- Results Dashboard Component -->
+        <div id="results-screen" class="screen">
+            <div class="victory-banner">🎉 Quest Complete! 🎉</div>
+            <h2>Your Cognitive Processing Profile</h2>
+            <p id="profile-summary">Analyzing your brain mechanics...</p>
+
+            <div class="strategy-section">
+                <h3>🛠️ Your Ultimate Retention Toolkit</h3>
+                <ul id="strategy-list"></ul>
+            </div>
+
+            <div class="action-row">
+                <button id="btn-export" class="btn-primary">📋 Print / Save Strategy PDF</button>
+                <button id="btn-restart" class="btn-secondary">Play Again 🔄</button>
+            </div>
+        </div>
+    </div>
+    <script src="main5.js"></script>
+</body>
+</html>
