@@ -241,7 +241,7 @@ p { color: var(--text-muted); line-height: 1.6; }
       #ffffff 70%
     );
 
-  color: #35a978;
+  color: var(--accent);
 
   box-shadow:
     0 12px 35px rgba(47, 172, 117, .18),
