@@ -216,7 +216,37 @@ p { color: var(--text-muted); line-height: 1.6; }
     border-radius: 16px;
     margin-top: 20px;
 }
+.score {
+  position: relative;
 
+  width: 190px;
+  height: 190px;
+
+  margin: 25px auto;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 4px;
+
+  border: 12px solid #55c99a;
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      #edfff6 0%,
+      #ffffff 70%
+    );
+
+  color: #35a978;
+
+  box-shadow:
+    0 12px 35px rgba(47, 172, 117, .18),
+    inset 0 0 20px rgba(85, 201, 154, .12);
+}
 .strategy-section li { margin-bottom: 12px; line-height: 1.5; }
 .disclaimer { font-size: 0.75rem; margin-top: 30px; }
 
