@@ -244,12 +244,58 @@ summaryText = "You possess a powerful Spatial Mind! Your brain locks onto geomet
     strategies.forEach(strat => {const li = document.createElement("li");
                                  li.innerHTML = strat;strategyList.appendChild(li);
                                 });
-}function saveAsHighFidelityPDF() {
+}
+
+function saveAsHighFidelityPDF() {
     triggerVictorySFX();
     const report = state.generatedReport;
     if (!report.summary) return;
+
     const printWindow = window.open("", "_blank");
-    printWindow.document.write(<html> <head> <title>MindQuest Strategy Report</title> <style> body { font-family: Arial, sans-serif; padding: 40px; color: #1e293b; max-width: 800px; margin: auto; } .header { border-bottom: 4px solid #8b5cf6; padding-bottom: 20px; margin-bottom: 30px; } h1 { color: #8b5cf6; margin: 0; } .section { background: #f8fafc; border: 1px solid #e2eafc; border-radius: 12px; padding: 24px; margin-bottom: 24px; } h3 { margin-top: 0; color: #0f172a; border-bottom: 1px solid #e2eafc; padding-bottom: 8px; } li { margin-bottom: 12px; line-height: 1.6; } .footer { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 40px; border-top: 1px solid #e2eafc; padding-top: 16px; } </style> </head> <body> <div class="header"> <h1>🧠 MindQuest Cognitive Report</h1> <p>Personalized Learning Strategy Blueprint</p> </div> <div class="section"> <h3>Cognitive Profile Overview</h3> <p>${report.summary}</p> </div> <div class="section"> <h3>🛠️ Personalized Retention Toolkit</h3> <ul>${report.strategies.map(s =>${s}).join("")}</ul> </div> <div class="footer"> Metrics Matrix: Visual[${state.scores.visual}] Auditory[${state.scores.auditory}] Kinesthetic[${state.scores.kinesthetic}] Structured[${state.scores.structured}] | Final Score: ${state.xp} XP<br> Educational assessment toolkit overview. Saved: ${new Date().toLocaleDateString()} </div> <script> window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); }; <\/script> </body> </html> );
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>MindQuest Strategy Report</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 40px; color: #1e293b; max-width: 800px; margin: auto; }
+                .header { border-bottom: 4px solid #8b5cf6; padding-bottom: 20px; margin-bottom: 30px; }
+                h1 { color: #8b5cf6; margin: 0; }
+                .section { background: #f8fafc; border: 1px solid #e2eafc; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+                h3 { margin-top: 0; color: #0f172a; border-bottom: 1px solid #e2eafc; padding-bottom: 8px; }
+                li { margin-bottom: 12px; line-height: 1.6; }
+                .footer { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 40px; border-top: 1px solid #e2eafc; padding-top: 16px; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>🧠 MindQuest Cognitive Report</h1>
+                <p>Personalized Learning Strategy Blueprint</p>
+            </div>
+            <div class="section">
+                <h3>Cognitive Profile Overview</h3>
+                <p>${report.summary}</p>
+            </div>
+            <div class="section">
+                <h3>🛠️ Personalized Retention Toolkit</h3>
+                <ul>
+                    ${report.strategies.map(s => `<li>${s}</li>`).join("")}
+                </ul>
+            </div>
+            <div class="footer">
+                Metrics Matrix: Visual[${state.scores.visual}] Auditory[${state.scores.auditory}] Kinesthetic[${state.scores.kinesthetic}] Structured[${state.scores.structured}] | Final Score: ${state.xp} XP<br>
+                Educational assessment toolkit overview. Saved: ${new Date().toLocaleDateString()}
+            </div>
+            <script>
+                window.onload = function() {
+                    window.print();
+                    setTimeout(function() { window.close(); }, 500);
+                };
+            <\/script>
+        </body>
+        </html>
+    `);
     printWindow.document.close();
 }
 
