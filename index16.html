@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>World Ocean Aquarium</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    background: #031b2b;
+    color: white;
+}
+
+/* =========================================
+   TITLE
+   ========================================= */
+
+.header {
+    text-align: center;
+    padding: 25px 15px 12px;
+    position: relative;
+    z-index: 20;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 7vw, 4.5rem);
+    font-weight: 900;
+    letter-spacing: 2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #7df9ff,
+            #ffffff,
+            #72e9ff,
+            #b7faff
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+
+    text-shadow:
+        0 0 20px rgba(92, 235, 255, .35);
+}
+
+.header p {
+    margin: 5px auto;
+    max-width: 650px;
+    color: #bcecf7;
+    font-size: 1rem;
+}
+
+/* =========================================
+   AQUARIUM
+   ========================================= */
+
+.aquarium {
+    position: relative;
+
+    width: min(1200px, 94%);
+    height: 700px;
+
+    margin: 10px auto 30px;
+
+    overflow: hidden;
+
+    border: 12px solid #164e68;
+    border-radius: 35px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #062b46 0%,
+            #07547a 40%,
+            #08789a 70%,
+            #04435d 100%
+        );
+
+    box-shadow:
+        0 0 0 5px #082f43,
+        0 25px 60px rgba(0,0,0,.55),
+        inset 0 0 80px rgba(0,0,0,.30);
+}
+
+/* Sunlight */
+
+.aquarium::before {
+    content: "";
+
+    position: absolute;
+
+    top: -100px;
+    left: 12%;
+
+    width: 260px;
+    height: 850px;
+
+    background: rgba(255,255,255,.08);
+
+    transform: rotate(18deg);
+
+    filter: blur(15px);
+
+    pointer-events: none;
+}
+
+/* =========================================
+   WATER LIGHT
+   ========================================= */
+
+.light {
+    position: absolute;
+
+    top: 0;
+
+    width: 80px;
+    height: 500px;
+
+    background: rgba(155,245,255,.06);
+
+    transform: rotate(20deg);
+
+    filter: blur(10px);
+
+    animation: lightMove 8s ease-in-out infinite alternate;
+}
+
+.light.one {
+    left: 15%;
+}
+
+.light.two {
+    left: 55%;
+    animation-delay: 2s;
+}
+
+.light.three {
+    left: 80%;
+    animation-delay: 4s;
+}
+
+@keyframes lightMove {
+
+    from {
+        transform: translateX(-30px) rotate(20deg);
+        opacity: .3;
+    }
+
+    to {
+        transform: translateX(40px) rotate(20deg);
+        opacity: .8;
+    }
+}
+
+/* =========================================
+   BUBBLES
+   ========================================= */
+
+.bubble {
+    position: absolute;
+
+    bottom: -30px;
+
+    width: 10px;
+    height: 10px;
+
+    border: 1px solid rgba(255,255,255,.7);
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.08);
+
+    animation: bubbleRise linear infinite;
+
+    pointer-events: none;
+}
+
+@keyframes bubbleRise {
+
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: .8;
+    }
+
+    50% {
+        transform: translateY(-350px) translateX(25px);
+    }
+
+    100% {
+        transform: translateY(-750px) translateX(-20px);
+        opacity: 0;
+    }
+}
+
+/* =========================================
+   FISH
+   ========================================= */
+
+.fish {
+    position: absolute;
+
+    width: 110px;
+    height: 70px;
+
+    cursor: pointer;
+
+    z-index: 8;
+
+    transition:
+        filter .2s ease,
+        transform .2s ease;
+}
+
+.fish:hover {
+    filter:
+        drop-shadow(0 0 15px white)
+        brightness(1.2);
+
+    transform: scale(1.12);
+}
+
+/* Fish body */
+
+.body {
+    position: absolute;
+
+    left: 15px;
+    top: 10px;
+
+    width: 75px;
+    height: 50px;
+
+    border-radius:
+        55% 45% 45% 55%;
+
+    background: var(--fish-color);
+
+    border: 2px solid rgba(0,0,0,.2);
+}
+
+/* Tail */
+
+.tail {
+    position: absolute;
+
+    left: 77px;
+    top: 8px;
+
+    width: 0;
+    height: 0;
+
+    border-top: 27px solid transparent;
+    border-bottom: 27px solid transparent;
+    border-right: 42px solid var(--fish-color);
+
+    transform: rotate(2deg);
+}
+
+/* Eye */
+
+.eye {
+    position: absolute;
+
+    left: 28px;
+    top: 23px;
+
+    width: 11px;
+    height: 11px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    border: 2px solid #111;
+}
+
+.eye::after {
+    content: "";
+
+    position: absolute;
+
+    left: 2px;
+    top: 2px;
+
+    width: 4px;
+    height: 4px;
+
+    background: black;
+
+    border-radius: 50%;
+}
+
+/* Fins */
+
+.fin {
+    position: absolute;
+
+    left: 45px;
+    top: 2px;
+
+    width: 25px;
+    height: 15px;
+
+    background: var(--fish-color);
+
+    border-radius: 70% 10% 10% 10%;
+
+    transform: rotate(-25deg);
+}
+
+/* Fish animation */
+
+.swim {
+    animation:
+        swimAcross 20s linear infinite,
+        bob 2.8s ease-in-out infinite;
+}
+
+.swim.reverse {
+    animation-name:
+        swimReverse,
+        bob;
+}
+
+@keyframes swimAcross {
+
+    0% {
+        left: -140px;
+    }
+
+    100% {
+        left: calc(100% + 140px);
+    }
+}
+
+@keyframes swimReverse {
+
+    0% {
+        left: calc(100% + 140px);
+    }
+
+    100% {
+        left: -140px;
+    }
+}
+
+@keyframes bob {
+
+    0%,100% {
+        margin-top: 0;
+    }
+
+    50% {
+        margin-top: -15px;
+    }
+}
+
+/* =========================================
+   INDIVIDUAL FISH COLORS
+   ========================================= */
+
+.clown {
+    --fish-color: #ff7b22;
+}
+
+.tang {
+    --fish-color: #087eff;
+}
+
+.yellow {
+    --fish-color: #ffd928;
+}
+
+.lion {
+    --fish-color: #d96b32;
+}
+
+.moorish {
+    --fish-color: #111827;
+}
+
+.angel {
+    --fish-color: #ffb52e;
+}
+
+.butterfly {
+    --fish-color: #ffe34a;
+}
+
+.trigger {
+    --fish-color: #31c48d;
+}
+
+.puffer {
+    --fish-color: #d8b94a;
+}
+
+.mandarin {
+    --fish-color: #ff7438;
+}
+
+/* =========================================
+   FISH LABEL
+   ========================================= */
+
+.fish-label {
+    position: absolute;
+
+    top: -27px;
+    left: 5px;
+
+    padding: 4px 8px;
+
+    border-radius: 8px;
+
+    background: rgba(0,20,35,.75);
+
+    color: white;
+
+    font-size: 11px;
+    font-weight: bold;
+
+    opacity: 0;
+
+    transition: opacity .2s;
+
+    pointer-events: none;
+}
+
+.fish:hover .fish-label {
+    opacity: 1;
+}
+
+/* =========================================
+   CORAL
+   ========================================= */
+
+.coral {
+    position: absolute;
+
+    bottom: 0;
+
+    width: 120px;
+    height: 150px;
+
+    z-index: 5;
+}
+
+.coral span {
+    position: absolute;
+
+    bottom: 0;
+
+    width: 25px;
+
+    border-radius: 20px 20px 0 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff6688,
+            #ff9f68
+        );
+
+    transform-origin: bottom;
+}
+
+.coral span:nth-child(1) {
+    left: 15px;
+    height: 100px;
+    transform: rotate(-15deg);
+}
+
+.coral span:nth-child(2) {
+    left: 45px;
+    height: 140px;
+}
+
+.coral span:nth-child(3) {
+    left: 75px;
+    height: 90px;
+    transform: rotate(14deg);
+}
+
+.coral span:nth-child(4) {
+    left: 95px;
+    height: 120px;
+    transform: rotate(20deg);
+}
+
+.coral.left {
+    left: 25px;
+}
+
+.coral.right {
+    right: 30px;
+    transform: scale(.85);
+}
+
+/* =========================================
+   SEAWEED
+   ========================================= */
+
+.seaweed {
+    position: absolute;
+
+    bottom: 0;
+
+    width: 25px;
+    height: 170px;
+
+    border-radius: 100% 0 100% 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            #0b7a58,
+            #39b982
+        );
+
+    transform-origin: bottom;
+
+    animation: seaweedWave 3s ease-in-out infinite;
+}
+
+@keyframes seaweedWave {
+
+    0%,100% {
+        transform: rotate(-4deg);
+    }
+
+    50% {
+        transform: rotate(7deg);
+    }
+}
+
+.weed1 {
+    left: 20%;
+    height: 190px;
+}
+
+.weed2 {
+    left: 24%;
+    height: 130px;
+    animation-delay: .6s;
+}
+
+.weed3 {
+    right: 20%;
+    height: 160px;
+    animation-delay: 1s;
+}
+
+/* =========================================
+   INFORMATION PANEL
+   ========================================= */
+
+.info {
+    position: absolute;
+
+    z-index: 50;
+
+    left: 50%;
+    top: 50%;
+
+    width: min(500px, 90%);
+
+    transform:
+        translate(-50%, -50%)
+        scale(.8);
+
+    opacity: 0;
+    pointer-events: none;
+
+    padding: 28px;
+
+    border-radius: 25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(4,36,56,.97),
+            rgba(5,72,91,.97)
+        );
+
+    border: 2px solid rgba(154,245,255,.5);
+
+    box-shadow:
+        0 25px 60px rgba(0,0,0,.5),
+        0 0 30px rgba(83,230,255,.18);
+
+    transition:
+        opacity .25s ease,
+        transform .25s ease;
+}
+
+.info.show {
+    opacity: 1;
+
+    pointer-events: auto;
+
+    transform:
+        translate(-50%, -50%)
+        scale(1);
+}
+
+.info h2 {
+    margin: 0 35px 10px 0;
+
+    color: #7df9ff;
+
+    font-size: 2rem;
+}
+
+.info p {
+    color: #d8f5fa;
+
+    line-height: 1.65;
+}
+
+.info .location {
+    display: inline-block;
+
+    margin-bottom: 12px;
+
+    padding: 6px 11px;
+
+    border-radius: 999px;
+
+    background: rgba(125,249,255,.12);
+
+    color: #91f5ff;
+
+    font-weight: bold;
+}
+
+.close {
+    position: absolute;
+
+    top: 15px;
+    right: 17px;
+
+    width: 35px;
+    height: 35px;
+
+    border: 0;
+    border-radius: 50%;
+
+    background: #ff6688;
+
+    color: white;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.close:hover {
+    background: #ff416d;
+}
+
+/* =========================================
+   INSTRUCTION
+   ========================================= */
+
+.instructions {
+    text-align: center;
+
+    color: #a8dce8;
+
+    font-size: .95rem;
+
+    margin-bottom: 25px;
+}
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    .aquarium {
+        height: 620px;
+
+        border-width: 7px;
+
+        border-radius: 24px;
+    }
+
+    .fish {
+        transform: scale(.8);
+    }
+
+    .fish:hover {
+        transform: scale(.9);
+    }
+
+    .info {
+        padding: 22px;
+    }
+
+    .info h2 {
+        font-size: 1.6rem;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1>🌊 World Ocean Aquarium 🐠</h1>
+
+    <p>
+        Explore colorful fish from tropical reefs and oceans around the world.
+    </p>
+
+</header>
+
+<div class="instructions">
+    🐟 Click any fish to discover its name and fun facts!
+</div>
+
+<div class="aquarium">
+
+    <!-- WATER LIGHT -->
+
+    <div class="light one"></div>
+    <div class="light two"></div>
+    <div class="light three"></div>
+
+    <!-- BUBBLES -->
+
+    <div class="bubble" style="left:8%;animation-duration:8s;"></div>
+    <div class="bubble" style="left:17%;animation-duration:11s;"></div>
+    <div class="bubble" style="left:28%;animation-duration:7s;"></div>
+    <div class="bubble" style="left:39%;animation-duration:10s;"></div>
+    <div class="bubble" style="left:51%;animation-duration:8s;"></div>
+    <div class="bubble" style="left:63%;animation-duration:12s;"></div>
+    <div class="bubble" style="left:74%;animation-duration:9s;"></div>
+    <div class="bubble" style="left:88%;animation-duration:11s;"></div>
+
+    <!-- =====================================
+         FISH
+         ===================================== -->
+
+    <div class="fish clown swim"
+         style="top:130px;animation-duration:22s;"
+         data-fish="clownfish">
+
+        <div class="fish-label">Clownfish</div>
+
+        <div class="body"></div>
+        <div class="tail"></div>
+        <div class="fin"></div>
+        <div class="eye"></div>
+
+    </div>
+
+    <div class="fish tang swim reverse"
+         style="top:240px;animation-duration:25s;"
+         data-fish="bluetang">
+
+        <div class="fish-label">Blue Tang</div>
+
+        <div class="body"></div>
+        <div class="tail"></div>
+        <div class="fin"></div>
+        <div class="eye"></div>
+
+    </div>
+
+    <div class="fish yellow swim"
+         style="top:340px;animation-duration:27s;"
+         data-fish="yellowtang">
+
+        <div class="fish-label">Yellow Tang</div>
+
+        <div class="body"></div>
+        <div class="tail"></div>
+        <div class="fin"></div>
+        <div class="eye"></div>
+
+    </div>
+
+    <div class="fish lion swim reverse"
+         style="top:420px;animation-duration:31s;"
+         data-fish="lionfish">
+
+        <div class="fish-label">Lionfish</div>
+
+        <div class="body"></div>
+        <div class="tail"></div>
+        <div class="fin"></div>
+        <div class="eye"></div>
+
+    </div>
+
+    <div class="fish moorish swim"
+         style="top:190px;animation-duration:30s;"
+         data-fish="moorish">
+
+        <div class="fish-label">Moorish Idol</div>
+
+        <div class="body"></div>
+        <div class="tail"></div>
+        <div class="fin"></div>
+        <div class="eye"></div>
+
+    </div>
+
+    <div class="fish angel swim reverse"
+         style="top:315px;animation-duration:24s;"
+         data-fish="angelfish">
+
+        <div class="fish-label">Angelfish</div>
+
+        <div class="body"></div>
+        <div class="tail"></div>
+        <div class="fin"></div>
+        <div class="eye"></div>
+
+    </div>
+
+    <div class="fish butterfly swim"
+         style="top:500px;animation-duration:29s;"
+         data-fish="butterflyfish">
+
+        <div class="fish-label">Butterflyfish</div>
+
+        <div class="body"></div>
+        <div class="tail"></div>
+        <div class="fin"></div>
+        <div class="eye"></div>
+
+    </div>
+
+    <div class="fish trigger swim reverse"
+         style="top:105px;animation-duration:34s;"
+         data-fish="triggerfish">
+
+        <div class="fish-label">Triggerfish</div>
+
+        <div class="body"></div>
+        <div class="tail"></div>
+        <div class="fin"></div>
+        <div class="eye"></div>
+
+    </div>
+
+    <div class="fish puffer swim"
+         style="top:450px;animation-duration:26s;"
+         data-fish="pufferfish">
+
+        <div class="fish-label">Pufferfish</div>
+
+        <div class="body"></div>
+        <div class="tail"></div>
+        <div class="fin"></div>
+        <div class="eye"></div>
+
+    </div>
+
+    <div class="fish mandarin swim reverse"
+         style="top:550px;animation-duration:32s;"
+         data-fish="mandarin">
+
+        <div class="fish-label">Mandarin Fish</div>
+
+        <div class="body"></div>
+        <div class="tail"></div>
+        <div class="fin"></div>
+        <div class="eye"></div>
+
+    </div>
+
+    <!-- CORAL -->
+
+    <div class="coral left">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="coral right">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- SEAWEED -->
+
+    <div class="seaweed weed1"></div>
+    <div class="seaweed weed2"></div>
+    <div class="seaweed weed3"></div>
+
+    <!-- INFORMATION PANEL -->
+
+    <div class="info" id="info">
+
+        <button class="close" id="close">×</button>
+
+        <h2 id="fishName"></h2>
+
+        <div class="location" id="fishLocation"></div>
+
+        <p id="fishFacts"></p>
+
+    </div>
+
+</div>
+
+<script>
+
+/* =========================================
+   FISH INFORMATION
+   ========================================= */
+
+const fishData = {
+
+    clownfish: {
+        name: "🐠 Clownfish",
+        location: "🌏 Indo-Pacific",
+        facts:
+        "Clownfish are famous for living among the tentacles of sea anemones. " +
+        "They have a special mucus coating that helps protect them from the anemone's sting. " +
+        "They are especially common around coral reefs in the Red Sea, Indian Ocean, and western Pacific."
+    },
+
+    bluetang: {
+        name: "💙 Blue Tang",
+        location: "🌏 Indo-Pacific",
+        facts:
+        "Blue tangs are brilliantly colored reef fish found throughout the tropical Indo-Pacific. " +
+        "They use their sharp tail spines for defense. " +
+        "They are commonly seen around coral reefs and rocky areas."
+    },
+
+    yellowtang: {
+        name: "💛 Yellow Tang",
+        location: "🌺 Hawaii & Central Pacific",
+        facts:
+        "Yellow tangs are one of the most recognizable reef fish in the Pacific Ocean. " +
+        "They are especially common around the Hawaiian Islands. " +
+        "Their bright yellow color makes them easy to spot on coral reefs."
+    },
+
+    lionfish: {
+        name: "🦁 Lionfish",
+        location: "🌊 Indo-Pacific & Caribbean",
+        facts:
+        "Lionfish have spectacular fan-like fins and venomous spines. " +
+        "They are native to the Indo-Pacific but have also become established in parts of the western Atlantic and Caribbean. " +
+        "Their dramatic appearance makes them popular in aquariums."
+    },
+
+    moorish: {
+        name: "🖤 Moorish Idol",
+        location: "🌏 Tropical Indo-Pacific",
+        facts:
+        "The Moorish idol is known for its striking black, white, yellow and gray pattern. " +
+        "It is found around coral reefs and rocky habitats across the tropical Indo-Pacific. " +
+        "Despite its popularity, it can be challenging to keep in captivity."
+    },
+
+    angelfish: {
+        name: "👼 Angelfish",
+        location: "🌎 Tropical Atlantic & Indo-Pacific",
+        facts:
+        "Marine angelfish are among the most colorful fish on coral reefs. " +
+        "Different species live in tropical oceans around the world. " +
+        "They are often found around reefs, caves, and rocky structures."
+    },
+
+    butterflyfish: {
+        name: "🦋 Butterflyfish",
+        location: "🌏 Tropical Coral Reefs",
+        facts:
+        "Butterflyfish get their name from their bright colors and delicate shapes. " +
+        "They are particularly common on coral reefs throughout the Indo-Pacific. " +
+        "Many species have eye-like markings that can confuse predators."
+    },
+
+    triggerfish: {
+        name: "🐟 Triggerfish",
+        location: "🌊 Tropical Indo-Pacific",
+        facts:
+        "Triggerfish have powerful jaws designed for crushing hard-shelled prey. " +
+        "They can raise a special dorsal spine to wedge themselves into reef crevices. " +
+        "The colorful clown triggerfish is particularly popular with divers."
+    },
+
+    pufferfish: {
+        name: "🎈 Pufferfish",
+        location: "🌏 Tropical & Temperate Oceans",
+        facts:
+        "Pufferfish are famous for inflating their bodies when threatened. " +
+        "Many species contain tetrodotoxin, a powerful toxin that makes them dangerous to eat. " +
+        "They are found in tropical and temperate marine environments around the world."
+    },
+
+    mandarin: {
+        name: "🧡 Mandarin Fish",
+        location: "🌏 Western Pacific",
+        facts:
+        "The psychedelic-looking mandarin fish is one of the most colorful fish in the ocean. " +
+        "It is native to the western Pacific, including areas around the Philippines, Indonesia and Australia. " +
+        "Its brilliant blue, orange and green markings come from unusual skin pigments."
+    }
+
+};
+
+/* =========================================
+   INTERACTION
+   ========================================= */
+
+const fish = document.querySelectorAll(".fish");
+
+const info = document.getElementById("info");
+
+const fishName =
+    document.getElementById("fishName");
+
+const fishLocation =
+    document.getElementById("fishLocation");
+
+const fishFacts =
+    document.getElementById("fishFacts");
+
+const close =
+    document.getElementById("close");
+
+
+fish.forEach(function(fishElement) {
+
+    fishElement.addEventListener("click", function() {
+
+        const type =
+            fishElement.dataset.fish;
+
+        const data =
+            fishData[type];
+
+        if (!data) return;
+
+        fishName.textContent =
+            data.name;
+
+        fishLocation.textContent =
+            data.location;
+
+        fishFacts.textContent =
+            data.facts;
+
+        info.classList.add("show");
+
+    });
+
+});
+
+
+close.addEventListener("click", function() {
+
+    info.classList.remove("show");
+
+});
+
+
+/* Close by clicking outside the information box */
+
+document.querySelector(".aquarium")
+.addEventListener("click", function(event) {
+
+    if (
+        event.target === this
+    ) {
+        info.classList.remove("show");
+    }
+
+});
+
+</script>
+
+</body>
+</html>
