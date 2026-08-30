@@ -10,7 +10,7 @@
     <div class="book-universe">
         <!-- HUD Header -->
         <header class="story-hud">
-            <div class="logo">✨ Jayla Jellybean</div>
+            <div class="logo">🌈 Jayla Jellybean</div>
             <div class="hud-actions">
                 <button id="btn-audio" class="hud-btn">🔊 Read Aloud</button>
                 <button id="btn-pdf" class="hud-btn highlight">💾 Save PDF Book</button>
@@ -31,6 +31,36 @@
             </div>
         </section>
 
+        <!-- Interactive Superpower Checklist Matrix Dashboard -->
+        <section class="power-matrix-box">
+            <h4>⚡ Hero Mission Tracker: Superpower Checklist Matrix</h4>
+            <p>Did you spot a superpower on this page? Check it off to charge the gauntlet!</p>
+            <div class="matrix-grid">
+                <label class="matrix-item" id="label-gen">
+                    <input type="checkbox" id="chk-generation">
+                    <span class="custom-chk"></span>
+                    <span>🔮 Jellybean Generation</span>
+                </label>
+                <label class="matrix-item" id="label-vision">
+                    <input type="checkbox" id="chk-vision">
+                    <span class="custom-chk"></span>
+                    <span>👁️ Jellybean Vision</span>
+                </label>
+                <label class="matrix-item" id="label-gauntlet">
+                    <input type="checkbox" id="chk-gauntlet">
+                    <span class="custom-chk"></span>
+                    <span>🥽 Jellybean Gauntlet</span>
+                </label>
+            </div>
+            <!-- Dynamic Power Charge Bar -->
+            <div class="charge-meter-container">
+                <div class="charge-label">Gauntlet Power Status:</div>
+                <div class="meter-track">
+                    <div id="power-charge-bar" class="meter-fill"></div>
+                </div>
+            </div>
+        </section>
+
         <!-- Main Book Component -->
         <main class="book-container">
             <div id="story-book" class="book-page">
@@ -39,7 +69,7 @@
                     <h2 class="page-title" id="story-title">The Sparkly Kitchen</h2>
                     <div class="story-layout">
                         <div class="illustration-container">
-                            <div id="story-art" class="magic-art visual-visual"></div>
+                            <div id="story-art" class="magic-art"></div>
                         </div>
                         <p class="story-text" id="story-narrative">Loading the magical journey...</p>
                     </div>
@@ -48,7 +78,7 @@
                 <!-- Page Navigation Controls -->
                 <div class="page-nav-row">
                     <button id="btn-prev" class="nav-arrow" disabled>◀ Back</button>
-                    <span id="page-indicator" class="page-num">Page 1 / 4</span>
+                    <span id="page-indicator" class="page-num">Page 1 / 8</span>
                     <button id="btn-next" class="nav-arrow">Next ▶</button>
                 </div>
             </div>
