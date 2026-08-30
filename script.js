@@ -166,7 +166,7 @@ function exportHighQualityStoryPDF() {
         </head>
         <body>
             <div class="book-header">
-                <h1>🌈 The Adventures of Jayla Jellybean</h1>
+                <h1>✨ The Adventures of Jayla Jellybean</h1>
                 <p>Superpower Edition featuring Co-Inventor ${bookState.userName}</p>
             </div>
     `;
