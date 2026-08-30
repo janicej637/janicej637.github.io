@@ -139,7 +139,57 @@ function evaluateMatrixScoreStatus() {
             setTimeout(() => osc.frequency.setValueAtTime(659.25, ctx.currentTime), 80); // E5
             gain.gain.setValueAtTime(0.04, ctx.currentTime);
             osc.connect(gain);
-gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime + 0.2);} catch(e) {}}}function applyCharacterPersonalization() {const nameInput = document.getElementById("user-name").value.trim();const roleInput = document.getElementById("user-role").value;if(nameInput !== "") {bookState.userName = nameInput;bookState.userRole = roleInput;renderActivePage();try {const ctx = new (window.AudioContext || window.webkitAudioContext)();const osc = ctx.createOscillator();const gain = ctx.createGain();osc.frequency.setValueAtTime(698.46, ctx.currentTime);gain.gain.setValueAtTime(0.04, ctx.currentTime);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime + 0.1);} catch(e) {}}}function shiftPage(offset) {bookState.currentPageIndex += offset;renderActivePage();}function controlSpeechRuntime() {if (bookState.audioPlaying) {stopCurrentSpeech();} else {const textToRead = getProcessedText(bookState.storyPages[bookState.currentPageIndex].template);bookState.speechUtterance = new SpeechSynthesisUtterance(textToRead);bookState.speechUtterance.rate = 0.95;bookState.speechUtterance.pitch = 1.1;bookState.speechUtterance.onend = () => {bookState.audioPlaying = false;btnAudio.innerText = "🔊 Read Aloud";};window.speechSynthesis.speak(bookState.speechUtterance);bookState.audioPlaying = true;btnAudio.innerText = "🛑 Stop Reading";}}function stopCurrentSpeech() {window.speechSynthesis.cancel();bookState.audioPlaying = false;btnAudio.innerText = "🔊 Read Aloud";}function compileCustomLabJellybean() {const coreSpark = document.getElementById("color-mix").value;const challengeTarget = document.getElementById("problem-mix").value;let magicResolutionText = "";switch(challengeTarget) {case "bullying":magicResolutionText = Jayla activates her Jellybean Vision! Highlighting a target grid, she fires the ${coreSpark} projectile from her Jellybean Gauntlet while ${bookState.userName} locks down coordinates. It bursts into a shimmering wave of neon glitter, creating a giant sandbox for everyone to share.;break;case "environment":magicResolutionText = Jayla triggers advanced Jellybean Generation! She creates a special customized variant, allowing her and ${bookState.userRole} ${bookState.userName} to plant the ${coreSpark} treat deep into the soil to instantly sprout rainbow sunflowers across the town square!;break;case "animals":magicResolutionText = Jayla spots a liquorice-styled line path using her lenses! Firing a soft ${coreSpark} cloud from her gauntlet, she creates a bouncy safety cushion below the tree while ${bookState.userName} guides the scared kitten down safely.;break;}craftedJellyText.innerText = magicResolutionText;labOutput.classList.remove("hidden");}
+gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime + 0.2);} catch(e) {}}}
+function applyCharacterPersonalization() {
+    const nameInput = document.getElementById("user-name").value.trim();
+    const roleInput = document.getElementById("user-role").value;
+    if(nameInput !== "") {
+        bookState.userName = nameInput;bookState.userRole = roleInput;renderActivePage();
+   try {const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.setValueAtTime(698.46, ctx.currentTime);
+        gain.gain.setValueAtTime(0.04, ctx.currentTime);
+        osc.connect(gain);gain.connect(ctx.destination);
+        osc.start();osc.stop(ctx.currentTime + 0.1);
+       } catch(e) {}}}
+
+function shiftPage(offset) {
+    bookState.currentPageIndex += offset;
+ renderActivePage();}
+
+function controlSpeechRuntime() {
+    if (bookState.audioPlaying) {stopCurrentSpeech();
+                                } else 
+    {const textToRead = getProcessedText(bookState.storyPages[bookState.currentPageIndex].template);
+     bookState.speechUtterance = new SpeechSynthesisUtterance(textToRead);
+     bookState.speechUtterance.rate = 0.95;
+     bookState.speechUtterance.pitch = 1.1;
+     bookState.speechUtterance.onend = () => {
+         bookState.audioPlaying = false;btnAudio.innerText = "🔊 Read Aloud";
+     };
+     window.speechSynthesis.speak(bookState.speechUtterance);
+     bookState.audioPlaying = true;btnAudio.innerText = "🛑 Stop Reading";
+    }}
+function stopCurrentSpeech() {
+    window.speechSynthesis.cancel();
+                              bookState.audioPlaying = false;
+    btnAudio.innerText = "🔊 Read Aloud";}
+
+function compileCustomLabJellybean() {
+    const coreSpark = document.getElementById("color-mix").value;
+    const challengeTarget = document.getElementById("problem-mix").value;
+    let magicResolutionText = "";
+    switch(challengeTarget) {
+        case "bullying":magicResolutionText = Jayla activates her Jellybean Vision! Highlighting a target grid, she fires the ${coreSpark} projectile from her Jellybean Gauntlet 
+            while ${bookState.userName} locks down coordinates. It bursts into a shimmering wave of neon glitter, creating a giant sandbox for everyone to share.;
+            break;
+        case "environment":magicResolutionText = Jayla triggers advanced Jellybean Generation! She creates a special customized variant, allowing her and ${bookState.userRole} ${bookState.userName} to plant the ${coreSpark} treat deep into the soil to instantly sprout rainbow sunflowers across the town square!;
+            break;
+        case "animals":magicResolutionText = 'Jayla spots a liquorice-styled line path using her lenses! Firing a soft ${coreSpark} cloud from her gauntlet, she creates a bouncy safety cushion below the tree 
+            while ${bookState.userName} guides the scared kitten down safely.';
+            break;}craftedJellyText.innerText = magicResolutionText;
+    labOutput.classList.remove("hidden");}
 
 
 
