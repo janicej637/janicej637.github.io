@@ -3,10 +3,11 @@ const state = {
     xp: 0,
     sfxEnabled: true,
     scores: { visual: 0, auditory: 0, kinesthetic: 0, structured: 0 },
-    generatedReport: { summary: "", strategies: [] }
+    generatedReport: { summary: "", strategies: [] },
+    minigameIndex: 0
 };
 
-// Precise clean synthetic sound engine via local oscillator nodes
+// Programmatic Web Audio Synthesizer Framework
 function playAudioTone(freq, waveType, length) {
     if (!state.sfxEnabled) return;
     try {
@@ -31,6 +32,9 @@ const triggerClickSFX = () => playAudioTone(580, "triangle", 0.12);
 const triggerProgressionSFX = () => {
     playAudioTone(480, "sine", 0.08);
     setTimeout(() => playAudioTone(640, "sine", 0.12), 80);
+};
+const triggerWrongSFX = () => {
+    playAudioTone(220, "sawtooth", 0.25);
 };
 const triggerVictorySFX = () => {
     playAudioTone(523, "sine", 0.15);
@@ -87,13 +91,25 @@ const quizData = [
     }
 ];
 
+// Interactive Deck of sorting cards for the bonus reinforcement round
+const minigameData = [
+    { text: "Using a text-to-speech engine to listen to a book", category: "auditory" },
+    { text: "Transforming bullet points into an interconnected mind map", category: "visual" },
+    { text: "Setting a kitchen timer for a structured 15-minute chunk", category: "structured" },
+    { text: "Doodling shapes or tracing letters while memorizing definitions", category: "kinesthetic" }
+];
+
 const startScreen = document.getElementById("start-screen");
 const quizScreen = document.getElementById("quiz-screen");
+const minigameScreen = document.getElementById("minigame-screen");
 const resultsScreen = document.getElementById("results-screen");
+
 const btnStart = document.getElementById("btn-start");
 const btnRestart = document.getElementById("btn-restart");
 const btnExport = document.getElementById("btn-export");
 const btnSfx = document.getElementById("btn-sfx");
+const activeSortCard = document.getElementById("active-sort-card");
+
 const questionNumber = document.getElementById("question-number");
 const questionText = document.getElementById("question-text");
 const optionsContainer = document.getElementById("options-container");
@@ -111,6 +127,11 @@ btnSfx.addEventListener("click", () => {
 btnStart.addEventListener("click", () => { triggerProgressionSFX(); startQuest(); });
 btnRestart.addEventListener("click", () => { triggerClickSFX(); resetQuest(); });
 btnExport.addEventListener("click", saveAsHighFidelityPDF);
+
+// Setup Zone listeners for tactile minigame validation
+document.querySelectorAll(".zone-btn").forEach(button => {
+    button.addEventListener("click", (e) => handleMinigameMatch(e.currentTarget));
+});
 
 function startQuest() {
     startScreen.classList.remove("active");
@@ -135,7 +156,7 @@ function loadQuestion() {
         optionsContainer.appendChild(card);
     });
 
-    progressBar.style.width = `${(state.currentQuestionIndex / quizData.length) * 100}%`;
+    progressBar.style.width = `${(state.currentQuestionIndex / (quizData.length + 1)) * 100}%`;
 }
 
 function handleSelection(type) {
@@ -147,13 +168,49 @@ function handleSelection(type) {
     if (state.currentQuestionIndex < quizData.length) {
         loadQuestion();
     } else {
+        launchBonusRound();
+    }
+}
+
+function launchBonusRound() {
+    quizScreen.classList.remove("active");
+    minigameScreen.classList.add("active");
+    progressBar.style.width = `${(quizData.length / (quizData.length + 1)) * 100}%`;
+    loadMinigameCard();
+}
+
+function loadMinigameCard() {
+    if (state.minigameIndex < minigameData.length) {
+        activeSortCard.innerText = `📋 Card: "${minigameData[state.minigameIndex].text}"`;
+    } else {
         showResults();
     }
 }
 
+function handleMinigameMatch(selectedTarget) {
+    const currentCard = minigameData[state.minigameIndex];
+    const userGuess = selectedTarget.getAttribute("data-zone");
+    
+    if (userGuess === currentCard.category) {
+        triggerProgressionSFX();
+        state.xp += 150; // Bonus points for validation match
+        xpCounter.innerText = state.xp;
+        selectedTarget.classList.add("correct-flash");
+    } else {
+        triggerWrongSFX();
+        selectedTarget.classList.add("wrong-flash");
+    }
+
+    setTimeout(() => {
+        selectedTarget.classList.remove("correct-flash", "wrong-flash");
+        state.minigameIndex++;
+        loadMinigameCard();
+    }, 400);
+}
+
 function showResults() {
     triggerVictorySFX();
-    quizScreen.classList.remove("active");
+    minigameScreen.classList.remove("active");
     resultsScreen.classList.add("active");
     progressBar.style.width = "100%";
 
@@ -171,55 +228,39 @@ function showResults() {
     } else {
         const dominant = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
         if (dominant === "visual") {
-            summaryText = "You possess a powerful Spatial Mind! Your brain locks onto geometric details, symbols, colors, and layout configurations rather than plain spoken blocks.";
-            strategies = [
-                "Color Coding: Use different highlighters or font layers to divide concepts visually.",
-                "Mind Mapping: Convert linear text summaries into flowcharts, diagrams, or visual node chains."
-            ];
-        } else if (dominant === "auditory") {
+summaryText = "You possess a powerful Spatial Mind! Your brain locks onto geometric details, symbols, colors, and layout configurations rather than plain spoken blocks.";
+            strategies = ["Color Coding: Use different highlighters or font layers to divide concepts visually.","Mind Mapping: Convert linear text summaries into flowcharts, diagrams, or visual node chains."];
+        } 
+        else if (dominant === "auditory") {
+            
             summaryText = "You are an Echo Weaver! Your memory thrives on rhythm, conversational cues, vocal cadences, and auditory feedback systems.";
-            strategies = [
-                "Vocal Recitation: Explain new concepts out loud to yourself or record voice memos to play back during downtime.",
-                "Text-to-Speech: Convert tracking assignments into audio readouts so you can digest information auditorily."
-            ];
+            strategies = ["Vocal Recitation: Explain new concepts out loud to yourself or record voice memos to play back during downtime.","Text-to-Speech: Convert tracking assignments into audio readouts so you can digest information auditorily."];
         } else {
             summaryText = "You are a Kinesthetic Builder! You process knowledge through touch, physical movement, real experimentation, and structural engagement.";
-            strategies = [
-                "Tactile Association: Fidget intentionally or space yourself on a standing pad while trying to remember complex topics.",
-                "Active Building: Rewrite concepts by hand onto whiteboards or use structural flashcards to sort physical piles."
-            ];
-        }
-    }
-
+            strategies = ["Tactile Association: Fidget intentionally or space yourself on a standing pad while trying to remember complex topics.","Active Building: Rewrite concepts by hand onto whiteboards or use structural flashcards to sort physical piles."];
+        }}
     state.generatedReport = { summary: summaryText, strategies: strategies };
-    profileSummary.innerText = summaryText;
-    strategyList.innerHTML = "";
-    strategies.forEach(strat => {
-        const li = document.createElement("li");
-        li.innerHTML = strat;
-        strategyList.appendChild(li);
-    });
-}
-
-// Spawns a lightweight window containing clean layouts targeted directly at print-to-PDF drivers
-function saveAsHighFidelityPDF() {
+    profileSummary.innerText = summaryText;strategyList.innerHTML = "";
+    strategies.forEach(strat => {const li = document.createElement("li");
+                                 li.innerHTML = strat;strategyList.appendChild(li);
+                                });
+}function saveAsHighFidelityPDF() {
     triggerVictorySFX();
     const report = state.generatedReport;
     if (!report.summary) return;
-
     const printWindow = window.open("", "_blank");
-
-
-printWindow.document.write(<html> <head> <title>MindQuest Strategy Report</title> <style> body { font-family: Arial, sans-serif; padding: 40px; color: #1e293b; max-width: 800px; margin: auto; } .header { border-bottom: 4px solid #8b5cf6; padding-bottom: 20px; margin-bottom: 30px; } h1 { color: #8b5cf6; margin: 0; } .section { background: #f8fafc; border: 1px solid #e2eafc; border-radius: 12px; padding: 24px; margin-bottom: 24px; } h3 { margin-top: 0; color: #0f172a; border-bottom: 1px solid #e2eafc; padding-bottom: 8px; } li { margin-bottom: 12px; line-height: 1.6; } .footer { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 40px; border-top: 1px solid #e2eafc; padding-top: 16px; } </style> </head> <body> <div class="header"> <h1>🧠 MindQuest Cognitive Report</h1> <p>Personalized Learning Strategy Blueprint</p> </div> <div class="section"> <h3>Cognitive Profile Overview</h3> <p>${report.summary}</p> </div> <div class="section"> <h3>🛠️ Personalized Retention Toolkit</h3> <ul>${report.strategies.map(s =>${s}).join("")}</ul> </div> <div class="footer"> Metrics Matrix: Visual[${state.scores.visual}] Auditory[${state.scores.auditory}] Kinesthetic[${state.scores.kinesthetic}] Structured[${state.scores.structured}] | Score: ${state.xp} XP<br> Educational assessment toolkit overview. Saved: ${new Date().toLocaleDateString()} </div> <script> window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); }; <\/script> </body> </html> );
-    printWindow.document.close();    
+    printWindow.document.write(<html> <head> <title>MindQuest Strategy Report</title> <style> body { font-family: Arial, sans-serif; padding: 40px; color: #1e293b; max-width: 800px; margin: auto; } .header { border-bottom: 4px solid #8b5cf6; padding-bottom: 20px; margin-bottom: 30px; } h1 { color: #8b5cf6; margin: 0; } .section { background: #f8fafc; border: 1px solid #e2eafc; border-radius: 12px; padding: 24px; margin-bottom: 24px; } h3 { margin-top: 0; color: #0f172a; border-bottom: 1px solid #e2eafc; padding-bottom: 8px; } li { margin-bottom: 12px; line-height: 1.6; } .footer { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 40px; border-top: 1px solid #e2eafc; padding-top: 16px; } </style> </head> <body> <div class="header"> <h1>🧠 MindQuest Cognitive Report</h1> <p>Personalized Learning Strategy Blueprint</p> </div> <div class="section"> <h3>Cognitive Profile Overview</h3> <p>${report.summary}</p> </div> <div class="section"> <h3>🛠️ Personalized Retention Toolkit</h3> <ul>${report.strategies.map(s =>${s}).join("")}</ul> </div> <div class="footer"> Metrics Matrix: Visual[${state.scores.visual}] Auditory[${state.scores.auditory}] Kinesthetic[${state.scores.kinesthetic}] Structured[${state.scores.structured}] | Final Score: ${state.xp} XP<br> Educational assessment toolkit overview. Saved: ${new Date().toLocaleDateString()} </div> <script> window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); }; <\/script> </body> </html> );
+    printWindow.document.close();
 }
 
 function resetQuest() {
     state.currentQuestionIndex = 0;
+                       state.minigameIndex = 0;
     state.xp = 0;xpCounter.innerText = "0";
     state.scores = { visual: 0, auditory: 0, kinesthetic: 0, structured: 0 };
     state.generatedReport = { summary: "", strategies: [] };
     resultsScreen.classList.remove("active");
+    minigameScreen.classList.remove("active");
     startScreen.classList.add("active");
     progressBar.style.width = "0%";
-    }
+}
