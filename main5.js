@@ -217,7 +217,7 @@ function loadMinigameCard() {
 }
 function handleMinigameMatch(selectedTarget) {
     const currentCard = minigameData[state.minigameIndex];
-    const userGuess = selectedTarget.getAttribute("data-zone");
+    const userGuess = selectedTarget.getAttribute("data-zone"); 
     
     if (userGuess === currentCard.category) {
         triggerProgressionSFX();
