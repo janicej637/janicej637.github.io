@@ -84,7 +84,7 @@ const powerChargeBar = document.getElementById("power-charge-bar");
 btnPrev.addEventListener("click", () => shiftPage(-1));
 btnNext.addEventListener("click", () => shiftPage(1));
 btnAudio.addEventListener("click", controlSpeechRuntime);
-btnPdf.addEventListener("click", exportHighQualityStoryPDF);
+/*btnPdf.addEventListener("click", exportHighQualityStoryPDF);*/
 btnCraft.addEventListener("click", compileCustomLabJellybean);
 if(btnApply) btnApply.addEventListener("click", applyCharacterPersonalization);
 
