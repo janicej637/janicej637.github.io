@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+ 
+   <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <p>
+     <p>
     <a href=" https://janicej637.github.io/" style="color: #000080;"><img src="https://clipart-library.com/data_images/469756.png" alt="Home" width="80" height="30"> </a>
   </p>
     <title>MindQuest: Discover Your Learning Power!</title>
@@ -39,6 +40,25 @@
                 <span class="badge" id="question-number">Challenge 1 of 5</span>
                 <h2 id="question-text">Loading challenge...</h2>
                 <div id="options-container" class="options-grid"></div>
+            </div>
+        </div>
+
+        <!-- Minigame Sorting Screen Component -->
+        <div id="minigame-screen" class="screen">
+            <div class="victory-banner">⚡ BONUS ROUND: Strategy Sorting! ⚡</div>
+            <p>Drag, click, or tap to match the <strong>Learning Strategy</strong> card to its correct <strong>Superpower Type</strong> for maximum bonus points!</p>
+            
+            <div class="game-board">
+                <div class="card-deck">
+                    <div id="active-sort-card" class="sort-card">Loading mini-game...</div>
+                </div>
+                
+                <div class="drop-zones-grid">
+                    <button class="zone-btn" data-zone="visual">👁️ Visual</button>
+                    <button class="zone-btn" data-zone="auditory">🗣️ Auditory</button>
+                    <button class="zone-btn" data-zone="kinesthetic">🪄 Kinesthetic</button>
+                    <button class="zone-btn" data-zone="structured">⏳ Structured</button>
+                </div>
             </div>
         </div>
 
