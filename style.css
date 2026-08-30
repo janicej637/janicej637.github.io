@@ -7,6 +7,7 @@
     --text-story: #4c1d95;
     --text-body: #6b21a8;
     --border-book: #fbcfe8;
+    --success-glow: #10b981;
 }
 
 body {
@@ -68,13 +69,12 @@ body {
     color: white;
 }
 
-/* Customizer Box styling rules */
 .customizer-box {
     background-color: #f5f3ff;
     border: 2px solid #ddd6fe;
     border-radius: 16px;
     padding: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .customizer-box h4 {
@@ -98,6 +98,115 @@ body {
     color: var(--text-story);
 }
 
+/* Superpower Matrix Checklist Styles */
+.power-matrix-box {
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
+    border: 3px solid #bae6fd;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.power-matrix-box h4 {
+    margin: 0 0 4px 0;
+    color: #0369a1;
+}
+
+.power-matrix-box p {
+    margin: 0 0 14px 0;
+    font-size: 0.9rem;
+    color: #0c4a6e;
+}
+
+.matrix-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.matrix-item {
+    background: white;
+    border: 2px solid #bae6fd;
+    padding: 10px 14px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.95rem;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+.matrix-item:hover {
+    border-color: #7dd3fc;
+    background-color: #f0f9ff;
+}
+
+.matrix-item input {
+    display: none;
+}
+
+.custom-chk {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    display: inline-block;
+    position: relative;
+    background: #f8fafc;
+    transition: all 0.2s;
+}
+
+.matrix-item input:checked + .custom-chk {
+    background: var(--success-glow);
+    border-color: var(--success-glow);
+}
+
+.matrix-item input:checked + .custom-chk::after {
+    content: '✓';
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+}
+
+/* Meter Elements */
+.charge-meter-container {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.charge-label {
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: #0369a1;
+}
+
+.meter-track {
+    flex-grow: 1;
+    height: 12px;
+    background: #e2e8f0;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.meter-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #38bdf8 0%, #10b981 100%);
+    border-radius: 6px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Interaction Book Engine Styles */
 .book-container {
     width: 100%;
     perspective: 1200px;
@@ -250,6 +359,6 @@ body {
 
 @media print {
     body { background: white; color: black; }
-    .story-hud, .page-nav-row, .lab-container, .customizer-box, #btn-audio { display: none !important; }
+    .story-hud, .page-nav-row, .lab-container, .customizer-box, .power-matrix-box, #btn-audio { display: none !important; }
     .book-page { border: none; box-shadow: none; padding: 0; page-break-after: always; }
 }
