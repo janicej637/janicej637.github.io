@@ -59,7 +59,10 @@ body {
     font-weight: 600;
 }
 
-.logo { color: var(--accent); }
+.logo { color: var(--accent); 
+     font-size: 1.8rem;
+      }
+
 .score-board {
     background-color: #334155;
     padding: 6px 16px;
