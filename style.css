@@ -266,7 +266,15 @@ body {
 .visual-p2 { background: linear-gradient(135deg, #c084fc 0%, #818cf8 100%); }
 .visual-p3 { background: linear-gradient(135deg, #6ee7b7 0%, #3b82f6 100%); }
 /*.visual-p4 { background: linear-gradient(135deg, #fde047 0%, #f97316 100%); } */
-.visual-p4 { background: url(Cute_3D_animated_cartoon_illustration_202608300143.jpeg); }
+.visual-p4 { background: url(Cute_3D_animated_cartoon_illustration_202608300143.jpeg);
+           
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+            display: block;
+        }
+    
 .story-text {
     font-size: 1.25rem;
     line-height: 1.7;
