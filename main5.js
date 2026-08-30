@@ -215,7 +215,141 @@ function loadMinigameCard() {
         showResults();
     }
 }
-
 function handleMinigameMatch(selectedTarget) {
     const currentCard = minigameData[state.minigameIndex];
-const userGuess = selectedTarget.getAttribute("data-zone");if (userGuess === currentCard.category) {triggerProgressionSFX();state.xp += 150;xpCounter.innerText = state.xp;selectedTarget.classList.add("correct-flash");} else {triggerWrongSFX();selectedTarget.classList.add("wrong-flash");}setTimeout(() => {selectedTarget.classList.remove("correct-flash", "wrong-flash");state.minigameIndex++;loadMinigameCard();}, 400);}function showResults() {triggerVictorySFX();minigameScreen.classList.remove("active");resultsScreen.classList.add("active");progressBar.style.width = "100%";const scores = state.scores;let summaryText = "";let strategies = [];if (scores.structured >= 2) {summaryText = "Your mind thrives on customized structure! Standard blocks of text or linear lessons can occasionally trigger focusing fatigue or word tracking shifts. You process information brilliantly when it is dynamic, highly segmented, and parsed.";strategies = ["Chunking Method: Break reading files into small 15-minute bursts followed by a 2-minute physical movement change.","Assistive Extensions: Try utilizing specialized typography fonts (like OpenDyslexic) or line-focus overlays to avoid tracking mistakes.","Gamify Deadlines: Treat tasks like level benchmarks. Reward yourself with XP or actual tokens upon executing tough reading targets."];} else {const dominant = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);if (dominant === "visual") {summaryText = "You possess a powerful Spatial Mind! Your brain locks onto geometric details, symbols, colors, and layout configurations rather than plain spoken blocks.";strategies = ["Color Coding: Use different highlighters or font layers to divide concepts visually.","Mind Mapping: Convert linear text summaries into flowcharts, diagrams, or visual node chains."];} else if (dominant === "auditory") {summaryText = "You are an Echo Weaver! Your memory thrives on rhythm, conversational cues, vocal cadences, and auditory feedback systems.";strategies = ["Vocal Recitation: Explain new concepts out loud to yourself or record voice memos to play back during downtime.","Text-to-Speech: Convert tracking assignments into audio readouts so you can digest information auditorily."];} else {summaryText = "You are a Kinesthetic Builder! You process knowledge through touch, physical movement, real experimentation, and structural engagement.";strategies = ["Tactile Association: Fidget intentionally or space yourself on a standing pad while trying to remember complex topics.","Active Building: Rewrite concepts by hand onto whiteboards or use structural flashcards to sort physical piles."];}}state.generatedReport = { summary: summaryText, strategies: strategies };profileSummary.innerText = summaryText;strategyList.innerHTML = "";strategies.forEach(strat => {const li = document.createElement("li");li.innerHTML = strat;strategyList.appendChild(li);});}function saveAsHighFidelityPDF() {triggerVictorySFX();const report = state.generatedReport;if (!report.summary) return;const printWindow = window.open("", "_blank");printWindow.document.write(<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <title>MindQuest Strategy Report</title> <style> body { font-family: Arial, sans-serif; padding: 40px; color: #1e293b; max-width: 800px; margin: auto; } .header { border-bottom: 4px solid #8b5cf6; padding-bottom: 20px; margin-bottom: 30px; } h1 { color: #8b5cf6; margin: 0; } .section { background: #f8fafc; border: 1px solid #e2eafc; border-radius: 12px; padding: 24px; margin-bottom: 24px; } h3 { margin-top: 0; color: #0f172a; border-bottom: 1px solid #e2eafc; padding-bottom: 8px; } li { margin-bottom: 12px; line-height: 1.6; } .footer { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 40px; border-top: 1px solid #e2eafc; padding-top: 16px; } </style> </head> <body> <div class="header"> <h1>🧠 MindQuest Cognitive Report</h1> <p>Personalized Learning Strategy Blueprint</p> </div> <div class="section"> <h3>Cognitive Profile Overview</h3> <p>${report.summary}</p> </div> <div class="section"> <h3>🛠️ Personalized Retention Toolkit</h3> <ul>${report.strategies.map(s =>${s}).join("")}</ul> </div> <div class="footer"> Metrics Matrix: Visual[${state.scores.visual}] Auditory[${state.scores.auditory}] Kinesthetic[${state.scores.kinesthetic}] Structured[${state.scores.structured}] | Final Score: ${state.xp} XP<br> Educational assessment toolkit overview. Saved: ${new Date().toLocaleDateString()} </div> <script> window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); }; <\/script> </body> </html> );printWindow.document.close();}function resetQuest() {state.currentQuestionIndex = 0;state.minigameIndex = 0;state.xp = 0;xpCounter.innerText = "0";state.scores = { visual: 0, auditory: 0, kinesthetic: 0, structured: 0 };state.generatedReport = { summary: "", strategies: [] };state.activeQuestions = [];resultsScreen.classList.remove("active");minigameScreen.classList.remove("active");startScreen.classList.add("active");progressBar.style.width = "0%";}
+    const userGuess = selectedTarget.getAttribute("data-zone");
+    
+    if (userGuess === currentCard.category) {
+        triggerProgressionSFX();
+        state.xp += 150;
+        xpCounter.innerText = state.xp;
+        selectedTarget.classList.add("correct-flash");
+    } else {
+        triggerWrongSFX();
+        selectedTarget.classList.add("wrong-flash");
+    }
+
+    setTimeout(() => {
+        selectedTarget.classList.remove("correct-flash", "wrong-flash");
+        state.minigameIndex++;
+        loadMinigameCard();
+    }, 400);
+}
+
+function showResults() {
+    triggerVictorySFX();
+    minigameScreen.classList.remove("active");
+    resultsScreen.classList.add("active");
+    progressBar.style.width = "100%";
+
+    const scores = state.scores;
+    let summaryText = "";
+    let strategies = [];
+
+    if (scores.structured >= 2) {
+        summaryText = "Your mind thrives on customized structure! Standard blocks of text or linear lessons can occasionally trigger focusing fatigue or word tracking shifts. You process information brilliantly when it is dynamic, highly segmented, and parsed.";
+        strategies = [
+            "Chunking Method: Break reading files into small 15-minute bursts followed by a 2-minute physical movement change.",
+            "Assistive Extensions: Try utilizing specialized typography fonts (like OpenDyslexic) or line-focus overlays to avoid tracking mistakes.",
+            "Gamify Deadlines: Treat tasks like level benchmarks. Reward yourself with XP or actual tokens upon executing tough reading targets."
+        ];
+    } else {
+        const dominant = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+        if (dominant === "visual") {
+            summaryText = "You possess a powerful Spatial Mind! Your brain locks onto geometric details, symbols, colors, and layout configurations rather than plain spoken blocks.";
+            strategies = [
+                "Color Coding: Use different highlighters or font layers to divide concepts visually.",
+                "Mind Mapping: Convert linear text summaries into flowcharts, diagrams, or visual node chains."
+            ];
+        } else if (dominant === "auditory") {
+            summaryText = "You are an Echo Weaver! Your memory thrives on rhythm, conversational cues, vocal cadences, and auditory feedback systems.";
+            strategies = [
+                "Vocal Recitation: Explain new concepts out loud to yourself or record voice memos to play back during downtime.",
+                "Text-to-Speech: Convert tracking assignments into audio readouts so you can digest information auditorily."
+            ];
+        } else {
+            summaryText = "You are a Kinesthetic Builder! You process knowledge through touch, physical movement, real experimentation, and structural engagement.";
+            strategies = [
+                "Tactile Association: Fidget intentionally or space yourself on a standing pad while trying to remember complex topics.",
+                "Active Building: Rewrite concepts by hand onto whiteboards or use structural flashcards to sort physical piles."
+            ];
+        }
+    }
+
+    state.generatedReport = { summary: summaryText, strategies: strategies };
+    profileSummary.innerText = summaryText;
+    strategyList.innerHTML = "";
+    strategies.forEach(strat => {
+        const li = document.createElement("li");
+        li.innerHTML = strat;
+        strategyList.appendChild(li);
+    });
+}
+
+function saveAsHighFidelityPDF() {
+    triggerVictorySFX();
+    const report = state.generatedReport;
+    if (!report.summary) return;
+
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return alert("Please allow popups to export your PDF report!");
+    
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>MindQuest Strategy Report</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 40px; color: #1e293b; max-width: 800px; margin: auto; }
+                .header { border-bottom: 4px solid #8b5cf6; padding-bottom: 20px; margin-bottom: 30px; }
+                h1 { color: #8b5cf6; margin: 0; }
+                .section { background: #f8fafc; border: 1px solid #e2eafc; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+                h3 { margin-top: 0; color: #0f172a; border-bottom: 1px solid #e2eafc; padding-bottom: 8px; }
+                li { margin-bottom: 12px; line-height: 1.6; }
+                .footer { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 40px; border-top: 1px solid #e2eafc; padding-top: 16px; }
+            </style>
+        </head>
+        <body>
+            <div class="header">
+                <h1>🧠 MindQuest Cognitive Report</h1>
+                <p>Personalized Learning Strategy Blueprint</p>
+            </div>
+            <div class="section">
+                <h3>Cognitive Profile Overview</h3>
+                <p>${report.summary}</p>
+            </div>
+            <div class="section">
+                <h3>🛠️ Personalized Retention Toolkit</h3>
+                <ul>${report.strategies.map(s => `<li>${s}</li>`).join("")}</ul>
+            </div>
+            <div class="footer">
+                Metrics Matrix: Visual[${state.scores.visual}] Auditory[${state.scores.auditory}] Kinesthetic[${state.scores.kinesthetic}] Structured[${state.scores.structured}] | Final Score: ${state.xp} XP<br>
+                Educational assessment toolkit overview. Saved: ${new Date().toLocaleDateString()}
+            </div>
+            <script>
+                window.onload = function() {
+                    window.print();
+                    setTimeout(function() { window.close(); }, 500);
+                };
+            <\/script>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+}
+
+function resetQuest() {
+    state.currentQuestionIndex = 0;
+    state.minigameIndex = 0;
+    state.xp = 0;
+    if(xpCounter) xpCounter.innerText = "0";
+    state.scores = { visual: 0, auditory: 0, kinesthetic: 0, structured: 0 };
+    state.generatedReport = { summary: "", strategies: [] };
+    state.activeQuestions = [];
+
+    resultsScreen.classList.remove("active");
+    minigameScreen.classList.remove("active");
+    startScreen.classList.add("active");
+    progressBar.style.width = "0%";
+}
