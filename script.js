@@ -195,9 +195,23 @@ function compileCustomLabJellybean() {
 
 function exportHighQualityStoryPDF() {
     stopCurrentSpeech();
+     const report = bookState.generatedReport || { summary: "", strategies: [] };
+    
+    // Fallback compilation map if active array is required
+    const activeSummary = report.summary || getProcessedText(bookState.storyPages[bookState.currentPageIndex].template);
+    
     const pdfWindow = window.open("", "_blank");
     if (!pdfWindow) return alert("Please allow popups to view your printable book format!");
-    
+
+
+ 
+   
+
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return alert("Please allow popups to view your printable book format!");
+
+
+        
     let htmlContent = `
         <!DOCTYPE html>
         <html>
