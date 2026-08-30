@@ -1,364 +1,142 @@
-/* Whimsical Palette Layout Configurations */
-:root {
-    --bg-universe: #fdf2f8;
-    --bg-paper: #ffffff;
-    --primary: #ec4899;
-    --primary-hover: #db2777;
-    --text-story: #4c1d95;
-    --text-body: #6b21a8;
-    --border-book: #fbcfe8;
-    --success-glow: #10b981;
+// Book Application State Manager
+const bookState = {
+    currentPageIndex: 0,
+    audioPlaying: false,
+    speechUtterance: null,
+    userName: "Alex",
+    userRole: "Chief Assistant",
+    storyPages: [
+        {
+            chapter: "Chapter 1",
+            title: "The Sugary Birthday",
+            visualClass: "visual-p4",
+            template: "Once upon a time, in a town filled with sugar plum houses and lollipop fences, lived a spunky little girl named Jayla Jellybean. Wherever she went, a trail of shimmering jellybeans followed in her wake! It all started on Jayla's eighth birthday, when a sprinkle of glitter dust tickled her nose. Poof! Out tumbled a perfectly formed blueberry jellybean! Her brilliant {ROLE} {NAME} watched in absolute amazement. But soon, Jayla discovered something even bigger: she possessed absolute Jellybean Generation! She could consciously create specific jellybeans with unique properties, utilizing them as a powerful force for good alongside her kind heart and unwavering optimism to protect her town from any sugary threat!"
+        },
+        {
+            chapter: "Chapter 2",
+            title: "The Sparkly Kitchen & Gauntlet",
+            visualClass: "visual-p1",
+            template: "Deep inside the Whispering Woods lived the evolved candy crusader, Jayla Jellybean. Jayla didn't make normal gadgets; she mixed starlight and fruit juice to create specialized tactical candies. Today, her kitchen smelled like warm cinnamon because her brilliant {ROLE} named {NAME} was helping calibrate the Jellybean Gauntlet—a special wrist-mounted device decorated with her favorite candy patterns designed to launch the perfect jellybean projectile to solve any real-world problem or aid a friend with a quick click and whir!"
+        },
+        {
+            chapter: "Chapter 3",
+            title: "The Sweetest Memories",
+            visualClass: "visual-p2",
+            template: "Rain lashed against the window, mirroring the storm brewing inside Jayla. Despite her amazing powers, she couldn't shake a deep sadness today—it was the anniversary of her grandma's passing. Memories flickered through Jayla's mind as her dedicated {ROLE} {NAME} sat quietly by her side. Suddenly, a soft glow caught {NAME}'s eye! Nestled amongst the colorful stash was a pearlescent white jellybean, radiating a warm vanilla aroma that left a faint inscription: 'Remember, the sweetest memories live on in every jellybean you create.' Wiping her tears, Jayla activated her Jellybean Generation. Together with {NAME}, they forged a special batch holding the ultimate tribute—her grandma's laugh became a fizzy lemon drop, her warm hugs became a gooey marshmallow, and her unwavering love became a heart-shaped cherry."
+        },
+        {
+            chapter: "Chapter 4",
+            title: "The Festival of Joy",
+            visualClass: "visual-p4",
+            template: "The annual Coral Springs Candy Festival was in full swing, and the air buzzed with excitement! Jayla Jellybean, alongside her tactical {ROLE} {NAME}, skipped down the street, their colorful costumes sparkling in the sun. Children chased after them, their pockets overflowing with the exotic treats they'd dispensed from their trusty Jellybean Gauntlet. As they rounded a corner, a group of children crowded around a crying toddler who had dropped his ice cream. Jayla immediately activated her Jellybean Vision, causing the world to shimmer and highlight the exact solution! Kneeling down, she offered the toddler a glimmering rainbow 'pick-me-up' jellybean. 'This isn't just any jellybean,' {NAME} explained with a wink. 'It's filled with all the happiness of a summer day!' The toddler popped it in, erupted into belly laughs, and the whole street cheered!"
+        },
+        {
+            chapter: "Chapter 5",
+            title: "Attack of the Gummy Golem!",
+            visualClass: "visual-p2",
+            template: "Chaos erupted in the town square! A monstrous figure made of swirling frosting and sour straps stomped through the streets—it was the Gummy Golem, a grumpy giant awakened by a candy imbalance! People scattered as it roared, but not Jayla Jellybean and her courageous {ROLE}, {NAME}. Tapping into her Jellybean Vision, the environment shifted into a high-tech lens, highlighting a massive, glistening target above the candy store. 'That's it!' Jayla cried, raising her Jellybean Gauntlet. With a click and a whir, the gauntlet transformed into a giant candy dispenser as {NAME} dialed in the coordinates. Utilizing Jellybean Generation, she loaded a single, ordinary-looking jellybean that rocketed upward, expanding until it squelched against the Golem's face! The supersized truth serum bean did its magic, shrinking the monster down to a tiny, tearful gingerbread cookie named Gummy George. Jayla and {NAME} gently explained that the world had simply forgotten the joy of candy, successfully saving the day with a well-placed projectile and a whole lot of heart!"
+        },
+        {
+            chapter: "Chapter 6",
+            title: "The Stormy Playground",
+            visualClass: "visual-p2",
+            template: "Walking to the local playground, Jayla and {NAME} noticed their friend Toby sitting all alone under a dark rain cloud on the swings. A group of older kids had accidentally kicked a soccer ball over his structural drawing. Toby was crying, and his drawing was fading under the gray drizzle. Jayla's gauntlet hummed softly as she prepared her next move."
+        },
+        {
+            chapter: "Chapter 7",
+            title: "The Neon Magic Pop",
+            visualClass: "visual-p3",
+            template: "Jayla reached into her candy pouch and pulled out a shimmering Neon Blue bean created through her conscious generation, while {NAME} cheered her on. 'Here, eat this!' Jayla smiled. Toby took a bite, and instantly, a glowing energy umbrella popped over his head, blocking out the rain! The blue sparkles flew onto the other kids' soccer ball, transforming it into a soft bubble."
+        },
+        {
+            chapter: "Chapter 8",
+            title: "Stronger Together",
+            visualClass: "visual-p1",
+            template: "Seeing the sparkling bubble, the other children laughed and ran over to help Toby rebuild his block fortress. Jayla and her brilliant {ROLE}, {NAME}, watched happily as new friendships grew right before their eyes. With a snap and a pop, her gauntlet began charging up with new sugar magic, ready to zoom up buildings or face the next runaway gumball avalanche!"
+        }
+    ]
+};
+
+// Selectors Matrix
+const pBadge = document.getElementById("page-badge");
+const pTitle = document.getElementById("story-title");
+const pArt = document.getElementById("story-art");
+const pNarrative = document.getElementById("story-narrative");
+const pIndicator = document.getElementById("page-indicator");
+
+const btnPrev = document.getElementById("btn-prev");
+const btnNext = document.getElementById("btn-next");
+const btnAudio = document.getElementById("btn-audio");
+const btnPdf = document.getElementById("btn-pdf");
+const btnApply = document.getElementById("btn-apply");
+
+const btnCraft = document.getElementById("btn-craft");
+const labOutput = document.getElementById("lab-output");
+const craftedJellyText = document.getElementById("crafted-jelly-text");
+
+// Matrix Checklist Selectors
+const chkGen = document.getElementById("chk-generation");
+const chkVision = document.getElementById("chk-vision");
+const chkGauntlet = document.getElementById("chk-gauntlet");
+const powerChargeBar = document.getElementById("power-charge-bar");
+
+// Bindings
+btnPrev.addEventListener("click", () => shiftPage(-1));
+btnNext.addEventListener("click", () => shiftPage(1));
+btnAudio.addEventListener("click", controlSpeechRuntime);
+btnPdf.addEventListener("click", exportHighQualityStoryPDF);
+btnCraft.addEventListener("click", compileCustomLabJellybean);
+if(btnApply) btnApply.addEventListener("click", applyCharacterPersonalization);
+
+// Matrix tracking change events
+[chkGen, chkVision, chkGauntlet].forEach(checkbox => {
+    checkbox.addEventListener("change", evaluateMatrixScoreStatus);
+});
+
+// Init Load Configuration Run
+renderActivePage();
+
+function getProcessedText(templateStr) {
+    return templateStr.replace(/{NAME}/g, bookState.userName).replace(/{ROLE}/g, bookState.userRole);
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    background-color: var(--bg-universe);
-    color: var(--text-body);
-    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Segoe UI', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+function renderActivePage() {
+    stopCurrentSpeech();
+    const data = bookState.storyPages[bookState.currentPageIndex];
+    
+    pArt.className = `magic-art ${data.visualClass}`;
+    pBadge.innerText = data.chapter;
+    pTitle.innerText = data.title;
+    pNarrative.innerText = getProcessedText(data.template);
+    
+    pIndicator.innerText = `Page ${bookState.currentPageIndex + 1} / ${bookState.storyPages.length}`;
+    btnPrev.disabled = bookState.currentPageIndex === 0;
+    btnNext.disabled = bookState.currentPageIndex === bookState.storyPages.length - 1;
+
+    // Reset Checklist Matrix per chapter to prevent cheating
+    chkGen.checked = false;
+    chkVision.checked = false;
+    chkGauntlet.checked = false;
+    evaluateMatrixScoreStatus();
 }
 
-.book-universe {
-    width: 95%;
-    max-width: 850px;
-    padding: 20px;
-    box-sizing: border-box;
-}
+function evaluateMatrixScoreStatus() {
+    let checkedCount = 0;
+    if (chkGen.checked) checkedCount++;
+    if (chkVision.checked) checkedCount++;
+    if (chkGauntlet.checked) checkedCount++;
 
-.story-hud {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
+    const chargePercentage = (checkedCount / 3) * 100;
+    powerChargeBar.style.width = `${chargePercentage}%`;
 
-.logo {
-    font-size: 2rem;
-    font-weight: bold;
-    color: var(--primary);
-    text-shadow: 2px 2px #fce7f3;
-}
-
-.hud-actions {
-    display: flex;
-    gap: 10px;
-}
-
-.hud-btn {
-    background-color: #ffffff;
-    border: 2px solid var(--primary);
-    color: var(--primary);
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.hud-btn:hover {
-    background-color: var(--primary);
-    color: white;
-}
-
-.hud-btn.highlight {
-    background-color: var(--primary);
-    color: white;
-}
-
-.customizer-box {
-    background-color: #f5f3ff;
-    border: 2px solid #ddd6fe;
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 16px;
-}
-
-.customizer-box h4 {
-    margin: 0 0 12px 0;
-    color: var(--text-story);
-}
-
-.customizer-inputs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-}
-
-.customizer-inputs input, .customizer-inputs select {
-    padding: 10px;
-    border: 2px solid #c084fc;
-    border-radius: 12px;
-    font-family: inherit;
-    font-size: 1rem;
-    color: var(--text-story);
-}
-
-/* Superpower Matrix Checklist Styles */
-.power-matrix-box {
-    background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
-    border: 3px solid #bae6fd;
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-}
-
-.power-matrix-box h4 {
-    margin: 0 0 4px 0;
-    color: #0369a1;
-}
-
-.power-matrix-box p {
-    margin: 0 0 14px 0;
-    font-size: 0.9rem;
-    color: #0c4a6e;
-}
-
-.matrix-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-}
-
-.matrix-item {
-    background: white;
-    border: 2px solid #bae6fd;
-    padding: 10px 14px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 0.95rem;
-    user-select: none;
-    transition: all 0.2s ease;
-}
-
-.matrix-item:hover {
-    border-color: #7dd3fc;
-    background-color: #f0f9ff;
-}
-
-.matrix-item input {
-    display: none;
-}
-
-.custom-chk {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #cbd5e1;
-    border-radius: 6px;
-    display: inline-block;
-    position: relative;
-    background: #f8fafc;
-    transition: all 0.2s;
-}
-
-.matrix-item input:checked + .custom-chk {
-    background: var(--success-glow);
-    border-color: var(--success-glow);
-}
-
-.matrix-item input:checked + .custom-chk::after {
-    content: '✓';
-    color: white;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 14px;
-}
-
-/* Meter Elements */
-.charge-meter-container {
-    margin-top: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.charge-label {
-    font-weight: bold;
-    font-size: 0.85rem;
-    color: #0369a1;
-}
-
-.meter-track {
-    flex-grow: 1;
-    height: 12px;
-    background: #e2e8f0;
-    border-radius: 6px;
-    overflow: hidden;
-    position: relative;
-}
-
-.meter-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #38bdf8 0%, #10b981 100%);
-    border-radius: 6px;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Interaction Book Engine Styles */
-.book-container {
-    width: 100%;
-    perspective: 1200px;
-    margin-bottom: 30px;
-}
-
-.book-page {
-    background-color: var(--bg-paper);
-    border: 8px solid var(--border-book);
-    border-radius: 24px;
-    padding: 30px;
-    box-shadow: 0 20px 40px rgba(236, 72, 153, 0.15);
-    min-height: 450px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.chapter-badge {
-    background-color: #fce7f3;
-    color: var(--primary);
-    padding: 6px 14px;
-    border-radius: 12px;
-    font-weight: bold;
-    font-size: 0.9rem;
-    display: inline-block;
-    margin-bottom: 12px;
-}
-
-.page-title {
-    color: var(--text-story);
-    font-size: 1.8rem;
-    margin: 0 0 20px 0;
-}
-
-.story-layout {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-    align-items: center;
-}
-
-@media (min-width: 650px) {
-    .story-layout {
-        grid-template-columns: 240px 1fr;
-    }
-}
-
-.magic-art {
-    width: 200px;
-    height: 200px;
-    border-radius: 24px;
-    box-shadow: inset 0 0 20px rgba(255,255,255,0.4), 0 8px 16px rgba(0,0,0,0.06);
-}
-
-.visual-p1 { background: linear-gradient(135deg, #fbcfe8 0%, #f472b6 100%); }
-.visual-p2 { background: linear-gradient(135deg, #c084fc 0%, #818cf8 100%); }
-.visual-p3 { background: linear-gradient(135deg, #6ee7b7 0%, #3b82f6 100%); }
-.visual-p4 { background: linear-gradient(135deg, #fde047 0%, #f97316 100%); }
-
-.story-text {
-    font-size: 1.25rem;
-    line-height: 1.7;
-    color: var(--text-story);
-    margin: 0;
-}
-
-.page-nav-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-top: 2px dashed #fbcfe8;
-    padding-top: 20px;
-    margin-top: 25px;
-}
-
-.nav-arrow {
-    background-color: #fef08a;
-    border: none;
-    color: #854d0e;
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.nav-arrow:disabled {
-    background-color: #e2e8f0;
-    color: #94a3b8;
-    cursor: not-allowed;
-}
-
-.page-num { font-weight: bold; }
-
-.lab-container {
-    background: white;
-    border: 4px solid #fbcfe8;
-    border-radius: 24px;
-    padding: 24px;
-}
-
-.lab-controls {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-    margin-top: 16px;
-}
-
-@media (min-width: 600px) {
-    .lab-controls {
-        grid-template-columns: 1fr 1fr auto;
-        align-items: flex-end;
-    }
-}
-
-.control-box {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.control-box select {
-    padding: 10px;
-    border: 2px solid #e9d5ff;
-    border-radius: 12px;
-    font-family: inherit;
-}
-
-.btn-craft {
-    background: linear-gradient(90deg, #ec4899 0%, #8b5cf6 100%);
-    color: white;
-    font-weight: bold;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    font-family: inherit;
-}
-
-.lab-output-box {
-    margin-top: 20px;
-    background-color: #f5f3ff;
-    border-left: 5px solid #8b5cf6;
-    padding: 16px;
-    border-radius: 0 12px 12px 0;
-}
-
-.lab-output-box.hidden { display: none; }
-
-@media print {
-    body { background: white; color: black; }
-    .story-hud, .page-nav-row, .lab-container, .customizer-box, .power-matrix-box, #btn-audio { display: none !important; }
-    .book-page { border: none; box-shadow: none; padding: 0; page-break-after: always; }
-}
+    // Success sound blip reward if all are matched
+    if(checkedCount === 3) {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+            setTimeout(() => osc.frequency.setValueAtTime(659.25, ctx.currentTime), 80); // E5
+            gain.gain.setValueAtTime(0.04, ctx.currentTime);
+            osc.connect(gain);
+gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime + 0.2);} catch(e) {}}}function applyCharacterPersonalization() {const nameInput = document.getElementById("user-name").value.trim();const roleInput = document.getElementById("user-role").value;if(nameInput !== "") {bookState.userName = nameInput;bookState.userRole = roleInput;renderActivePage();try {const ctx = new (window.AudioContext || window.webkitAudioContext)();const osc = ctx.createOscillator();const gain = ctx.createGain();osc.frequency.setValueAtTime(698.46, ctx.currentTime);gain.gain.setValueAtTime(0.04, ctx.currentTime);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime + 0.1);} catch(e) {}}}function shiftPage(offset) {bookState.currentPageIndex += offset;renderActivePage();}function controlSpeechRuntime() {if (bookState.audioPlaying) {stopCurrentSpeech();} else {const textToRead = getProcessedText(bookState.storyPages[bookState.currentPageIndex].template);bookState.speechUtterance = new SpeechSynthesisUtterance(textToRead);bookState.speechUtterance.rate = 0.95;bookState.speechUtterance.pitch = 1.1;bookState.speechUtterance.onend = () => {bookState.audioPlaying = false;btnAudio.innerText = "🔊 Read Aloud";};window.speechSynthesis.speak(bookState.speechUtterance);bookState.audioPlaying = true;btnAudio.innerText = "🛑 Stop Reading";}}function stopCurrentSpeech() {window.speechSynthesis.cancel();bookState.audioPlaying = false;btnAudio.innerText = "🔊 Read Aloud";}function compileCustomLabJellybean() {const coreSpark = document.getElementById("color-mix").value;const challengeTarget = document.getElementById("problem-mix").value;let magicResolutionText = "";switch(challengeTarget) {case "bullying":magicResolutionText = Jayla activates her Jellybean Vision! Highlighting a target grid, she fires the ${coreSpark} projectile from her Jellybean Gauntlet while ${bookState.userName} locks down coordinates. It bursts into a shimmering wave of neon glitter, creating a giant sandbox for everyone to share.;break;case "environment":magicResolutionText = Jayla triggers advanced Jellybean Generation! She creates a special customized variant, allowing her and ${bookState.userRole} ${bookState.userName} to plant the ${coreSpark} treat deep into the soil to instantly sprout rainbow sunflowers across the town square!;break;case "animals":magicResolutionText = Jayla spots a liquorice-styled line path using her lenses! Firing a soft ${coreSpark} cloud from her gauntlet, she creates a bouncy safety cushion below the tree while ${bookState.userName} guides the scared kitten down safely.;break;}craftedJellyText.innerText = magicResolutionText;labOutput.classList.remove("hidden");}function exportHighQualityStoryPDF() {stopCurrentSpeech();const pdfWindow = window.open("", "_blank");if (!pdfWindow) return alert("Please allow popups to view your printable book format!");let htmlContent = <!DOCTYPE html> <html> <head> <title>The Adventures of Jayla Jellybean</title> <style> body { font-family: 'Comic Sans MS', sans-serif; padding: 40px; color: #4c1d95; line-height: 1.6; max-width: 700px; margin: auto; } .book-header { text-align: center; border-bottom: 5px solid #fbcfe8; padding-bottom: 20px; margin-bottom: 40px; } h1 { color: #ec4899; margin: 0; } .page-block { background: #ffffff; border: 3px solid #fbcfe8; border-radius: 16px; padding: 30px; margin-bottom: 40px; page-break-inside: avoid; } .chapter-title { color: #8b5cf6; margin-top: 0; font-size: 1.5rem; border-bottom: 1px dashed #fbcfe8; padding-bottom: 8px; } .narrative { font-size: 1.2rem; text-align: justify; } .footer { text-align: center; font-size: 12px; color: #94a3b8; margin-top: 50px; } </style> </head> <body> <div class="book-header"> <h1>🌈 The Adventures of Jayla Jellybean</h1> <p>Superpower Edition featuring Co-Inventor ${bookState.userName}</p> </div>;bookState.storyPages.forEach(p => {htmlContent += <div class="page-block"> <div class="chapter-title">${p.chapter}: ${p.title}</div> <p class="narrative">${getProcessedText(p.template)}</p> </div>;});htmlContent += <div class="footer">© 2026 Jayla Jellybean Universe | All Rights Reserved.</div> <script> window.onload = function() { window.print(); setTimeout(function() { window.close(); }, 500); }; <\/script> </body> </html>;pdfWindow.document.write(htmlContent);pdfWindow.document.close();}
