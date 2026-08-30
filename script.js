@@ -181,11 +181,11 @@ function compileCustomLabJellybean() {
     const challengeTarget = document.getElementById("problem-mix").value;
     let magicResolutionText = "";
     switch(challengeTarget) {
-        case "bullying":magicResolutionText = 'Jayla activates her Jellybean Vision! Highlighting a target grid, she fires the ' ${coreSpark} ' projectile from her Jellybean Gauntlet while ' ${bookState.userName} ' locks down coordinates. It bursts into a shimmering wave of neon glitter, creating a giant sandbox for everyone to share.';
+        case "bullying":magicResolutionText = "Jayla activates her Jellybean Vision! Highlighting a target grid, she fires the " ${coreSpark} " projectile from her Jellybean Gauntlet while " ${bookState.userName} " locks down coordinates. It bursts into a shimmering wave of neon glitter, creating a giant sandbox for everyone to share.";
             break;
-        case "environment":magicResolutionText = 'Jayla triggers advanced Jellybean Generation! She creates a special customized variant, allowing her and ' ${bookState.userRole} ${bookState.userName} ' to plant the ' ${coreSpark} 'treat deep into the soil to instantly sprout rainbow sunflowers across the town square!';
+        case "environment":magicResolutionText = "Jayla triggers advanced Jellybean Generation! She creates a special customized variant, allowing her and " ${bookState.userRole} ${bookState.userName} " to plant the " ${coreSpark} " treat deep into the soil to instantly sprout rainbow sunflowers across the town square!";
             break;
-        case "animals":magicResolutionText = 'Jayla spots a liquorice-styled line path using her lenses! Firing a soft ' ${coreSpark} ' cloud from her gauntlet, she creates a bouncy safety cushion below the tree while ' ${bookState.userName} ' guides the scared kitten down safely.';
+        case "animals":magicResolutionText = "Jayla spots a liquorice-styled line path using her lenses! Firing a soft " ${coreSpark} " cloud from her gauntlet, she creates a bouncy safety cushion below the tree while " ${bookState.userName} " guides the scared kitten down safely.";
             break;}craftedJellyText.innerText = magicResolutionText;
     labOutput.classList.remove("hidden");}
 
