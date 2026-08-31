@@ -1,89 +1,139 @@
-
 "use strict";
 
-/*
-===========================================================
- TRIORINGO — MAIN5A.JS
- Matched specifically to the supplied index17.html
-===========================================================
-*/
-
-
 /* =========================================================
-   GAME STATE
+TrioRingo — Learning Power Game
+JavaScript matched specifically to the supplied HTML
 ========================================================= */
 
+/* -----------------------------
+GAME STATE
+----------------------------- */
+
 const state = {
-    currentQuestionIndex: 0,
-    xp: 0,
-    sfxEnabled: true,
+currentQuestionIndex: 0,
+minigameIndex: 0,
+xp: 0,
+sfxEnabled: true,
 
-    scores: {
-        visual: 0,
-        auditory: 0,
-        kinesthetic: 0,
-        structured: 0
-    },
+```
+scores: {
+    visual: 0,
+    auditory: 0,
+    kinesthetic: 0,
+    structured: 0
+},
 
-    generatedReport: {
-        summary: "",
-        strategies: []
-    },
+generatedReport: {
+    summary: "",
+    strategies: []
+},
 
-    minigameIndex: 0,
-    activeQuestions: [],
-    answered: false
+activeQuestions: []
+```
+
 };
 
+/* -----------------------------
+DOM ELEMENTS
+----------------------------- */
+
+const startScreen = document.getElementById("start-screen");
+const quizScreen = document.getElementById("quiz-screen");
+const minigameScreen = document.getElementById("minigame-screen");
+const resultsScreen = document.getElementById("results-screen");
+
+const btnStart = document.getElementById("btn-start");
+const btnRestart = document.getElementById("btn-restart");
+const btnExport = document.getElementById("btn-export");
+const btnSfx = document.getElementById("btn-sfx");
+
+const questionNumber = document.getElementById("question-number");
+const questionText = document.getElementById("question-text");
+const optionsContainer = document.getElementById("options-container");
+
+const activeSortCard = document.getElementById("active-sort-card");
+
+const progressBar = document.getElementById("progress-bar");
+
+const profileSummary = document.getElementById("profile-summary");
+const strategyList = document.getElementById("strategy-list");
+
+/*
+XP counter is OPTIONAL.
+
+```
+Your HTML currently has the XP display commented out.
+Therefore we use a null-safe selector.
+```
+
+*/
+
+const xpCounter = document.getElementById("xp-counter");
 
 /* =========================================================
-   AUDIO
+AUDIO SYSTEM
 ========================================================= */
 
 let audioContext = null;
 
+/*
+Create the AudioContext only after a user interaction.
+This avoids browser autoplay restrictions.
+*/
+
 function getAudioContext() {
 
-    if (audioContext) {
-        return audioContext;
-    }
+```
+if (!audioContext) {
 
-    try {
+    const AudioContext =
+        window.AudioContext ||
+        window.webkitAudioContext;
 
-        const AudioContext =
-            window.AudioContext ||
-            window.webkitAudioContext;
-
-        if (!AudioContext) {
-            console.warn("Web Audio is not supported.");
-            return null;
-        }
-
-        audioContext = new AudioContext();
-
-        return audioContext;
-
-    } catch (error) {
-
-        console.warn(
-            "Could not create audio context:",
-            error
-        );
-
+    if (!AudioContext) {
         return null;
     }
+
+    audioContext = new AudioContext();
 }
 
+return audioContext;
+```
 
-async function playAudioTone(
-    frequency,
-    waveType,
-    duration
-) {
+}
 
-    if (!state.sfxEnabled) {
-        return;
-    }
+/*
+Resume audio if browser has suspended it.
+*/
+
+function prepareAudio() {
+
+```
+const ctx = getAudioContext();
+
+if (!ctx) {
+    return;
+}
+
+if (ctx.state === "suspended") {
+    ctx.resume();
+}
+```
+
+}
+
+/*
+Play a simple synthesized tone.
+*/
+
+function playAudioTone(freq, waveType, length) {
+
+```
+if (!state.sfxEnabled) {
+    return;
+}
+
+try {
 
     const ctx = getAudioContext();
 
@@ -91,821 +141,682 @@ async function playAudioTone(
         return;
     }
 
-    try {
-
-        if (ctx.state === "suspended") {
-            await ctx.resume();
-        }
-
-        const oscillator =
-            ctx.createOscillator();
-
-        const gain =
-            ctx.createGain();
-
-        oscillator.type =
-            waveType;
-
-        oscillator.frequency.setValueAtTime(
-            frequency,
-            ctx.currentTime
-        );
-
-        gain.gain.setValueAtTime(
-            0.08,
-            ctx.currentTime
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.00001,
-            ctx.currentTime + duration
-        );
-
-        oscillator.connect(gain);
-        gain.connect(ctx.destination);
-
-        oscillator.start();
-
-        oscillator.stop(
-            ctx.currentTime + duration
-        );
-
-    } catch (error) {
-
-        console.warn(
-            "Audio playback error:",
-            error
-        );
+    if (ctx.state === "suspended") {
+        ctx.resume();
     }
+
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    oscillator.type = waveType;
+    oscillator.frequency.setValueAtTime(
+        freq,
+        ctx.currentTime
+    );
+
+    gain.gain.setValueAtTime(
+        0.08,
+        ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        ctx.currentTime + length
+    );
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+
+    oscillator.start();
+
+    oscillator.stop(
+        ctx.currentTime + length
+    );
+
+} catch (error) {
+
+    console.log(
+        "Audio error:",
+        error
+    );
+}
+```
+
 }
 
-
-/* =========================================================
-   SOUND EFFECTS
-========================================================= */
+/* -----------------------------
+SOUND EFFECTS
+----------------------------- */
 
 function triggerClickSFX() {
 
-    playAudioTone(
-        580,
-        "triangle",
-        0.12
-    );
+```
+playAudioTone(
+    580,
+    "triangle",
+    0.12
+);
+```
 
 }
-
 
 function triggerProgressionSFX() {
 
+```
+playAudioTone(
+    480,
+    "sine",
+    0.08
+);
+
+setTimeout(() => {
+
     playAudioTone(
-        480,
+        640,
         "sine",
-        0.08
+        0.12
     );
 
-    setTimeout(() => {
-
-        playAudioTone(
-            640,
-            "sine",
-            0.12
-        );
-
-    }, 80);
+}, 80);
+```
 
 }
-
 
 function triggerWrongSFX() {
 
-    playAudioTone(
-        220,
-        "sawtooth",
-        0.25
-    );
+```
+playAudioTone(
+    220,
+    "sawtooth",
+    0.25
+);
+```
 
 }
 
-
 function triggerVictorySFX() {
 
+```
+playAudioTone(
+    523,
+    "sine",
+    0.15
+);
+
+setTimeout(() => {
+
     playAudioTone(
-        523,
+        659,
         "sine",
         0.15
     );
 
-    setTimeout(() => {
+}, 100);
 
-        playAudioTone(
-            659,
-            "sine",
-            0.15
-        );
+setTimeout(() => {
 
-    }, 100);
+    playAudioTone(
+        784,
+        "sine",
+        0.15
+    );
 
-    setTimeout(() => {
+}, 200);
 
-        playAudioTone(
-            784,
-            "sine",
-            0.15
-        );
+setTimeout(() => {
 
-    }, 200);
+    playAudioTone(
+        1046,
+        "sine",
+        0.35
+    );
 
-    setTimeout(() => {
-
-        playAudioTone(
-            1046,
-            "sine",
-            0.35
-        );
-
-    }, 300);
+}, 300);
+```
 
 }
 
-
 /* =========================================================
-   QUESTION BANK
+QUESTION BANK
 ========================================================= */
 
 const masterQuestionBank = [
 
-    {
-        question:
-            "A giant scroll drops in front of you containing a secret spell. How do you learn it?",
+```
+{
+    question:
+        "A giant scroll drops in front of you containing a secret spell. How do you learn it?",
 
-        options: [
+    options: [
 
-            {
-                text:
-                    "👁️ I look closely at the maps, symbols, and written patterns.",
-                type:
-                    "visual"
-            },
+        {
+            text:
+                "👁️ I look closely at the maps, symbols, and written patterns.",
+            type: "visual"
+        },
 
-            {
-                text:
-                    "🗣️ I say the incantation out loud or listen to a wizard read it.",
-                type:
-                    "auditory"
-            },
+        {
+            text:
+                "🗣️ I say the incantation out loud or listen to a wizard read it.",
+            type: "auditory"
+        },
 
-            {
-                text:
-                    "🪄 I wave the wand immediately to get a feel for the magic.",
-                type:
-                    "kinesthetic"
-            },
+        {
+            text:
+                "🪄 I wave the wand immediately to get a feel for the magic.",
+            type: "kinesthetic"
+        },
 
-            {
-                text:
-                    "⏳ I break it into tiny steps; long walls of text mix me up.",
-                type:
-                    "structured"
-            }
+        {
+            text:
+                "⏳ I break it into tiny steps; long walls of text mix me up.",
+            type: "structured"
+        }
 
-        ]
-    },
+    ]
+},
 
 
-    {
-        question:
-            "You are navigating a maze. Which hazard blocks your progress most?",
+{
+    question:
+        "You are navigating a maze. Which hazard blocks your progress most?",
 
-        options: [
+    options: [
 
-            {
-                text:
-                    "🌀 Getting distracted by moving decorations or flash changes.",
-                type:
-                    "visual"
-            },
+        {
+            text:
+                "🌀 Getting distracted by moving decorations or flash changes.",
+            type: "visual"
+        },
 
-            {
-                text:
-                    "🔊 Loud echoes or background hums cutting off my thoughts.",
-                type:
-                    "auditory"
-            },
+        {
+            text:
+                "🔊 Loud echoes or background hums cutting off my thoughts.",
+            type: "auditory"
+        },
 
-            {
-                text:
-                    "🪑 Having to stand completely still at a locked door for too long.",
-                type:
-                    "kinesthetic"
-            },
+        {
+            text:
+                "🪑 Having to stand completely still at a locked door for too long.",
+            type: "kinesthetic"
+        },
 
-            {
-                text:
-                    "📜 Instructions that keep shifting without keeping a clear rule book.",
-                type:
-                    "structured"
-            }
+        {
+            text:
+                "📜 Instructions that keep shifting without keeping a clear rule book.",
+            type: "structured"
+        }
 
-        ]
-    },
+    ]
+},
 
 
-    {
-        question:
-            "Time to complete a mini-game challenge! What keeps your memory sharp?",
+{
+    question:
+        "Time to complete a mini-game challenge! What keeps your memory sharp?",
 
-        options: [
+    options: [
 
-            {
-                text:
-                    "🎨 Color-coding matching elements or using map markers.",
-                type:
-                    "visual"
-            },
+        {
+            text:
+                "🎨 Color-coding matching elements or using map markers.",
+            type: "visual"
+        },
 
-            {
-                text:
-                    "🎵 Rhymes, rhythmic chants, or discussing tips with a teammate.",
-                type:
-                    "auditory"
-            },
+        {
+            text:
+                "🎵 Rhymes, rhythmic chants, or discussing tips with a teammate.",
+            type: "auditory"
+        },
 
-            {
-                text:
-                    "🎮 Using physical props, sketching, or active tracing tasks.",
-                type:
-                    "kinesthetic"
-            },
+        {
+            text:
+                "🎮 Using physical props, sketching, or active tracing tasks.",
+            type: "kinesthetic"
+        },
 
-            {
-                text:
-                    "⏱️ Frequent quick micro-breaks so my brain doesn't track off lines.",
-                type:
-                    "structured"
-            }
+        {
+            text:
+                "⏱️ Frequent quick micro-breaks so my brain doesn't track off lines.",
+            type: "structured"
+        }
 
-        ]
-    },
+    ]
+},
 
 
-    {
-        question:
-            "When reading a long piece of lore, your brain naturally...",
+{
+    question:
+        "When reading a long piece of lore, your brain naturally...",
 
-        options: [
+    options: [
 
-            {
-                text:
-                    "📸 Skims cleanly if there are pictures, charts, or bold fonts.",
-                type:
-                    "visual"
-            },
+        {
+            text:
+                "📸 Skims cleanly if there are pictures, charts, or bold fonts.",
+            type: "visual"
+        },
 
-            {
-                text:
-                    "🎧 Sub-vocalizes or whispers words internally to stay connected.",
-                type:
-                    "auditory"
-            },
+        {
+            text:
+                "🎧 Sub-vocalizes (whispering words internally) to stay connected.",
+            type: "auditory"
+        },
 
-            {
-                text:
-                    "✏️ Needs to doodle, highlight text, or fidget to maintain concentration.",
-                type:
-                    "kinesthetic"
-            },
+        {
+            text:
+                "✏️ Needs to doodle, highlight text, or fidget to maintain concentration.",
+            type: "kinesthetic"
+        },
 
-            {
-                text:
-                    "❌ Gets lost unless information is clearly separated and organized.",
-                type:
-                    "structured"
-            }
+        {
+            text:
+                "❌ Swaps letters around or gets lost unless someone highlights the row.",
+            type: "structured"
+        }
 
-        ]
-    },
+    ]
+},
 
 
-    {
-        question:
-            "Pick a legendary tool to assist you on your journey:",
+{
+    question:
+        "Pick a legendary tool to assist you on your journey:",
 
-        options: [
+    options: [
 
-            {
-                text:
-                    "🗺️ The Chrono-Map — infographics, mind maps and clear outlines.",
-                type:
-                    "visual"
-            },
+        {
+            text:
+                "🗺️ The Chrono-Map — infographics, mind maps and clear outlines.",
+            type: "visual"
+        },
 
-            {
-                text:
-                    "🎙️ The Echo-Stone — text-to-speech devices, audio logs and podcasts.",
-                type:
-                    "auditory"
-            },
+        {
+            text:
+                "🎙️ The Echo-Stone — text-to-speech devices, audio logs and podcasts.",
+            type: "auditory"
+        },
 
-            {
-                text:
-                    "🛠️ The Builder's Kit — hands-on creation tools and real builds.",
-                type:
-                    "kinesthetic"
-            },
+        {
+            text:
+                "🛠️ The Builder's Kit — hands-on creation tools and real builds.",
+            type: "kinesthetic"
+        },
 
-            {
-                text:
-                    "📅 The Order-Shield — task breakdowns, clean displays and timers.",
-                type:
-                    "structured"
-            }
+        {
+            text:
+                "📅 The Order-Shield — task breakdowns, timers and uncluttered displays.",
+            type: "structured"
+        }
 
-        ]
-    },
+    ]
+},
 
 
-    {
-        question:
-            "You enter a forgotten dungeon library. How do you find the hidden switch?",
+{
+    question:
+        "You enter a forgotten dungeon library. How do you find the hidden switch?",
 
-        options: [
+    options: [
 
-            {
-                text:
-                    "🔍 Scanning structural changes, color codes or layout variations.",
-                type:
-                    "visual"
-            },
+        {
+            text:
+                "🔍 Scanning structural changes, color codes, or layout variations.",
+            type: "visual"
+        },
 
-            {
-                text:
-                    "🦻 Listening closely for tiny gear clicks or wall echoes.",
-                type:
-                    "auditory"
-            },
+        {
+            text:
+                "🦻 Listening closely for tiny gear clicks or wall echoes.",
+            type: "auditory"
+        },
 
-            {
-                text:
-                    "🧱 Feeling along the textures of the stone walls manually.",
-                type:
-                    "kinesthetic"
-            },
+        {
+            text:
+                "🧱 Feeling along the textures of the stone walls manually.",
+            type: "kinesthetic"
+        },
 
-            {
-                text:
-                    "🗂️ Sorting books systematically by row numbers to unlock details.",
-                type:
-                    "structured"
-            }
+        {
+            text:
+                "🗂️ Sorting books systematically by row numbers to unlock details.",
+            type: "structured"
+        }
 
-        ]
-    },
+    ]
+},
 
 
-    {
-        question:
-            "A teammate tries to explain a new battle tactic. You prefer that they:",
+{
+    question:
+        "A teammate tries to explain a new battle tactic. You prefer that they:",
 
-        options: [
+    options: [
 
-            {
-                text:
-                    "🗺️ Sketch a tactical combat drawing or map outline.",
-                type:
-                    "visual"
-            },
+        {
+            text:
+                "🗺️ Sketch a tactical combat drawing or map outline.",
+            type: "visual"
+        },
 
-            {
-                text:
-                    "📣 Explain it clearly or act out vocal target calls.",
-                type:
-                    "auditory"
-            },
+        {
+            text:
+                "📣 Explain it clearly or act out vocal target calls.",
+            type: "auditory"
+        },
 
-            {
-                text:
-                    "⚔️ Run a mock scrimmage so you can practice the physical maneuvers.",
-                type:
-                    "kinesthetic"
-            },
+        {
+            text:
+                "⚔️ Run a mock scrimmage so you can practice the physical maneuvers.",
+            type: "kinesthetic"
+        },
 
-            {
-                text:
-                    "📋 List individual, incremental sub-tasks step-by-step.",
-                type:
-                    "structured"
-            }
+        {
+            text:
+                "📋 List individual, incremental sub-tasks step-by-step.",
+            type: "structured"
+        }
 
-        ]
-    }
+    ]
+}
+```
 
 ];
 
-
 /* =========================================================
-   MINI-GAME DATA
+BONUS ROUND DATA
 ========================================================= */
 
 const minigameData = [
 
-    {
-        text:
-            "Using a text-to-speech engine to listen to a book",
-        category:
-            "auditory"
-    },
+```
+{
+    text:
+        "Using a text-to-speech engine to listen to a book",
+    category:
+        "auditory"
+},
 
-    {
-        text:
-            "Transforming bullet points into an interconnected mind map",
-        category:
-            "visual"
-    },
+{
+    text:
+        "Transforming bullet points into an interconnected mind map",
+    category:
+        "visual"
+},
 
-    {
-        text:
-            "Setting a kitchen timer for a structured 15-minute chunk",
-        category:
-            "structured"
-    },
+{
+    text:
+        "Setting a kitchen timer for a structured 15-minute chunk",
+    category:
+        "structured"
+},
 
-    {
-        text:
-            "Doodling shapes or tracing letters while memorizing definitions",
-        category:
-            "kinesthetic"
-    }
+{
+    text:
+        "Doodling shapes or tracing letters while memorizing definitions",
+    category:
+        "kinesthetic"
+}
+```
 
 ];
 
-
 /* =========================================================
-   DOM ELEMENTS
+EVENT LISTENERS
 ========================================================= */
 
-let startScreen;
-let quizScreen;
-let minigameScreen;
-let resultsScreen;
+/*
+SFX toggle
+*/
 
-let btnStart;
-let btnRestart;
-let btnExport;
-let btnSfx;
+if (btnSfx) {
 
-let activeSortCard;
-let questionNumber;
-let questionText;
-let optionsContainer;
-let progressBar;
-let profileSummary;
-let strategyList;
+```
+btnSfx.addEventListener(
+    "click",
+    () => {
 
+        prepareAudio();
 
-/* =========================================================
-   GET DOM ELEMENTS
-========================================================= */
+        state.sfxEnabled =
+            !state.sfxEnabled;
 
-function cacheDOM() {
+        btnSfx.innerText =
+            state.sfxEnabled
+                ? "🔊 SFX: ON"
+                : "🔇 SFX: OFF";
 
-    startScreen =
-        document.getElementById(
-            "start-screen"
-        );
+        if (state.sfxEnabled) {
+            triggerClickSFX();
+        }
 
-    quizScreen =
-        document.getElementById(
-            "quiz-screen"
-        );
-
-    minigameScreen =
-        document.getElementById(
-            "minigame-screen"
-        );
-
-    resultsScreen =
-        document.getElementById(
-            "results-screen"
-        );
-
-
-    btnStart =
-        document.getElementById(
-            "btn-start"
-        );
-
-    btnRestart =
-        document.getElementById(
-            "btn-restart"
-        );
-
-    btnExport =
-        document.getElementById(
-            "btn-export"
-        );
-
-    btnSfx =
-        document.getElementById(
-            "btn-sfx"
-        );
-
-
-    activeSortCard =
-        document.getElementById(
-            "active-sort-card"
-        );
-
-    questionNumber =
-        document.getElementById(
-            "question-number"
-        );
-
-    questionText =
-        document.getElementById(
-            "question-text"
-        );
-
-    optionsContainer =
-        document.getElementById(
-            "options-container"
-        );
-
-    progressBar =
-        document.getElementById(
-            "progress-bar"
-        );
-
-    profileSummary =
-        document.getElementById(
-            "profile-summary"
-        );
-
-    strategyList =
-        document.getElementById(
-            "strategy-list"
-        );
+    }
+);
+```
 
 }
 
+/*
+Start game
+*/
 
-/* =========================================================
-   SCREEN MANAGEMENT
-========================================================= */
+if (btnStart) {
 
-function showScreen(screen) {
+```
+btnStart.addEventListener(
+    "click",
+    () => {
 
-    const screens = [
+        prepareAudio();
 
-        startScreen,
-        quizScreen,
-        minigameScreen,
-        resultsScreen
+        triggerProgressionSFX();
 
-    ];
+        startQuest();
 
+    }
+);
+```
 
-    screens.forEach(
-        current => {
+}
 
-            if (current) {
+/*
+Restart game
+*/
 
-                current.classList.remove(
-                    "active"
-                );
+if (btnRestart) {
 
-            }
+```
+btnRestart.addEventListener(
+    "click",
+    () => {
+
+        prepareAudio();
+
+        triggerClickSFX();
+
+        resetQuest();
+
+    }
+);
+```
+
+}
+
+/*
+Export / Print report
+*/
+
+if (btnExport) {
+
+```
+btnExport.addEventListener(
+    "click",
+    saveAsHighFidelityPDF
+);
+```
+
+}
+
+/*
+Bonus round buttons
+*/
+
+document
+.querySelectorAll(".zone-btn")
+.forEach(button => {
+
+```
+    button.addEventListener(
+        "click",
+        event => {
+
+            prepareAudio();
+
+            handleMinigameMatch(
+                event.currentTarget
+            );
 
         }
     );
 
-
-    if (screen) {
-
-        screen.classList.add(
-            "active"
-        );
-
-    }
-
-}
-
+});
+```
 
 /* =========================================================
-   PROGRESS BAR
-========================================================= */
-
-function updateProgress(percent) {
-
-    if (!progressBar) {
-        return;
-    }
-
-
-    percent =
-        Math.max(
-            0,
-            Math.min(
-                100,
-                percent
-            )
-        );
-
-
-    progressBar.style.width =
-        `${percent}%`;
-
-}
-
-
-/* =========================================================
-   RANDOMIZE QUESTIONS
+QUESTION RANDOMIZER
 ========================================================= */
 
 function generateDynamicQuestions() {
 
-    const shuffled =
-        [...masterQuestionBank];
+```
+const shuffled =
+    [...masterQuestionBank];
 
+for (
+    let i = shuffled.length - 1;
+    i > 0;
+    i--
+) {
 
-    for (
-        let i = shuffled.length - 1;
-        i > 0;
-        i--
-    ) {
-
-        const j =
-            Math.floor(
-                Math.random() *
-                (i + 1)
-            );
-
-
-        [
-            shuffled[i],
-            shuffled[j]
-        ] =
-        [
-            shuffled[j],
-            shuffled[i]
-        ];
-
-    }
-
-
-    state.activeQuestions =
-        shuffled.slice(
-            0,
-            5
+    const j =
+        Math.floor(
+            Math.random() * (i + 1)
         );
+
+    [
+        shuffled[i],
+        shuffled[j]
+    ] =
+    [
+        shuffled[j],
+        shuffled[i]
+    ];
 
 }
 
+/*
+    Five random questions.
+*/
+
+state.activeQuestions =
+    shuffled.slice(0, 5);
+```
+
+}
 
 /* =========================================================
-   START GAME
+START QUEST
 ========================================================= */
 
 function startQuest() {
 
-    state.currentQuestionIndex =
-        0;
+```
+state.currentQuestionIndex = 0;
+state.minigameIndex = 0;
 
-    state.minigameIndex =
-        0;
+generateDynamicQuestions();
 
-    state.xp =
-        0;
+if (startScreen) {
+    startScreen.classList.remove("active");
+}
 
-    state.answered =
-        false;
+if (quizScreen) {
+    quizScreen.classList.add("active");
+}
 
-    state.scores = {
-
-        visual: 0,
-        auditory: 0,
-        kinesthetic: 0,
-        structured: 0
-
-    };
-
-
-    state.generatedReport = {
-
-        summary: "",
-        strategies: []
-
-    };
-
-
-    generateDynamicQuestions();
-
-
-    triggerProgressionSFX();
-
-
-    showScreen(
-        quizScreen
-    );
-
-
-    loadQuestion();
+loadQuestion();
+```
 
 }
 
-
 /* =========================================================
-   LOAD QUESTION
+LOAD QUESTION
 ========================================================= */
 
 function loadQuestion() {
 
-    const currentQuestion =
-        state.activeQuestions[
-            state.currentQuestionIndex
-        ];
+```
+const currentQuestion =
+    state.activeQuestions[
+        state.currentQuestionIndex
+    ];
+
+if (!currentQuestion) {
+    launchBonusRound();
+    return;
+}
 
 
-    if (!currentQuestion) {
+if (questionNumber) {
 
-        launchBonusRound();
+    questionNumber.innerText =
+        `Challenge ${
+            state.currentQuestionIndex + 1
+        } of 5`;
 
-        return;
-
-    }
-
-
-    state.answered =
-        false;
+}
 
 
-    if (questionNumber) {
+if (questionText) {
 
-        questionNumber.innerText =
-            `Challenge ${state.currentQuestionIndex + 1} of 5`;
+    questionText.innerText =
+        currentQuestion.question;
 
-    }
-
-
-    if (questionText) {
-
-        questionText.innerText =
-            currentQuestion.question;
-
-    }
+}
 
 
-    if (!optionsContainer) {
+if (optionsContainer) {
 
-        console.error(
-            "Missing #options-container"
-        );
+    optionsContainer.innerHTML = "";
 
-        return;
-
-    }
-
-
-    optionsContainer.innerHTML =
-        "";
-
-
-    currentQuestion.options.forEach(
-        (option, index) => {
+    currentQuestion.options
+        .forEach(option => {
 
             const card =
-                document.createElement(
-                    "button"
-                );
-
-
-            card.type =
-                "button";
-
+                document.createElement("div");
 
             card.className =
                 "option-card";
 
-
-            card.dataset.type =
-                option.type;
-
-
             card.innerText =
                 option.text;
+
+            card.setAttribute(
+                "role",
+                "button"
+            );
+
+            card.setAttribute(
+                "tabindex",
+                "0"
+            );
 
 
             card.addEventListener(
                 "click",
                 () => {
 
-                    if (
-                        state.answered
-                    ) {
-
-                        return;
-
-                    }
-
+                    triggerProgressionSFX();
 
                     handleSelection(
                         option.type,
@@ -916,1059 +827,989 @@ function loadQuestion() {
             );
 
 
+            card.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+
+                        event.preventDefault();
+
+                        triggerProgressionSFX();
+
+                        handleSelection(
+                            option.type,
+                            card
+                        );
+
+                    }
+
+                }
+            );
+
+
             optionsContainer.appendChild(
                 card
             );
 
-        }
-    );
-
-
-    updateProgress(
-        (
-            state.currentQuestionIndex /
-            5
-        ) * 100
-    );
+        });
 
 }
 
 
+updateProgress();
+```
+
+}
+
 /* =========================================================
-   HANDLE QUIZ ANSWER
+HANDLE ANSWER
 ========================================================= */
 
 function handleSelection(
-    type,
-    selectedCard
+type,
+selectedCard
 ) {
 
-    if (
-        state.answered
-    ) {
+```
+/*
+    Prevent double-clicking an answer.
+*/
 
-        return;
+if (
+    optionsContainer &&
+    optionsContainer.dataset.locked === "true"
+) {
+    return;
+}
 
-    }
-
-
-    state.answered =
-        true;
-
-
-    if (
-        state.scores[type] !== undefined
-    ) {
-
-        state.scores[type]++;
-
-    }
+if (optionsContainer) {
+    optionsContainer.dataset.locked = "true";
+}
 
 
-    state.xp +=
-        100;
+/*
+    Add score.
+*/
+
+if (
+    Object.prototype.hasOwnProperty.call(
+        state.scores,
+        type
+    )
+) {
+
+    state.scores[type]++;
+
+}
 
 
-    if (selectedCard) {
+/*
+    Add XP.
+*/
 
-        selectedCard.classList.add(
-            "selected"
-        );
-
-    }
+state.xp += 100;
 
 
-    triggerProgressionSFX();
+/*
+    IMPORTANT FIX:
+
+    xpCounter may not exist because
+    the HTML currently comments it out.
+
+    Therefore this is null-safe.
+*/
+
+if (xpCounter) {
+    xpCounter.innerText =
+        state.xp;
+}
 
 
-    /*
-     * Give the user a short visual pause
-     * before loading the next question.
-     */
+/*
+    Visual feedback.
+*/
 
-    setTimeout(
-        () => {
+if (selectedCard) {
 
-            state.currentQuestionIndex++;
-
-
-            if (
-                state.currentQuestionIndex <
-                state.activeQuestions.length
-            ) {
-
-                loadQuestion();
-
-            } else {
-
-                launchBonusRound();
-
-            }
-
-        },
-        450
+    selectedCard.classList.add(
+        "selected"
     );
 
 }
 
 
+state.currentQuestionIndex++;
+
+
+setTimeout(
+    () => {
+
+        if (optionsContainer) {
+            optionsContainer.dataset.locked =
+                "false";
+        }
+
+        if (
+            state.currentQuestionIndex <
+            state.activeQuestions.length
+        ) {
+
+            loadQuestion();
+
+        } else {
+
+            launchBonusRound();
+
+        }
+
+    },
+    350
+);
+```
+
+}
+
 /* =========================================================
-   BONUS ROUND
+BONUS ROUND
 ========================================================= */
 
 function launchBonusRound() {
 
-    showScreen(
-        minigameScreen
-    );
+```
+if (quizScreen) {
+    quizScreen.classList.remove("active");
+}
 
+if (minigameScreen) {
+    minigameScreen.classList.add("active");
+}
 
-    updateProgress(
-        83
-    );
+updateProgress();
 
-
-    state.minigameIndex =
-        0;
-
-
-    loadMinigameCard();
+loadMinigameCard();
+```
 
 }
 
-
 /* =========================================================
-   LOAD BONUS CARD
+LOAD BONUS CARD
 ========================================================= */
 
 function loadMinigameCard() {
 
-    if (
-        state.minigameIndex >=
-        minigameData.length
-    ) {
-
-        showResults();
-
-        return;
-
-    }
-
-
-    const card =
-        minigameData[
-            state.minigameIndex
-        ];
-
-
-    if (activeSortCard) {
-
-        activeSortCard.innerText =
-            `📋 Card: "${card.text}"`;
-
-    }
-
-}
-
-
-/* =========================================================
-   MINI-GAME MATCH
-========================================================= */
-
-function handleMinigameMatch(
-    selectedTarget
+```
+if (
+    state.minigameIndex <
+    minigameData.length
 ) {
-
-    if (!selectedTarget) {
-        return;
-    }
-
 
     const currentCard =
         minigameData[
             state.minigameIndex
         ];
 
+    if (activeSortCard) {
 
-    if (!currentCard) {
-
-        showResults();
-
-        return;
+        activeSortCard.innerText =
+            `📋 Card: "${currentCard.text}"`;
 
     }
 
+} else {
 
-    const userGuess =
-        selectedTarget.dataset.zone;
-
-
-    const isCorrect =
-        userGuess ===
-        currentCard.category;
-
-
-    if (isCorrect) {
-
-        state.xp +=
-            150;
-
-
-        triggerProgressionSFX();
-
-
-        selectedTarget.classList.add(
-            "correct-flash"
-        );
-
-
-    } else {
-
-        triggerWrongSFX();
-
-
-        selectedTarget.classList.add(
-            "wrong-flash"
-        );
-
-    }
-
-
-    setTimeout(
-        () => {
-
-            selectedTarget.classList.remove(
-                "correct-flash",
-                "wrong-flash"
-            );
-
-
-            state.minigameIndex++;
-
-
-            loadMinigameCard();
-
-        },
-        500
-    );
+    showResults();
 
 }
+```
 
+}
 
 /* =========================================================
-   FIND DOMINANT TYPE
+BONUS ROUND ANSWER
 ========================================================= */
 
-function getDominantScore() {
-
-    const categories =
-        Object.keys(
-            state.scores
-        );
-
-
-    return categories.reduce(
-        (
-            highest,
-            current
-        ) => {
-
-            if (
-                state.scores[current] >
-                state.scores[highest]
-            ) {
-
-                return current;
-
-            }
-
-
-            return highest;
-
-        },
-        categories[0]
-    );
-
-}
-
-
-/* =========================================================
-   SHOW RESULTS
-========================================================= */
-
-function showResults() {
-
-    triggerVictorySFX();
-
-
-    showScreen(
-        resultsScreen
-    );
-
-
-    updateProgress(
-        100
-    );
-
-
-    const scores =
-        state.scores;
-
-
-    let summary =
-        "";
-
-    let strategies =
-        [];
-
-
-    if (
-        scores.structured >= 2
-    ) {
-
-        summary =
-            "Your learning profile shows a strong preference for structure. You may work especially well when information is organized into clear steps, manageable sections and predictable routines.";
-
-
-        strategies = [
-
-            "Chunking Method: Break large assignments into short, focused sessions.",
-
-            "Organize Information: Use headings, numbered steps, checklists and clearly separated sections.",
-
-            "Use Timers: Try short timed learning blocks followed by brief breaks."
-
-        ];
-
-    }
-
-    else {
-
-        const dominant =
-            getDominantScore();
-
-
-        if (
-            dominant ===
-            "visual"
-        ) {
-
-            summary =
-                "Your learning profile shows a strong visual preference. You may remember information particularly well when it is presented through images, diagrams, colors, symbols and spatial organization.";
-
-
-            strategies = [
-
-                "Color Coding: Use colors to separate concepts and highlight important information.",
-
-                "Mind Mapping: Turn written information into diagrams, charts or visual maps.",
-
-                "Visual Flashcards: Combine important words with pictures or symbols."
-
-            ];
-
-        }
-
-        else if (
-            dominant ===
-            "auditory"
-        ) {
-
-            summary =
-                "Your learning profile shows a strong auditory preference. You may benefit from hearing explanations, discussing ideas, repeating information and using spoken feedback.";
-
-
-            strategies = [
-
-                "Read Aloud: Say important information aloud while studying.",
-
-                "Text-to-Speech: Listen to longer reading assignments when appropriate.",
-
-                "Teach Someone: Explain a concept verbally to reinforce your memory."
-
-            ];
-
-        }
-
-        else {
-
-            summary =
-                "Your learning profile shows a strong kinesthetic preference. You may engage especially well when learning includes movement, hands-on activities, experimentation and physical interaction.";
-
-
-            strategies = [
-
-                "Hands-On Learning: Use physical examples whenever possible.",
-
-                "Movement Breaks: Add short movement breaks during longer study sessions.",
-
-                "Build and Practice: Learn concepts by doing, creating or demonstrating them."
-
-            ];
-
-        }
-
-    }
-
-
-    state.generatedReport = {
-
-        summary:
-            summary,
-
-        strategies:
-            strategies
-
-    };
-
-
-    if (profileSummary) {
-
-        profileSummary.innerText =
-            summary;
-
-    }
-
-
-    if (strategyList) {
-
-        strategyList.innerHTML =
-            "";
-
-
-        strategies.forEach(
-            strategy => {
-
-                const li =
-                    document.createElement(
-                        "li"
-                    );
-
-
-                li.innerText =
-                    strategy;
-
-
-                strategyList.appendChild(
-                    li
-                );
-
-            }
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   PRINT / PDF REPORT
-========================================================= */
-
-function saveAsHighFidelityPDF() {
-
-    if (
-        !state.generatedReport.summary
-    ) {
-
-        alert(
-            "Please complete the TrioRingo challenge first."
-        );
-
-        return;
-
-    }
-
-
-    triggerVictorySFX();
-
-
-    const report =
-        state.generatedReport;
-
-
-    const printWindow =
-        window.open(
-            "",
-            "_blank"
-        );
-
-
-    if (!printWindow) {
-
-        alert(
-            "Please allow popups so TrioRingo can create your printable report."
-        );
-
-        return;
-
-    }
-
-
-    const strategiesHTML =
-        report.strategies
-            .map(
-                strategy =>
-                    `<li>${escapeHTML(strategy)}</li>`
-            )
-            .join("");
-
-
-    printWindow.document.write(`
-
-<!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-
-<meta charset="UTF-8">
-
-<title>
-TrioRingo Learning Power Report
-</title>
-
-<style>
-
-body {
-
-    font-family:
-        Arial,
-        sans-serif;
-
-    max-width:
-        800px;
-
-    margin:
-        auto;
-
-    padding:
-        40px;
-
-    color:
-        #1e293b;
-
-    line-height:
-        1.6;
-
-}
-
-.header {
-
-    border-bottom:
-        4px solid #8b5cf6;
-
-    padding-bottom:
-        20px;
-
-    margin-bottom:
-        30px;
-
-}
-
-h1 {
-
-    color:
-        #8b5cf6;
-
-    margin:
-        0;
-
-}
-
-.section {
-
-    background:
-        #f8fafc;
-
-    border:
-        1px solid #e2e8f0;
-
-    border-radius:
-        12px;
-
-    padding:
-        24px;
-
-    margin-bottom:
-        24px;
-
-}
-
-h2,
-h3 {
-
-    color:
-        #0f172a;
-
-}
-
-li {
-
-    margin-bottom:
-        12px;
-
-}
-
-.score-box {
-
-    background:
-        #f1f5f9;
-
-    padding:
-        18px;
-
-    border-radius:
-        10px;
-
-}
-
-.footer {
-
-    border-top:
-        1px solid #e2e8f0;
-
-    margin-top:
-        30px;
-
-    padding-top:
-        20px;
-
-    text-align:
-        center;
-
-    font-size:
-        11px;
-
-    color:
-        #64748b;
-
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="header">
-
-<h1>
-🧠 TrioRingo
-</h1>
-
-<p>
-Discover Your Learning Power
-</p>
-
-</div>
-
-
-<div class="section">
-
-<h2>
-Your Cognitive Processing Profile
-</h2>
-
-<p>
-${escapeHTML(report.summary)}
-</p>
-
-</div>
-
-
-<div class="section">
-
-<h2>
-🛠️ Your Ultimate Retention Toolkit
-</h2>
-
-<ul>
-
-${strategiesHTML}
-
-</ul>
-
-</div>
-
-
-<div class="section">
-
-<h2>
-Your TrioRingo Score
-</h2>
-
-<div class="score-box">
-
-<p>
-Visual:
-<strong>
-${state.scores.visual}
-</strong>
-</p>
-
-<p>
-Auditory:
-<strong>
-${state.scores.auditory}
-</strong>
-</p>
-
-<p>
-Kinesthetic:
-<strong>
-${state.scores.kinesthetic}
-</strong>
-</p>
-
-<p>
-Structured:
-<strong>
-${state.scores.structured}
-</strong>
-</p>
-
-<p>
-Total XP:
-<strong>
-${state.xp}
-</strong>
-</p>
-
-</div>
-
-</div>
-
-
-<div class="footer">
-
-TrioRingo Educational Learning Tool
-
-<br>
-
-Generated:
-${new Date().toLocaleDateString()}
-
-<br><br>
-
-This tool is educational and is not a medical diagnosis.
-
-</div>
-
-
-<script>
-
-window.onload = function() {
-
-    window.print();
-
-    setTimeout(
-        function() {
-
-            window.close();
-
-        },
-        800
-    );
-
-};
-
-<\/script>
-
-</body>
-
-</html>
-
-`);
-
-
-    printWindow.document.close();
-
-}
-
-
-/* =========================================================
-   HTML ESCAPE
-========================================================= */
-
-function escapeHTML(
-    value
+function handleMinigameMatch(
+selectedTarget
 ) {
 
-    return String(value)
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
+```
+if (
+    !selectedTarget ||
+    state.minigameIndex >=
+    minigameData.length
+) {
+    return;
 }
 
 
-/* =========================================================
-   RESET GAME
-========================================================= */
-
-function resetQuest() {
-
-    state.currentQuestionIndex =
-        0;
-
-    state.minigameIndex =
-        0;
-
-    state.xp =
-        0;
-
-    state.answered =
-        false;
-
-
-    state.scores = {
-
-        visual: 0,
-
-        auditory: 0,
-
-        kinesthetic: 0,
-
-        structured: 0
-
-    };
-
-
-    state.generatedReport = {
-
-        summary: "",
-
-        strategies: []
-
-    };
-
-
-    state.activeQuestions =
-        [];
-
-
-    if (profileSummary) {
-
-        profileSummary.innerText =
-            "Analyzing your brain mechanics...";
-
-    }
-
-
-    if (strategyList) {
-
-        strategyList.innerHTML =
-            "";
-
-    }
-
-
-    updateProgress(
-        0
-    );
-
-
-    showScreen(
-        startScreen
-    );
-
-}
-
-
-/* =========================================================
-   INITIALIZE SFX BUTTON
-========================================================= */
-
-function initializeSFX() {
-
-    if (!btnSfx) {
-        return;
-    }
-
-
-    btnSfx.addEventListener(
-        "click",
-        () => {
-
-            state.sfxEnabled =
-                !state.sfxEnabled;
-
-
-            btnSfx.innerText =
-                state.sfxEnabled
-                    ? "🔊 SFX: ON"
-                    : "🔇 SFX: OFF";
-
-
-            if (
-                state.sfxEnabled
-            ) {
-
-                triggerClickSFX();
-
-            }
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   INITIALIZE MINI-GAME BUTTONS
-========================================================= */
-
-function initializeMiniGame() {
-
-    const zoneButtons =
-        document.querySelectorAll(
-            ".zone-btn"
-        );
-
-
-    zoneButtons.forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    handleMinigameMatch(
-                        button
-                    );
-
-                }
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
-
-function initializeGame() {
-
-    cacheDOM();
-
-
-    /*
-     * START
-     */
-
-    if (btnStart) {
-
-        btnStart.addEventListener(
-            "click",
-            startQuest
-        );
-
-    }
-
-
-    /*
-     * RESTART
-     */
-
-    if (btnRestart) {
-
-        btnRestart.addEventListener(
-            "click",
-            () => {
-
-                triggerClickSFX();
-
-                resetQuest();
-
-            }
-        );
-
-    }
-
-
-    /*
-     * EXPORT
-     */
-
-    if (btnExport) {
-
-        btnExport.addEventListener(
-            "click",
-            saveAsHighFidelityPDF
-        );
-
-    }
-
-
-    initializeSFX();
-
-    initializeMiniGame();
-
-
-    /*
-     * Make sure the start screen is visible.
-     */
-
-    showScreen(
-        startScreen
-    );
-
-
-    updateProgress(
-        0
-    );
-
-
-    console.log(
-        "TrioRingo main5a.js loaded successfully."
-    );
-
-}
-
-
-/* =========================================================
-   START AFTER HTML LOADS
-========================================================= */
+/*
+    Prevent multiple clicks
+    during the animation.
+*/
 
 if (
-    document.readyState ===
-    "loading"
+    selectedTarget.dataset.locked ===
+    "true"
+) {
+    return;
+}
+
+selectedTarget.dataset.locked =
+    "true";
+
+
+const currentCard =
+    minigameData[
+        state.minigameIndex
+    ];
+
+const userGuess =
+    selectedTarget.getAttribute(
+        "data-zone"
+    );
+
+
+if (
+    userGuess ===
+    currentCard.category
 ) {
 
-    document.addEventListener(
-        "DOMContentLoaded",
-        initializeGame
+    triggerProgressionSFX();
+
+    state.xp += 150;
+
+
+    if (xpCounter) {
+
+        xpCounter.innerText =
+            state.xp;
+
+    }
+
+
+    selectedTarget.classList.add(
+        "correct-flash"
     );
 
 } else {
 
-    initializeGame();
+    triggerWrongSFX();
+
+    selectedTarget.classList.add(
+        "wrong-flash"
+    );
 
 }
 
+
+setTimeout(
+    () => {
+
+        selectedTarget.classList.remove(
+            "correct-flash",
+            "wrong-flash"
+        );
+
+        selectedTarget.dataset.locked =
+            "false";
+
+        state.minigameIndex++;
+
+        loadMinigameCard();
+
+    },
+    500
+);
+```
+
+}
+
+/* =========================================================
+PROGRESS BAR
+========================================================= */
+
+function updateProgress() {
+
+```
+if (!progressBar) {
+    return;
+}
+
+
+const totalSteps =
+    state.activeQuestions.length +
+    minigameData.length;
+
+
+const completedSteps =
+    state.currentQuestionIndex +
+    state.minigameIndex;
+
+
+let percent =
+    totalSteps > 0
+        ? (completedSteps / totalSteps) * 100
+        : 0;
+
+
+percent =
+    Math.max(
+        0,
+        Math.min(
+            100,
+            percent
+        )
+    );
+
+
+progressBar.style.width =
+    `${percent}%`;
+```
+
+}
+
+/* =========================================================
+RESULTS
+========================================================= */
+
+function showResults() {
+
+```
+triggerVictorySFX();
+
+
+if (minigameScreen) {
+    minigameScreen.classList.remove(
+        "active"
+    );
+}
+
+
+if (resultsScreen) {
+    resultsScreen.classList.add(
+        "active"
+    );
+}
+
+
+if (progressBar) {
+    progressBar.style.width =
+        "100%";
+}
+
+
+const scores =
+    state.scores;
+
+
+/*
+    Find highest category.
+*/
+
+const categories =
+    Object.keys(scores);
+
+
+let dominant =
+    categories[0];
+
+
+categories.forEach(
+    category => {
+
+        if (
+            scores[category] >
+            scores[dominant]
+        ) {
+
+            dominant =
+                category;
+
+        }
+
+    }
+);
+
+
+let summaryText = "";
+let strategies = [];
+
+
+/*
+    Structured profile
+*/
+
+if (
+    scores.structured >= 2 &&
+    scores.structured >= scores[dominant]
+) {
+
+    summaryText =
+        "Your mind thrives on customized structure! You may learn especially well when information is broken into clear, manageable steps.";
+
+    strategies = [
+
+        "Chunking Method: Break large assignments into small 15-minute bursts.",
+
+        "Visual Organization: Use headings, checklists, timers and clearly separated sections.",
+
+        "Gamify Deadlines: Turn difficult tasks into small level-based goals and reward progress."
+
+    ];
+
+}
+
+
+/*
+    Visual profile
+*/
+
+else if (
+    dominant === "visual"
+) {
+
+    summaryText =
+        "You are a Spatial Explorer! You may naturally connect strongly with colors, images, diagrams, symbols and visual organization.";
+
+    strategies = [
+
+        "Color Coding: Use different colors to separate important concepts.",
+
+        "Mind Mapping: Turn written information into diagrams, flowcharts and visual connections.",
+
+        "Visual Flashcards: Pair important facts with memorable images or symbols."
+
+    ];
+
+}
+
+
+/*
+    Auditory profile
+*/
+
+else if (
+    dominant === "auditory"
+) {
+
+    summaryText =
+        "You are an Echo Weaver! You may remember information particularly well through conversation, rhythm, spoken explanations and auditory feedback.";
+
+    strategies = [
+
+        "Vocal Recitation: Explain new concepts out loud.",
+
+        "Text-to-Speech: Listen to difficult reading material.",
+
+        "Discussion Learning: Talk through difficult ideas with another person."
+
+    ];
+
+}
+
+
+/*
+    Kinesthetic profile
+*/
+
+else {
+
+    summaryText =
+        "You are a Kinesthetic Builder! You may learn especially well through movement, hands-on activities, experimentation and active practice.";
+
+    strategies = [
+
+        "Active Learning: Turn passive studying into hands-on activities.",
+
+        "Tactile Association: Write, draw, build or physically manipulate learning materials.",
+
+        "Movement Breaks: Add short movement breaks during longer study sessions."
+
+    ];
+
+}
+
+
+state.generatedReport = {
+
+    summary:
+        summaryText,
+
+    strategies:
+        strategies
+
+};
+
+
+if (profileSummary) {
+
+    profileSummary.innerText =
+        summaryText;
+
+}
+
+
+if (strategyList) {
+
+    strategyList.innerHTML =
+        "";
+
+    strategies.forEach(
+        strategy => {
+
+            const li =
+                document.createElement(
+                    "li"
+                );
+
+            li.innerText =
+                strategy;
+
+            strategyList.appendChild(
+                li
+            );
+
+        }
+    );
+
+}
+```
+
+}
+
+/* =========================================================
+PRINT / SAVE REPORT
+========================================================= */
+
+function saveAsHighFidelityPDF() {
+
+```
+prepareAudio();
+
+triggerVictorySFX();
+
+
+const report =
+    state.generatedReport;
+
+
+if (!report.summary) {
+
+    alert(
+        "Please complete the TrioRingo challenge first."
+    );
+
+    return;
+
+}
+
+
+const printWindow =
+    window.open(
+        "",
+        "_blank"
+    );
+
+
+if (!printWindow) {
+
+    alert(
+        "Please allow popups to export your report."
+    );
+
+    return;
+
+}
+
+
+const safeSummary =
+    escapeHTML(
+        report.summary
+    );
+
+
+const safeStrategies =
+    report.strategies
+        .map(
+            strategy =>
+                `<li>${escapeHTML(strategy)}</li>`
+        )
+        .join("");
+
+
+printWindow.document.write(`
+
+    <!DOCTYPE html>
+
+    <html lang="en">
+
+    <head>
+
+        <meta charset="UTF-8">
+
+        <title>
+            TrioRingo Learning Power Report
+        </title>
+
+        <style>
+
+            body {
+                font-family:
+                    Arial,
+                    sans-serif;
+
+                padding: 40px;
+
+                color:
+                    #1e293b;
+
+                max-width:
+                    800px;
+
+                margin:
+                    auto;
+
+                line-height:
+                    1.6;
+            }
+
+            .header {
+
+                border-bottom:
+                    4px solid #8b5cf6;
+
+                padding-bottom:
+                    20px;
+
+                margin-bottom:
+                    30px;
+
+            }
+
+            h1 {
+
+                color:
+                    #8b5cf6;
+
+                margin:
+                    0;
+
+            }
+
+            .section {
+
+                background:
+                    #f8fafc;
+
+                border:
+                    1px solid #e2e8f0;
+
+                border-radius:
+                    12px;
+
+                padding:
+                    24px;
+
+                margin-bottom:
+                    24px;
+
+            }
+
+            h3 {
+
+                margin-top:
+                    0;
+
+                color:
+                    #0f172a;
+
+            }
+
+            li {
+
+                margin-bottom:
+                    12px;
+
+            }
+
+            .footer {
+
+                font-size:
+                    11px;
+
+                color:
+                    #64748b;
+
+                text-align:
+                    center;
+
+                margin-top:
+                    40px;
+
+                border-top:
+                    1px solid #e2e8f0;
+
+                padding-top:
+                    16px;
+
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+
+        <div class="header">
+
+            <h1>
+                🧠 TrioRingo
+            </h1>
+
+            <p>
+                Learning Power Strategy Report
+            </p>
+
+        </div>
+
+
+        <div class="section">
+
+            <h3>
+                Your Cognitive Processing Profile
+            </h3>
+
+            <p>
+                ${safeSummary}
+            </p>
+
+        </div>
+
+
+        <div class="section">
+
+            <h3>
+                🛠️ Your Retention Toolkit
+            </h3>
+
+            <ul>
+                ${safeStrategies}
+            </ul>
+
+        </div>
+
+
+        <div class="footer">
+
+            Visual:
+            ${state.scores.visual}
+
+            &nbsp;|&nbsp;
+
+            Auditory:
+            ${state.scores.auditory}
+
+            &nbsp;|&nbsp;
+
+            Kinesthetic:
+            ${state.scores.kinesthetic}
+
+            &nbsp;|&nbsp;
+
+            Structured:
+            ${state.scores.structured}
+
+            <br><br>
+
+            Final XP:
+            ${state.xp}
+
+            <br>
+
+            Generated:
+            ${new Date().toLocaleDateString()}
+
+        </div>
+
+
+        <script>
+
+            window.onload = function() {
+
+                window.print();
+
+                setTimeout(
+                    function() {
+                        window.close();
+                    },
+                    500
+                );
+
+            };
+
+        <\/script>
+
+    </body>
+
+    </html>
+
+`);
+
+
+printWindow.document.close();
+```
+
+}
+
+/* =========================================================
+HTML ESCAPE
+========================================================= */
+
+function escapeHTML(value) {
+
+```
+return String(value)
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+```
+
+}
+
+/* =========================================================
+RESET GAME
+========================================================= */
+
+function resetQuest() {
+
+```
+state.currentQuestionIndex =
+    0;
+
+state.minigameIndex =
+    0;
+
+state.xp =
+    0;
+
+
+state.scores = {
+
+    visual: 0,
+
+    auditory: 0,
+
+    kinesthetic: 0,
+
+    structured: 0
+
+};
+
+
+state.generatedReport = {
+
+    summary: "",
+
+    strategies: []
+
+};
+
+
+state.activeQuestions =
+    [];
+
+
+/*
+    XP is optional in this HTML.
+*/
+
+if (xpCounter) {
+
+    xpCounter.innerText =
+        "0";
+
+}
+
+
+if (profileSummary) {
+
+    profileSummary.innerText =
+        "Analyzing your brain mechanics...";
+
+}
+
+
+if (strategyList) {
+
+    strategyList.innerHTML =
+        "";
+
+}
+
+
+if (resultsScreen) {
+
+    resultsScreen.classList.remove(
+        "active"
+    );
+
+}
+
+
+if (minigameScreen) {
+
+    minigameScreen.classList.remove(
+        "active"
+    );
+
+}
+
+
+if (quizScreen) {
+
+    quizScreen.classList.remove(
+        "active"
+    );
+
+}
+
+
+if (startScreen) {
+
+    startScreen.classList.add(
+        "active"
+    );
+
+}
+
+
+if (progressBar) {
+
+    progressBar.style.width =
+        "0%";
+
+}
+
+
+}
