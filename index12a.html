@@ -1,462 +1,956 @@
 <!DOCTYPE html>
-<html lang="en">
 
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arsenal Player Flashcards</title>
 
-    <style>
-        body {
-            margin: 0;
+```
+<title>Arsenal Player Flashcards</title>
+
+<!-- Keep your existing JavaScript -->
+<script src="main.js" defer></script>
+
+<style>
+    :root {
+        --arsenal-red: #db0007;
+        --arsenal-red-dark: #9d0005;
+        --arsenal-red-deep: #650004;
+        --gold: #d4af37;
+        --white: #ffffff;
+        --cream: #f5f2eb;
+        --dark: #090909;
+        --panel: rgba(255, 255, 255, 0.07);
+        --border: rgba(255, 255, 255, 0.13);
+        --shadow: rgba(0, 0, 0, 0.55);
+    }
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        min-height: 100vh;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: var(--white);
+        background:
+            radial-gradient(circle at 50% 15%, rgba(219, 0, 7, 0.28), transparent 32%),
+            radial-gradient(circle at 15% 85%, rgba(219, 0, 7, 0.12), transparent 28%),
+            linear-gradient(145deg, #050505 0%, #100000 45%, #050505 100%);
+        overflow-x: hidden;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.06;
+        background-image:
+            linear-gradient(45deg, #fff 1px, transparent 1px),
+            linear-gradient(-45deg, #fff 1px, transparent 1px);
+        background-size: 45px 45px;
+    }
+
+    .page {
+        width: min(1100px, 94%);
+        margin: auto;
+        padding: 28px 0 50px;
+    }
+
+    /* HEADER */
+
+    .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 28px;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .crest {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(145deg, var(--arsenal-red), #8e0004);
+        border: 2px solid rgba(255,255,255,.25);
+        box-shadow:
+            0 8px 30px rgba(219,0,7,.35),
+            inset 0 0 0 4px rgba(255,255,255,.08);
+        font-size: 25px;
+        font-weight: 900;
+    }
+
+    .brand-text h1 {
+        font-size: clamp(20px, 3vw, 29px);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .brand-text p {
+        color: #bdbdbd;
+        font-size: 12px;
+        letter-spacing: 2.5px;
+        margin-top: 3px;
+    }
+
+    .badge {
+        border: 1px solid rgba(212,175,55,.45);
+        color: var(--gold);
+        padding: 9px 15px;
+        border-radius: 30px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        background: rgba(212,175,55,.06);
+    }
+
+    /* HERO */
+
+    .hero {
+        text-align: center;
+        margin: 15px auto 30px;
+    }
+
+    .eyebrow {
+        color: var(--gold);
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 4px;
+        font-weight: 700;
+        margin-bottom: 9px;
+    }
+
+    .hero h2 {
+        font-size: clamp(28px, 5vw, 48px);
+        line-height: 1.05;
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .hero p {
+        color: #a8a8a8;
+        margin-top: 12px;
+        font-size: 15px;
+    }
+
+    /* MAIN GRID */
+
+    .game-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 280px;
+        gap: 24px;
+        align-items: start;
+    }
+
+    /* CARD */
+
+    .game-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 28px;
+        background:
+            linear-gradient(145deg,
+                rgba(255,255,255,.09),
+                rgba(255,255,255,.025));
+        box-shadow:
+            0 25px 70px var(--shadow),
+            inset 0 1px 0 rgba(255,255,255,.08);
+        padding: 28px;
+    }
+
+    .game-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+            90deg,
+            var(--arsenal-red-dark),
+            var(--arsenal-red),
+            var(--gold),
+            var(--arsenal-red),
+            var(--arsenal-red-dark)
+        );
+    }
+
+    .card-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #bcbcbc;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 18px;
+    }
+
+    .card-label::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        background: var(--arsenal-red);
+        border-radius: 50%;
+        box-shadow: 0 0 12px var(--arsenal-red);
+    }
+
+    /* PLAYER IMAGE */
+
+    .player-stage {
+        min-height: 360px;
+        border-radius: 22px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background:
+            radial-gradient(
+                circle at 50% 35%,
+                rgba(219,0,7,.25),
+                transparent 45%
+            ),
+            linear-gradient(
+                160deg,
+                #1c1c1c,
+                #080808
+            );
+        border: 1px solid rgba(255,255,255,.08);
+        margin-bottom: 24px;
+    }
+
+    .player-stage::after {
+        content: "";
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        border: 1px solid rgba(212,175,55,.15);
+        box-shadow:
+            0 0 0 35px rgba(212,175,55,.025),
+            0 0 0 70px rgba(212,175,55,.018);
+    }
+
+    #player-image {
+        position: relative;
+        z-index: 2;
+        max-width: 78%;
+        max-height: 340px;
+        object-fit: contain;
+        filter: drop-shadow(0 20px 25px rgba(0,0,0,.65));
+    }
+
+    /* Compatibility with common image IDs */
+
+    #playerImage,
+    #player-photo,
+    #playerPhoto {
+        position: relative;
+        z-index: 2;
+        max-width: 78%;
+        max-height: 340px;
+        object-fit: contain;
+        filter: drop-shadow(0 20px 25px rgba(0,0,0,.65));
+    }
+
+    /* QUESTION */
+
+    .question {
+        text-align: center;
+        margin: 8px 0 22px;
+    }
+
+    #question,
+    #player-question {
+        font-size: clamp(20px, 3vw, 27px);
+        font-weight: 700;
+        line-height: 1.35;
+    }
+
+    /* ANSWERS */
+
+    #answers,
+    .answers {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    #answers input,
+    .answers input {
+        width: 100%;
+        min-height: 58px;
+        padding: 0 18px;
+        border-radius: 14px;
+        border: 1px solid rgba(255,255,255,.13);
+        outline: none;
+        color: white;
+        background: rgba(255,255,255,.055);
+        font-size: 15px;
+        font-weight: 600;
+        transition: .2s ease;
+    }
+
+    #answers input::placeholder,
+    .answers input::placeholder {
+        color: #858585;
+    }
+
+    #answers input:hover,
+    .answers input:hover {
+        border-color: rgba(219,0,7,.7);
+        background: rgba(219,0,7,.08);
+        transform: translateY(-1px);
+    }
+
+    #answers input:focus,
+    .answers input:focus {
+        border-color: var(--arsenal-red);
+        box-shadow: 0 0 0 3px rgba(219,0,7,.15);
+    }
+
+    /* BUTTONS */
+
+    .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    button {
+        border: none;
+        min-height: 56px;
+        border-radius: 14px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: .6px;
+        transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    #submit,
+    #submit-answer,
+    #submitAnswer {
+        color: white;
+        background: linear-gradient(
+            135deg,
+            var(--arsenal-red),
+            var(--arsenal-red-dark)
+        );
+        box-shadow: 0 10px 25px rgba(219,0,7,.25);
+    }
+
+    #submit:hover,
+    #submit-answer:hover,
+    #submitAnswer:hover {
+        box-shadow: 0 14px 32px rgba(219,0,7,.4);
+        filter: brightness(1.08);
+    }
+
+    #next,
+    #next-player,
+    #nextPlayer {
+        color: #151515;
+        background: linear-gradient(
+            135deg,
+            #f2f2f2,
+            #cfcfcf
+        );
+    }
+
+    #next:hover,
+    #next-player:hover,
+    #nextPlayer:hover {
+        box-shadow: 0 12px 25px rgba(255,255,255,.12);
+    }
+
+    /* FEEDBACK */
+
+    #result,
+    #feedback {
+        margin-top: 16px;
+        min-height: 24px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+    }
+
+    /* SCORE PANEL */
+
+    .score-panel {
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 22px;
+        background: rgba(255,255,255,.045);
+        box-shadow: 0 20px 50px rgba(0,0,0,.35);
+    }
+
+    .score-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .score-header h3 {
+        font-size: 18px;
+    }
+
+    .score-icon {
+        width: 35px;
+        height: 35px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        background: rgba(219,0,7,.15);
+        color: var(--gold);
+    }
+
+    .score-main {
+        text-align: center;
+        padding: 18px 10px 22px;
+        border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .score-number {
+        font-size: 48px;
+        line-height: 1;
+        font-weight: 900;
+        color: var(--gold);
+    }
+
+    .score-caption {
+        color: #898989;
+        margin-top: 7px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .stats {
+        display: grid;
+        gap: 11px;
+        margin-top: 18px;
+    }
+
+    .stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 13px 14px;
+        border-radius: 12px;
+        background: rgba(255,255,255,.045);
+    }
+
+    .stat span:first-child {
+        color: #999;
+        font-size: 12px;
+    }
+
+    .stat span:last-child {
+        font-size: 15px;
+        font-weight: 800;
+    }
+
+    /* PROGRESS */
+
+    .progress-section {
+        margin-top: 20px;
+    }
+
+    .progress-top {
+        display: flex;
+        justify-content: space-between;
+        color: #8c8c8c;
+        font-size: 11px;
+        margin-bottom: 8px;
+    }
+
+    .progress {
+        height: 6px;
+        border-radius: 20px;
+        overflow: hidden;
+        background: rgba(255,255,255,.08);
+    }
+
+    .progress-bar {
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--arsenal-red), var(--gold));
+        transition: width .4s ease;
+    }
+
+    /* FOOTER */
+
+    footer {
+        text-align: center;
+        color: #5e5e5e;
+        font-size: 10px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-top: 28px;
+    }
+
+    /* ANIMATIONS */
+
+    @keyframes cardIn {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .game-card {
+        animation: cardIn .5s ease both;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            box-shadow: 0 0 0 0 rgba(219,0,7,.35);
+        }
+        50% {
+            box-shadow: 0 0 0 8px rgba(219,0,7,0);
+        }
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 780px) {
+        .page {
+            width: min(94%, 620px);
+            padding-top: 18px;
+        }
+
+        .topbar {
+            margin-bottom: 22px;
+        }
+
+        .badge {
+            display: none;
+        }
+
+        .game-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .score-panel {
+            order: 2;
+        }
+
+        .player-stage {
+            min-height: 300px;
+        }
+
+        .game-card {
             padding: 20px;
-            font-family: Arial, Helvetica, sans-serif;
-            text-align: center;
-            background-image: url('6a4ff4760d36b823e2c295ab24f2d191.png');
+            border-radius: 22px;
+        }
+    }
+
+    @media (max-width: 500px) {
+        #answers,
+        .answers {
+            grid-template-columns: 1fr;
         }
 
-        #container {
-            width: 90%;
-            max-width: 800px;
-            margin: auto;
+        .controls {
+            grid-template-columns: 1fr;
         }
 
-        h1 {
-            color: black;
-            font-size: 36px;
+        .crest {
+            width: 48px;
+            height: 48px;
+            font-size: 21px;
         }
 
-        #instructions {
-            font-size: 18px;
-            margin-bottom: 20px;
+        .hero h2 {
+            font-size: 30px;
         }
 
-        #playerCard {
-            width: 300px;
-             height: 400px;
-            max-width: 90%;
-            margin: 20px auto;
-            background-color: white;
-            border: 3px solid #db0007;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 10px #999999;
+        .player-stage {
+            min-height: 270px;
         }
+    }
+</style>
+```
 
-        #playerImage {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 5px;
-            display: block;
-        }
-
-        #answers {
-            width: 300px;
-            max-width: 90%;
-            margin: 20px auto;
-            text-align: left;
-        }
-
-        .answerOption {
-            display: block;
-            background-color: white;
-            border: 2px solid #333333;
-            border-radius: 5px;
-            padding: 12px;
-            margin: 10px 0;
-            font-size: 18px;
-            cursor: pointer;
-        }
-
-        .answerOption:hover {
-            background-color: #dddddd;
-        }
-
-        .answerOption input {
-            margin-right: 10px;
-        }
-
-        button {
-            padding: 12px 20px;
-            font-size: 17px;
-            background-color: #db0007;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-        }
-
-        button:hover {
-            background-color: #9c0005;
-        }
-
-        #result {
-            font-size: 20px;
-            font-weight: bold;
-            min-height: 30px;
-            margin: 15px;
-        }
-
-        #score {
-            margin-top: 30px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 8px;
-            border: 2px solid #333333;
-        }
-
-        #score p {
-            font-size: 18px;
-        }
-
-        @media screen and (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            #playerCard {
-                width: 260px;
-            }
-
-            #playerImage {
-                height: 290px;
-            }
-
-            #answers {
-                width: 90%;
-            }
-        }
-    </style>
 </head>
 
 <body>
-<p>
-<a href=" https://janicej637.github.io/" style="color: #000080;"><img src="https://clipart-library.com/data_images/469756.png" alt="Home" width="80" height=30> </a>
-</p>
-<div id="container">
 
-    <h1>Arsenal Player Flashcards</h1>
+<div class="page">
 
-    <h1 id="instructions">
-        Who is the Arsenal player shown below?
-    </h1>
+```
+<!-- HEADER -->
+<header class="topbar">
 
-    <div id="playerCard">
-        <img id="playerImage" src="" alt="Arsenal player">
+    <div class="brand">
+        <div class="crest">⚽</div>
+
+        <div class="brand-text">
+            <h1>Arsenal Quiz</h1>
+            <p>Player Flashcards</p>
+        </div>
     </div>
 
-    <div id="answers">
-
-        <label class="answerOption">
-            <input type="radio" name="player" value="">
-            <span id="option1"></span>
-        </label>
-
-        <label class="answerOption">
-            <input type="radio" name="player" value="">
-            <span id="option2"></span>
-        </label>
-
-        <label class="answerOption">
-            <input type="radio" name="player" value="">
-            <span id="option3"></span>
-        </label>
-
-        <label class="answerOption">
-            <input type="radio" name="player" value="">
-            <span id="option4"></span>
-        </label>
-
+    <div class="badge">
+        Matchday Challenge
     </div>
 
-    <button onclick="checkAnswer()">Submit Answer</button>
-    <button onclick="nextPlayer()">Next Player</button>
+</header>
 
-    <div id="result"></div>
 
-    <div id="score">
-        <h2>Score</h2>
+<!-- HERO -->
+<section class="hero">
 
-        <p>
-            Correct Answers:
-            <span id="correct">0</span>
-        </p>
-
-        <p>
-            Total Attempts:
-            <span id="attempts">0</span>
-        </p>
+    <div class="eyebrow">
+        Test Your Knowledge
     </div>
+
+    <h2>Who Is The Player?</h2>
+
+    <p>
+        Study the face. Choose the correct Arsenal player.
+    </p>
+
+</section>
+
+
+<!-- GAME -->
+<main class="game-layout">
+
+    <section class="game-card">
+
+        <div class="card-label">
+            Current Player
+        </div>
+
+
+        <!-- PLAYER IMAGE AREA -->
+        <div class="player-stage">
+
+            <!--
+                Your existing JavaScript can continue using
+                its existing image element if it has a different ID.
+            -->
+
+            <img
+                id="player-image"
+                src=""
+                alt="Arsenal player"
+            >
+
+        </div>
+
+
+        <!-- QUESTION -->
+        <div class="question">
+
+            <h3 id="question">
+                Who is the Arsenal player shown below?
+            </h3>
+
+        </div>
+
+
+        <!-- ANSWER OPTIONS -->
+        <div id="answers" class="answers">
+
+            <input
+                type="text"
+                placeholder="Player 1"
+                aria-label="Answer option 1"
+            >
+
+            <input
+                type="text"
+                placeholder="Player 2"
+                aria-label="Answer option 2"
+            >
+
+            <input
+                type="text"
+                placeholder="Player 3"
+                aria-label="Answer option 3"
+            >
+
+            <input
+                type="text"
+                placeholder="Player 4"
+                aria-label="Answer option 4"
+            >
+
+        </div>
+
+
+        <!-- BUTTONS -->
+        <div class="controls">
+
+            <button id="submit" type="button">
+                ✓ &nbsp; Submit Answer
+            </button>
+
+            <button id="next" type="button">
+                Next Player &nbsp; →
+            </button>
+
+        </div>
+
+
+        <!-- RESULT -->
+        <div id="result"></div>
+
+    </section>
+
+
+    <!-- SCORE -->
+    <aside class="score-panel">
+
+        <div class="score-header">
+
+            <h3>Your Score</h3>
+
+            <div class="score-icon">
+                ★
+            </div>
+
+        </div>
+
+
+        <div class="score-main">
+
+            <div
+                class="score-number"
+                id="score-number"
+            >
+                0
+            </div>
+
+            <div class="score-caption">
+                Correct Answers
+            </div>
+
+        </div>
+
+
+        <div class="stats">
+
+            <div class="stat">
+                <span>Correct</span>
+                <span id="correct-count">0</span>
+            </div>
+
+            <div class="stat">
+                <span>Attempts</span>
+                <span id="attempt-count">0</span>
+            </div>
+
+            <div class="stat">
+                <span>Accuracy</span>
+                <span id="accuracy">0%</span>
+            </div>
+
+        </div>
+
+
+        <div class="progress-section">
+
+            <div class="progress-top">
+                <span>Quiz Progress</span>
+                <span id="progress-text">0%</span>
+            </div>
+
+            <div class="progress">
+                <div
+                    class="progress-bar"
+                    id="progress-bar"
+                ></div>
+            </div>
+
+        </div>
+
+    </aside>
+
+</main>
+
+
+<footer>
+    Arsenal Player Flashcards • Know The Gunners
+</footer>
+```
+
+</div>
+
+<!--
+    SCORE DISPLAY COMPATIBILITY
+
+    These hidden/legacy elements allow existing JavaScript
+    that expects the original IDs to continue functioning.
+-->
+
+<div style="display:none">
+
+```
+<span id="score">
+    <b>0</b>
+</span>
+
+<span id="summary"></span>
+<span id="details"></span>
+```
 
 </div>
 
 <script>
-    
-     /* Arsenal 2026/27 flashcard set.
-     * Add the corresponding image files to the images folder.
+
+    /*
+     * Elegant UI score synchronization.
      *
-     * The summer transfer window remains open until September 1,
-     * so this list can be updated if Arsenal make another move.*/
-    
+     * This does NOT replace your main.js.
+     * It watches the existing score elements and mirrors
+     * their values into the new design.
+     */
 
-    var players = [
+    function updateElegantScore() {
 
-       
-{ name: "David Raya", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/David_Raya_Argentina_v_Spain_19_July_2026-003_(cropped).jpg" },
+        const originalScore =
+            document.querySelector("#score b");
 
-{ name: "William Saliba", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/1_william_saliba_arsenal_2025_(cropped).jpg" },
+        const correct =
+            originalScore
+                ? parseInt(originalScore.textContent) || 0
+                : 0;
 
-{ name: "Gabriel Magalhaes", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/1_Gabriel_Magalhães_2026_(cropped).jpg" },
+        const attemptsText =
+            document.querySelector("#summary");
 
-{ name: "Jurrien Timber", image: "https://cdn1.arsenalinsider.com/uploads/19/2024/03/GettyImages-1593911047-1024x683.jpg" },
+        let attempts = 0;
 
-{ name: "Piero Hincapie", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/1_Piero_Hincapié_2026.jpg" },
+        if (attemptsText) {
+            const match =
+                attemptsText.textContent.match(/\d+/);
 
-{ name: "Riccardo Calafiori", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/1_Riccardo_Calafiori_2026.jpg" },
-
-{ name: "Declan Rice", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Declan_Rice_England_v_Ghana_23_June_2026-143.jpg" },
-
-{ name: "Martin Zubimendi", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/1_Martín_Zubimendi_arsenal_2025.jpg" },
-
-{ name: "Martin Odegaard", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Martin_Odegaard_France_v_Norway_26_June_26-011.jpg" },
-
-{ name: "Eberechi Eze", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/1_Eberechi_Eze_2026.jpg" },
-
-{ name: "Bukayo Saka", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/1_bukayo_saka_arsenal_2025_(cropped).jpg" },
-
-{ name: "Noni Madueke", image: "https://eu-images.contentstack.com/v3/assets/blta90d05ad41a54a71/blt25abd0f334adba28/6893b0047c09c25f3cf57518/Noni_Madueke_Arsenal.jpg" },
-
-{ name: "Gabriel Martinelli", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Gabriel_Martinelli_Brazil_V_Morocco_13_June_2026-144.jpg" },
-
-{ name: "Viktor Gyokeres", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/1_Viktor_Gyökeres_2026.jpg" },
-
-{ name: "Christos Tzolis", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Sweden_-_Greece22_(cropped).jpg" },
-
-{ name: "Bruno Guimaraes", image: "https://commons.wikimedia.org/wiki/Special:Redirect/file/Bruno_Guimarães_24052026_(1).jpg" }
-
-
-
-    ];
-
-    var currentPlayer = 0;
-    var correctAnswers = 0;
-    var totalAttempts = 0;
-
-    function createAnswers() {
-
-        var answers = [];
-        var correctAnswer = players[currentPlayer].name;
-
-        answers.push(correctAnswer);
-
-        while (answers.length < 4) {
-
-            var randomNumber =
-                Math.floor(Math.random() * players.length);
-
-            var randomPlayer =
-                players[randomNumber].name;
-
-            if (answers.indexOf(randomPlayer) === -1) {
-                answers.push(randomPlayer);
+            if (match) {
+                attempts = parseInt(match[0]);
             }
         }
 
-        /* Shuffle the four choices. */
-        for (var i = answers.length - 1; i > 0; i--) {
-            var j = Math.floor(Math.random() * (i + 1));
-            var temp = answers[i];
-            answers[i] = answers[j];
-            answers[j] = temp;
+        const scoreNumber =
+            document.getElementById("score-number");
+
+        const correctCount =
+            document.getElementById("correct-count");
+
+        const attemptCount =
+            document.getElementById("attempt-count");
+
+        const accuracy =
+            document.getElementById("accuracy");
+
+        if (scoreNumber) {
+            scoreNumber.textContent = correct;
         }
 
-        var radioButtons =
-            document.getElementsByName("player");
-
-        for (var k = 0; k < 4; k++) {
-
-            radioButtons[k].value = answers[k];
-            radioButtons[k].checked = false;
-
-            document.getElementById(
-                "option" + (k + 1)
-            ).innerHTML = answers[k];
+        if (correctCount) {
+            correctCount.textContent = correct;
         }
+
+        if (attemptCount) {
+            attemptCount.textContent = attempts;
+        }
+
+        if (accuracy) {
+            const percent =
+                attempts > 0
+                    ? Math.round((correct / attempts) * 100)
+                    : 0;
+
+            accuracy.textContent = percent + "%";
+        }
+
     }
 
-    function nextPlayer() {
 
-        currentPlayer =
-            Math.floor(Math.random() * players.length);
+    /*
+     * Update the new score display periodically so it stays
+     * synchronized with your existing game script.
+     */
 
-        document.getElementById("playerImage").src =
-            players[currentPlayer].image;
+    setInterval(updateElegantScore, 250);
 
-        document.getElementById("playerImage").alt =
-            "Arsenal player";
+    updateElegantScore();
 
-        document.getElementById("result").innerHTML = "";
 
-        createAnswers();
-    }
+    /*
+     * Add a subtle animation whenever the player image changes.
+     */
 
-    function checkAnswer() {
+    const observer =
+        new MutationObserver(() => {
 
-        var selectedAnswer = null;
+            const image =
+                document.getElementById("player-image");
 
-        var radioButtons =
-            document.getElementsByName("player");
+            if (image) {
 
-        for (var i = 0; i < radioButtons.length; i++) {
+                image.style.animation = "none";
 
-            if (radioButtons[i].checked) {
-                selectedAnswer = radioButtons[i].value;
+                requestAnimationFrame(() => {
+
+                    image.style.animation =
+                        "cardIn .45s ease both";
+
+                });
+
             }
-        }
 
-        if (selectedAnswer === null) {
+        });
 
-            document.getElementById("result").innerHTML =
-                "Please select an answer.";
 
-            return;
-        }
+    const playerStage =
+        document.querySelector(".player-stage");
 
-        totalAttempts++;
+    if (playerStage) {
 
-        if (selectedAnswer === players[currentPlayer].name) {
+        observer.observe(
+            playerStage,
+            {
+                childList: true,
+                subtree: true,
+                attributes: true
+            }
+        );
 
-            correctAnswers++;
-
-            document.getElementById("result").innerHTML =
-                "Correct! Great job!";
-
-        } else {
-
-            document.getElementById("result").innerHTML =
-                "Incorrect. The correct answer is " +
-                players[currentPlayer].name + ".";
-
-        }
-
-        document.getElementById("correct").innerHTML =
-            correctAnswers;
-
-        document.getElementById("attempts").innerHTML =
-            totalAttempts;
     }
-
-    nextPlayer();
-
-    
-    
-
-/* ============================================================
-   GENERATE FOUR RADIO-BUTTON ANSWERS
-   ============================================================ */
-
-function getAnswerChoices(correctPlayer) {
-
-    const choices = [correctPlayer.name];
-
-    const otherPlayers = players.filter(
-        player => player.name !== correctPlayer.name
-    );
-
-    // Shuffle the other players
-    const shuffled = [...otherPlayers].sort(
-        () => Math.random() - 0.5
-    );
-
-    // Add three incorrect answers
-    for (let i = 0; i < shuffled.length && choices.length < 4; i++) {
-        choices.push(shuffled[i].name);
-    }
-
-    // Shuffle all four answers
-    return choices.sort(() => Math.random() - 0.5);
-}
-
-
-/* ============================================================
-   CREATE QUESTION DATA
-   ============================================================ */
-
-function createQuestion(player) {
-
-    return {
-        player: player,
-        question: `Who is this Arsenal player?`,
-        choices: getAnswerChoices(player),
-        correctAnswer: player.name
-    };
-
-}
-
-
-/* ============================================================
-   SHUFFLE PLAYERS
-   ============================================================ */
-
-function shufflePlayers() {
-
-    return [...players].sort(
-        () => Math.random() - 0.5
-    );
-
-}
-
-
-
-
-/* ============================================================
-   HELPER FUNCTIONS
-   ============================================================ */
-
-function getPlayerByName(name) {
-
-    return players.find(
-        player => player.name === name
-    );
-
-}
-
-
-function getPlayersByPosition(position) {
-
-    return players.filter(
-        player => player.position.includes(position)
-    );
-
-}
-
-
-function getRandomPlayer() {
-
-    return players[
-        Math.floor(Math.random() * players.length)
-    ];
-
-}
-
-
-/* ============================================================
-   EXAMPLE:
-   
-   const player = getRandomPlayer();
-
-   console.log(player.name);
-   console.log(player.flag);
-   console.log(getAnswerChoices(player));
-
-   ============================================================ */
-
 
 </script>
 
