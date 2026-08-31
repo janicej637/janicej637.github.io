@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Aquarium Adventure</title>
+
+<style>
+
+:root {
+    --ocean-dark: #03101b;
+    --ocean: #06283d;
+    --ocean-blue: #087ea4;
+    --cyan: #43d9ff;
+    --white: #ffffff;
+    --glass: rgba(255,255,255,.09);
+    --border: rgba(255,255,255,.16);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    color: var(--white);
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(67,217,255,.24),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 15% 80%,
+            rgba(0,145,210,.20),
+            transparent 30%
+        ),
+        linear-gradient(
+            180deg,
+            #073a5c 0%,
+            #041a2a 48%,
+            #020b12 100%
+        );
+
+    overflow-x: hidden;
+}
+
+
+/* WATER PARTICLES */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .15;
+
+    background-image:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.65) 1px,
+            transparent 1px
+        );
+
+    background-size: 34px 34px;
+}
+
+
+/* PAGE */
+
+.page {
+    width: min(1180px, 94%);
+    margin: auto;
+
+    padding:
+        38px
+        0
+        55px;
+}
+
+
+/* HEADER */
+
+header {
+    text-align: center;
+    margin-bottom: 38px;
+}
+
+.kicker {
+    color: var(--cyan);
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    letter-spacing: 4px;
+
+    text-transform: uppercase;
+}
+
+h1 {
+    font-size:
+        clamp(
+            34px,
+            6vw,
+            64px
+        );
+
+    line-height: 1;
+
+    margin:
+        9px
+        0
+        12px;
+
+    font-weight: 900;
+
+    text-shadow:
+        0 5px 25px
+        rgba(0,0,0,.35);
+}
+
+header p {
+    color: #b8d5e5;
+
+    font-size: 16px;
+
+    line-height: 1.6;
+}
+
+.ocean-line {
+    width: 120px;
+    height: 4px;
+
+    margin:
+        20px
+        auto;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--cyan),
+            transparent
+        );
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 0 15px
+        rgba(67,217,255,.45);
+}
+
+
+/* FISH GRID */
+
+.fish-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            5,
+            1fr
+        );
+
+    gap: 18px;
+}
+
+
+/* FISH CARD */
+
+.fish-card {
+    position: relative;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 22px;
+
+    background:
+        var(--glass);
+
+    backdrop-filter:
+        blur(12px);
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    box-shadow:
+        0 18px 45px
+        rgba(0,0,0,.30);
+
+    cursor: pointer;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+}
+
+.fish-card:hover {
+    transform:
+        translateY(-8px);
+
+    border-color:
+        rgba(
+            67,
+            217,
+            255,
+            .75
+        );
+
+    box-shadow:
+        0 25px 60px
+        rgba(0,0,0,.45),
+        0 0 25px
+        rgba(67,217,255,.10);
+}
+
+.fish-card:focus {
+    outline:
+        2px solid
+        var(--cyan);
+
+    outline-offset: 3px;
+}
+
+
+/* IMAGE */
+
+.fish-card img {
+    display: block;
+
+    width: 100%;
+
+    height: 205px;
+
+    object-fit: cover;
+
+    transition:
+        transform .45s ease;
+}
+
+.fish-card:hover img {
+    transform:
+        scale(1.06);
+}
+
+
+/* IMAGE SHINE */
+
+.fish-card::after {
+    content: "";
+
+    position: absolute;
+
+    left: -100%;
+
+    top: 0;
+
+    width: 60%;
+
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.12),
+            transparent
+        );
+
+    transform:
+        skewX(-20deg);
+
+    transition:
+        left .6s ease;
+
+    pointer-events: none;
+}
+
+.fish-card:hover::after {
+    left: 140%;
+}
+
+
+/* FISH INFO */
+
+.fish-info {
+    padding: 16px 17px 18px;
+}
+
+.fish-info h2 {
+    font-size: 19px;
+
+    margin-bottom: 6px;
+}
+
+.fish-info p {
+    color: #9fc2d4;
+
+    font-size: 12px;
+}
+
+
+/* MODAL */
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 100;
+
+    background:
+        rgba(
+            0,
+            8,
+            15,
+            .82
+        );
+
+    backdrop-filter:
+        blur(8px);
+}
+
+.modal.open {
+    display: flex;
+}
+
+
+/* MODAL CARD */
+
+.modal-card {
+    width:
+        min(
+            720px,
+            100%
+        );
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #092b40,
+            #041722
+        );
+
+    box-shadow:
+        0 30px 90px
+        rgba(0,0,0,.70);
+
+    animation:
+        modalIn
+        .3s
+        ease;
+}
+
+@keyframes modalIn {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(20px)
+            scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0)
+            scale(1);
+    }
+
+}
+
+
+/* MODAL IMAGE */
+
+.modal-card img {
+    display: block;
+
+    width: 100%;
+
+    height:
+        min(
+            430px,
+            55vh
+        );
+
+    object-fit: cover;
+}
+
+
+/* MODAL CONTENT */
+
+.modal-content {
+    padding: 26px;
+}
+
+.modal-content h2 {
+    font-size: 31px;
+
+    margin-bottom: 10px;
+}
+
+.modal-content p {
+    color: #b8d5e5;
+
+    font-size: 15px;
+
+    line-height: 1.7;
+}
+
+
+/* CLOSE BUTTON */
+
+.close {
+    margin-top: 20px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    padding:
+        13px
+        24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #43d9ff,
+            #0ba4d2
+        );
+
+    color:
+        #032033;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.close:hover {
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 10px 25px
+        rgba(67,217,255,.25);
+}
+
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+
+    color: #6f9bb1;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+
+    margin-top: 38px;
+}
+
+
+/* TABLET */
+
+@media (max-width: 1000px) {
+
+    .fish-grid {
+        grid-template-columns:
+            repeat(
+                4,
+                1fr
+            );
+    }
+
+}
+
+
+/* SMALL TABLET */
+
+@media (max-width: 800px) {
+
+    .fish-grid {
+        grid-template-columns:
+            repeat(
+                3,
+                1fr
+            );
+    }
+
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .page {
+        width: 92%;
+
+        padding-top: 25px;
+    }
+
+    .fish-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+
+        gap: 13px;
+    }
+
+    .fish-card img {
+        height: 165px;
+    }
+
+    .fish-info {
+        padding: 13px;
+    }
+
+    .fish-info h2 {
+        font-size: 16px;
+    }
+
+}
+
+
+/* SMALL PHONE */
+
+@media (max-width: 420px) {
+
+    .fish-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .fish-card img {
+        height: 220px;
+    }
+
+    h1 {
+        font-size: 36px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+
+<header>
+
+    <div class="kicker">
+        Explore • Discover • Learn
+    </div>
+
+    <h1>
+        🌊 Aquarium Adventure 🐠
+    </h1>
+
+    <div class="ocean-line"></div>
+
+    <p>
+        Explore colorful fish from tropical reefs
+        and oceans around the world.
+    </p>
+
+    <p style="margin-top:8px">
+        🐟 Click any fish to discover its name
+        and fun facts!
+    </p>
+
+</header>
+
+
+<main
+    id="fish-grid"
+    class="fish-grid"
+>
+</main>
+
+
+<footer>
+    Real Fish Photography • Aquarium Adventure
+</footer>
+
+
+</div>
+
+
+<!-- FISH INFORMATION MODAL -->
+
+<div
+    id="modal"
+    class="modal"
+    aria-hidden="true"
+>
+
+    <div class="modal-card">
+
+        <img
+            id="modal-image"
+            src=""
+            alt=""
+        >
+
+        <div class="modal-content">
+
+            <h2
+                id="modal-name"
+            ></h2>
+
+            <p
+                id="modal-facts"
+            ></p>
+
+            <button
+                class="close"
+                id="close-modal"
+                type="button"
+            >
+                Close
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- JAVASCRIPT -->
+
+<script src="main8.js"></script>
+
+
+</body>
+</html>
