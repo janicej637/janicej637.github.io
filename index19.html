@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -878,11 +877,16 @@ function escapeHTML(text) {
     return div.innerHTML;
 }
 
+```javascript
 /* =========================
-   SOUND ENGINE
+   SOUND + MOTIVATIONAL COACH
 ========================= */
 
 let audioContext = null;
+
+/* -------------------------
+   AUDIO CONTEXT
+------------------------- */
 
 function getAudioContext() {
 
@@ -893,22 +897,19 @@ function getAudioContext() {
                 window.AudioContext ||
                 window.webkitAudioContext
             )();
-
     }
 
-    if (
-        audioContext.state ===
-        "suspended"
-    ) {
-
+    if (audioContext.state === "suspended") {
         audioContext.resume();
-
     }
 
     return audioContext;
 }
 
-/* Basic tone */
+
+/* -------------------------
+   BASIC TONE
+------------------------- */
 
 function tone(
     frequency,
@@ -916,8 +917,7 @@ function tone(
     type = "sine"
 ) {
 
-    const ctx =
-        getAudioContext();
+    const ctx = getAudioContext();
 
     const oscillator =
         ctx.createOscillator();
@@ -951,7 +951,158 @@ function tone(
     );
 }
 
-/* Start */
+
+/* =========================
+   MOTIVATIONAL COACH
+========================= */
+
+const coachMessages = [
+
+    "You've got this! Keep going!",
+
+    "Great job! Stay focused!",
+
+    "Keep moving! You're doing great!",
+
+    "Don't stop now! You're making progress!",
+
+    "Stay strong! You've got this!",
+
+    "Keep pushing! You're almost there!",
+
+    "Nice work! Keep that momentum going!",
+
+    "You're doing awesome! Keep going!",
+
+    "Stay focused and finish strong!",
+
+    "Every second counts! Keep moving!",
+
+    "You are making it happen! Keep going!",
+
+    "Great effort! Don't give up!",
+
+    "Keep it up! You're doing fantastic!",
+
+    "You're closer than you think! Keep going!"
+
+];
+
+
+/* =========================
+   COUNTDOWN MESSAGES
+========================= */
+
+const countdownMessages = {
+
+    10:
+        "Ten seconds! Finish strong!",
+
+    9:
+        "Nine seconds! Keep moving!",
+
+    8:
+        "Eight seconds! You've got this!",
+
+    7:
+        "Seven seconds! Don't stop!",
+
+    6:
+        "Six seconds! Keep pushing!",
+
+    5:
+        "Five seconds! Almost there!",
+
+    4:
+        "Four seconds! Stay focused!",
+
+    3:
+        "Three seconds! You can do it!",
+
+    2:
+        "Two seconds!",
+
+    1:
+        "One second! Finish!"
+};
+
+
+/* =========================
+   SPEAK
+========================= */
+
+function coachSpeak(message) {
+
+    if (
+        !("speechSynthesis" in window)
+    ) {
+        return;
+    }
+
+    /*
+       Stop any previous coach message
+       so messages don't overlap.
+    */
+
+    window.speechSynthesis.cancel();
+
+    const speech =
+        new SpeechSynthesisUtterance(
+            message
+        );
+
+    speech.rate = 1.05;
+
+    speech.pitch = 1.05;
+
+    speech.volume = 1;
+
+    /*
+       Try to select an English voice.
+    */
+
+    const voices =
+        window.speechSynthesis.getVoices();
+
+    const englishVoice =
+        voices.find(
+            voice =>
+                voice.lang &&
+                voice.lang.toLowerCase()
+                    .startsWith("en")
+        );
+
+    if (englishVoice) {
+        speech.voice = englishVoice;
+    }
+
+    window.speechSynthesis.speak(
+        speech
+    );
+}
+
+
+/* =========================
+   RANDOM COACH MESSAGE
+========================= */
+
+function randomCoachMessage() {
+
+    const index =
+        Math.floor(
+            Math.random() *
+            coachMessages.length
+        );
+
+    coachSpeak(
+        coachMessages[index]
+    );
+}
+
+
+/* =========================
+   START SOUND
+========================= */
 
 function playStartSound() {
 
@@ -961,30 +1112,88 @@ function playStartSound() {
         () => tone(800, .15),
         120
     );
+
+    setTimeout(
+        () => coachSpeak(
+            "Let's get started! You've got this!"
+        ),
+        350
+    );
 }
 
-/* Pause */
+
+/* =========================
+   PAUSE SOUND
+========================= */
 
 function playPauseSound() {
 
     tone(350, .2);
+
+    coachSpeak(
+        "Take a quick breath. Resume when you're ready."
+    );
 }
 
-/* Countdown */
+
+/* =========================
+   RANDOM ENCOURAGEMENT
+========================= */
+
+function playMotivationalCoach() {
+
+    /*
+       Randomly choose a motivational
+       message.
+    */
+
+    randomCoachMessage();
+}
+
+
+/* =========================
+   COUNTDOWN COACH
+========================= */
+
+function playCountdownCoach(seconds) {
+
+    const message =
+        countdownMessages[seconds];
+
+    if (message) {
+
+        coachSpeak(message);
+
+    }
+
+}
+
+
+/* =========================
+   COUNTDOWN BEEP
+========================= */
 
 function playCountdownSound() {
 
     tone(900, .2);
+
 }
 
-/* Each countdown second */
+
+/* =========================
+   INDIVIDUAL COUNTDOWN BEEP
+========================= */
 
 function playBeep() {
 
     tone(1000, .08);
+
 }
 
-/* Finished */
+
+/* =========================
+   FINISH SOUND
+========================= */
 
 function playFinishSound() {
 
@@ -999,9 +1208,19 @@ function playFinishSound() {
         () => tone(1100, .35),
         360
     );
+
+    setTimeout(
+        () => coachSpeak(
+            "Time's up! Great job! You finished your chore!"
+        ),
+        500
+    );
 }
 
-/* Completed */
+
+/* =========================
+   COMPLETE SOUND
+========================= */
 
 function playCompleteSound() {
 
@@ -1016,7 +1235,15 @@ function playCompleteSound() {
         () => tone(1200, .3),
         240
     );
+
+    setTimeout(
+        () => coachSpeak(
+            "Awesome job! Chore complete!"
+        ),
+        400
+    );
 }
+
 
 /* =========================
    INITIAL DISPLAY
@@ -1028,4 +1255,3 @@ render();
 
 </body>
 </html>
-```
