@@ -734,6 +734,8 @@ function stopOceanSound() {
             "active"
         );
 
+       underwaterAudio.loop = false;
+
     }
 
 
