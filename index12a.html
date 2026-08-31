@@ -27,16 +27,21 @@
             margin: 20px 0;
             background: #fff;
         }
-        .player-image {
-            width: 200px;
-            height: 200px;
-            background-color: #ddd;
+        .player-image-container {
+            width: 250px;
+            height: 250px;
             margin: 0 auto 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            border-radius: 5px;
+            background-color: #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+        .player-image-container img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
         }
         select, button {
@@ -54,6 +59,10 @@
         button:hover {
             background-color: #c70005;
         }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
         .scoreboard {
             margin-top: 20px;
             text-align: left;
@@ -64,13 +73,17 @@
         .feedback {
             font-weight: bold;
             margin: 10px 0;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <p>⚽ Home</p>
+    <p>
+    <a href=" https://janicej637.github.io/" style="color: #000080;"><img src="https://clipart-library.com/data_images/469756.png" alt="Home" width="80" height="30"> </a>
+  </p>
+
     <h1>Arsenal Quiz</h1>
     <p>Player Flashcards | Matchday Challenge | Test Your Knowledge</p>
     
@@ -78,8 +91,10 @@
     <p>Study the face. Choose the correct Arsenal player.</p>
 
     <div class="card">
-        <!-- Replace text with <img id="player-img" src="path_to_image.jpg"> when you have images -->
-        <div id="player-view" class="player-image">Current Player</div>
+        <div class="player-image-container">
+            <!-- Image tag dynamically populated by JavaScript web URLs -->
+            <img id="player-img" src="" alt="Arsenal Player Face">
+        </div>
         <h3>Who is the Arsenal player shown below?</h3>
         
         <select id="player-select">
@@ -88,6 +103,7 @@
             <option value="Odegaard">Martin Ødegaard</option>
             <option value="Saliba">William Saliba</option>
             <option value="Rice">Declan Rice</option>
+            <option value="Havertz">Kai Havertz</option>
         </select>
         <br><br>
         
@@ -106,12 +122,33 @@
 </div>
 
 <script>
-    // Quiz Data
+    // Quiz Data utilizing web URLs for images
     const players = [
-        { name: "Saka", placeholder: "Bukayo Saka Face Pic" },
-        { name: "Odegaard", placeholder: "Martin Ødegaard Face Pic" },
-        { name: "Saliba", placeholder: "William Saliba Face Pic" },
-        { name: "Rice", placeholder: "Declan Rice Face Pic" }
+        { 
+            id: "Saka", 
+            displayName: "Bukayo Saka", 
+            imgUrl: "https://wikimedia.org" 
+        },
+        { 
+            id: "Odegaard", 
+            displayName: "Martin Ødegaard", 
+            imgUrl: "https://wikimedia.org" 
+        },
+        { 
+            id: "Saliba", 
+            displayName: "William Saliba", 
+            imgUrl: "https://wikimedia.org" 
+        },
+        { 
+            id: "Rice", 
+            displayName: "Declan Rice", 
+            imgUrl: "https://wikimedia.org" 
+        },
+        { 
+            id: "Havertz", 
+            displayName: "Kai Havertz", 
+            imgUrl: "https://wikimedia.org" 
+        }
     ];
 
     let currentIndex = 0;
@@ -120,7 +157,7 @@
     let hasAnsweredCurrent = false;
 
     // DOM Elements
-    const playerView = document.getElementById("player-view");
+    const playerImg = document.getElementById("player-img");
     const playerSelect = document.getElementById("player-select");
     const submitBtn = document.getElementById("submit-btn");
     const nextBtn = document.getElementById("next-btn");
@@ -132,9 +169,9 @@
     const accuracyRate = document.getElementById("accuracy-rate");
     const quizProgress = document.getElementById("quiz-progress");
 
-    // Initialize Quiz
+    // Initialize/Load Card
     function loadPlayer() {
-        playerView.textContent = players[currentIndex].placeholder;
+        playerImg.src = players[currentIndex].imgUrl;
         playerSelect.value = "";
         feedback.textContent = "";
         submitBtn.disabled = false;
@@ -157,11 +194,11 @@
         quizProgress.textContent = progress + "%";
     }
 
-    // Event Listeners
+    // Event Listener for Answer Submission
     submitBtn.addEventListener("click", () => {
         const selectedAnswer = playerSelect.value;
         if (!selectedAnswer) {
-            feedback.textContent = "Please select a player first!";
+            feedback.textContent = "⚠️ Please select a player first!";
             feedback.style.color = "orange";
             return;
         }
@@ -171,12 +208,12 @@
         totalAttempts++;
         hasAnsweredCurrent = true;
 
-        if (selectedAnswer === players[currentIndex].name) {
+        if (selectedAnswer === players[currentIndex].id) {
             correctAnswers++;
-            feedback.textContent = "Correct! Well done.";
+            feedback.textContent = "🎉 Correct! Well done.";
             feedback.style.color = "green";
         } else {
-            feedback.textContent = `Incorrect! It was ${players[currentIndex].placeholder.split(' ')[0]}.`;
+            feedback.textContent = `❌ Incorrect! It was ${players[currentIndex].displayName}.`;
             feedback.style.color = "red";
         }
 
@@ -185,19 +222,21 @@
         updateScoreboard();
     });
 
+    // Event Listener for Next Button
     nextBtn.addEventListener("click", () => {
         currentIndex++;
         if (currentIndex < players.length) {
             loadPlayer();
         } else {
             // End of Quiz
-            playerView.textContent = "Quiz Complete!";
+            playerImg.src = "https://wikimedia.org"; 
             playerSelect.style.display = "none";
             submitBtn.style.display = "none";
             nextBtn.style.display = "none";
-            feedback.textContent = `Final Score: ${correctAnswers} out of ${players.length}!`;
+            feedback.textContent = `🏆 Quiz Complete! Final Score: ${correctAnswers} out of ${players.length}!`;
             feedback.style.color = "blue";
             quizProgress.textContent = "100%";
+            updateScoreboard();
         }
     });
 
