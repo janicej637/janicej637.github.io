@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coach's Chore Time</title>
+  <link rel="stylesheet" href="style2.css">
+</head>
+<body>
+  <div class="field-overlay"></div>
+
+  <main class="app">
+    <header class="hero">
+      <div class="playbook">✕　○　△　→</div>
+      <h1>COACH'S <span>CHORE TIME</span></h1>
+      <div class="tagline">FOCUS. EFFORT. FINISH.</div>
+      <p>Every chore is a win. Let's get it done!</p>
+    </header>
+
+    <section class="stats">
+      <div class="stat blue"><span>📋</span><small>TOTAL CHORES</small><strong id="totalChores">0</strong></div>
+      <div class="stat green"><span>🏆</span><small>COMPLETED</small><strong id="completedChores">0</strong></div>
+      <div class="stat gold"><span>📣</span><small>REMAINING</small><strong id="remainingChores">0</strong></div>
+    </section>
+
+    <div class="dashboard">
+      <aside class="sidebar">
+        <section class="panel">
+          <h2>🏈 ADD A NEW CHORE</h2>
+          <div class="add-form">
+            <input id="choreName" type="text" placeholder="Enter chore name...">
+            <div class="minutes">
+              <input id="choreMinutes" type="number" min="1" value="10">
+              <span>min</span>
+            </div>
+            <button class="btn add" id="addBtn">＋ ADD CHORE</button>
+          </div>
+        </section>
+
+        <section class="panel motivation">
+          <h2>📣 COACH'S MOTIVATION</h2>
+          <div id="coachMessage" class="coach-message">"You've got this! Keep pushing!"</div>
+          <button class="btn speak" id="speakBtn">🔊 SPEAK MOTIVATION</button>
+        </section>
+      </aside>
+
+      <section class="chores">
+        <div id="choreList"></div>
+        <div id="emptyState" class="empty">No chores yet. Coach says: add your first play!</div>
+      </section>
+    </div>
+
+    <footer>
+      <button id="soundBtn" class="icon-btn" title="Toggle sound">🔊</button>
+      <div>★ CHAMPIONS AREN'T MADE IN THE EASY MOMENTS. KEEP WORKING. FINISH STRONG. ★</div>
+      <button id="clearBtn" class="clear">🗑 CLEAR COMPLETED</button>
+    </footer>
+  </main>
+
+  <script src="main6.js"></script>
+</body>
+</html>
