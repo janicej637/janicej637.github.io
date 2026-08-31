@@ -1,0 +1,1031 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Chore Time Tracker</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #111827, #1e293b);
+    color: #ffffff;
+}
+
+.container {
+    width: min(1100px, 94%);
+    margin: auto;
+    padding: 25px 0 50px;
+}
+
+/* HEADER */
+
+header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+}
+
+header p {
+    color: #cbd5e1;
+}
+
+/* ADD CHORE */
+
+.add-chore {
+    background: rgba(255,255,255,0.08);
+    padding: 20px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+}
+
+.add-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.add-row input {
+    flex: 1;
+    min-width: 200px;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+}
+
+.add-row input[type="number"] {
+    max-width: 160px;
+}
+
+/* BUTTONS */
+
+button {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform .15s, opacity .15s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: scale(.97);
+}
+
+.add-btn {
+    background: #22c55e;
+    color: white;
+}
+
+.start-btn {
+    background: #3b82f6;
+    color: white;
+}
+
+.pause-btn {
+    background: #f59e0b;
+    color: white;
+}
+
+.reset-btn {
+    background: #64748b;
+    color: white;
+}
+
+.complete-btn {
+    background: #10b981;
+    color: white;
+}
+
+.delete-btn {
+    background: #ef4444;
+    color: white;
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.stat {
+    background: rgba(255,255,255,0.08);
+    border-radius: 15px;
+    padding: 18px;
+    text-align: center;
+}
+
+.stat strong {
+    display: block;
+    font-size: 2rem;
+}
+
+/* CHORES */
+
+.chore-list {
+    display: grid;
+    gap: 18px;
+}
+
+.chore {
+    background: rgba(255,255,255,0.08);
+    border-radius: 18px;
+    padding: 20px;
+    border: 2px solid transparent;
+}
+
+.chore.active {
+    border-color: #3b82f6;
+}
+
+.chore.completed {
+    opacity: .65;
+}
+
+.chore-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.chore-name {
+    font-size: 1.35rem;
+    font-weight: bold;
+}
+
+.target {
+    color: #cbd5e1;
+    font-size: .9rem;
+}
+
+/* TIMER */
+
+.timer {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.time {
+    font-family: monospace;
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: bold;
+    letter-spacing: 4px;
+}
+
+.countdown {
+    min-height: 30px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #facc15;
+}
+
+.countdown.warning {
+    color: #ef4444;
+    animation: pulse .8s infinite;
+}
+
+@keyframes pulse {
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+/* PROGRESS */
+
+.progress {
+    width: 100%;
+    height: 12px;
+    background: #334155;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #22c55e;
+    transition: width .3s;
+}
+
+/* CONTROLS */
+
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* EMPTY */
+
+.empty {
+    text-align: center;
+    color: #94a3b8;
+    padding: 40px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 650px) {
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .chore-top {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .time {
+        font-size: 3.2rem;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .controls button {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+    <h1>🧹 Chore Time Tracker</h1>
+    <p>Stay focused, beat the clock, and get your chores done!</p>
+</header>
+
+<section class="add-chore">
+
+    <h2>Add a Chore</h2>
+
+    <div class="add-row">
+
+        <input
+            id="choreName"
+            type="text"
+            placeholder="Example: Clean bedroom"
+        >
+
+        <input
+            id="choreMinutes"
+            type="number"
+            min="1"
+            value="10"
+            placeholder="Minutes"
+        >
+
+        <button class="add-btn" onclick="addChore()">
+            ➕ Add Chore
+        </button>
+
+    </div>
+
+</section>
+
+<section class="stats">
+
+    <div class="stat">
+        <strong id="totalChores">0</strong>
+        Total Chores
+    </div>
+
+    <div class="stat">
+        <strong id="completedChores">0</strong>
+        Completed
+    </div>
+
+    <div class="stat">
+        <strong id="remainingChores">0</strong>
+        Remaining
+    </div>
+
+</section>
+
+<section id="choreList" class="chore-list"></section>
+
+</div>
+
+<script>
+
+"use strict";
+
+/* =========================
+   DATA
+========================= */
+
+let chores = JSON.parse(
+    localStorage.getItem("choreTracker")
+) || [];
+
+let activeTimer = null;
+
+/* =========================
+   SAVE
+========================= */
+
+function saveChores() {
+
+    localStorage.setItem(
+        "choreTracker",
+        JSON.stringify(chores)
+    );
+}
+
+/* =========================
+   ADD CHORE
+========================= */
+
+function addChore() {
+
+    const nameInput =
+        document.getElementById("choreName");
+
+    const minutesInput =
+        document.getElementById("choreMinutes");
+
+    const name =
+        nameInput.value.trim();
+
+    const minutes =
+        parseInt(minutesInput.value);
+
+    if (!name) {
+
+        alert("Please enter a chore.");
+
+        return;
+    }
+
+    if (!minutes || minutes < 1) {
+
+        alert("Please enter a valid number of minutes.");
+
+        return;
+    }
+
+    chores.push({
+
+        id: Date.now(),
+
+        name: name,
+
+        duration: minutes * 60,
+
+        elapsed: 0,
+
+        running: false,
+
+        completed: false,
+
+        endCountdownStarted: false
+
+    });
+
+    nameInput.value = "";
+
+    saveChores();
+
+    render();
+
+}
+
+/* =========================
+   START
+========================= */
+
+function startChore(id) {
+
+    /* Stop another timer */
+
+    if (activeTimer) {
+
+        clearInterval(activeTimer);
+
+        activeTimer = null;
+
+        chores.forEach(chore => {
+            chore.running = false;
+        });
+    }
+
+    const chore =
+        chores.find(c => c.id === id);
+
+    if (!chore || chore.completed) {
+        return;
+    }
+
+    chore.running = true;
+
+    playStartSound();
+
+    activeTimer = setInterval(() => {
+
+        chore.elapsed++;
+
+        const remaining =
+            chore.duration - chore.elapsed;
+
+        /* 10 second countdown */
+
+        if (
+            remaining <= 10 &&
+            remaining > 0 &&
+            !chore.endCountdownStarted
+        ) {
+
+            chore.endCountdownStarted = true;
+
+            playCountdownSound();
+
+        }
+
+        /* Countdown beeps */
+
+        if (
+            remaining <= 10 &&
+            remaining > 0
+        ) {
+
+            playBeep();
+
+        }
+
+        /* Time expired */
+
+        if (chore.elapsed >= chore.duration) {
+
+            chore.elapsed = chore.duration;
+
+            chore.running = false;
+
+            clearInterval(activeTimer);
+
+            activeTimer = null;
+
+            playFinishSound();
+
+            alert(
+                "⏰ Time's up! " +
+                chore.name +
+                " is finished."
+            );
+
+        }
+
+        saveChores();
+
+        render();
+
+    }, 1000);
+
+    render();
+}
+
+/* =========================
+   PAUSE
+========================= */
+
+function pauseChore(id) {
+
+    const chore =
+        chores.find(c => c.id === id);
+
+    if (!chore) {
+        return;
+    }
+
+    chore.running = false;
+
+    if (activeTimer) {
+
+        clearInterval(activeTimer);
+
+        activeTimer = null;
+    }
+
+    playPauseSound();
+
+    saveChores();
+
+    render();
+}
+
+/* =========================
+   RESET
+========================= */
+
+function resetChore(id) {
+
+    const chore =
+        chores.find(c => c.id === id);
+
+    if (!chore) {
+        return;
+    }
+
+    chore.elapsed = 0;
+
+    chore.running = false;
+
+    chore.endCountdownStarted = false;
+
+    if (activeTimer) {
+
+        clearInterval(activeTimer);
+
+        activeTimer = null;
+    }
+
+    saveChores();
+
+    render();
+}
+
+/* =========================
+   COMPLETE
+========================= */
+
+function completeChore(id) {
+
+    const chore =
+        chores.find(c => c.id === id);
+
+    if (!chore) {
+        return;
+    }
+
+    chore.completed = true;
+
+    chore.running = false;
+
+    if (activeTimer) {
+
+        clearInterval(activeTimer);
+
+        activeTimer = null;
+    }
+
+    playCompleteSound();
+
+    saveChores();
+
+    render();
+}
+
+/* =========================
+   DELETE
+========================= */
+
+function deleteChore(id) {
+
+    if (
+        !confirm(
+            "Delete this chore?"
+        )
+    ) {
+        return;
+    }
+
+    if (activeTimer) {
+
+        clearInterval(activeTimer);
+
+        activeTimer = null;
+    }
+
+    chores =
+        chores.filter(c => c.id !== id);
+
+    saveChores();
+
+    render();
+}
+
+/* =========================
+   FORMAT TIME
+========================= */
+
+function formatTime(seconds) {
+
+    const minutes =
+        Math.floor(seconds / 60);
+
+    const secs =
+        seconds % 60;
+
+    return (
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(secs).padStart(2, "0")
+    );
+}
+
+/* =========================
+   RENDER
+========================= */
+
+function render() {
+
+    const list =
+        document.getElementById("choreList");
+
+    if (chores.length === 0) {
+
+        list.innerHTML = `
+            <div class="empty">
+                <h2>No chores yet</h2>
+                <p>Add your first chore above!</p>
+            </div>
+        `;
+
+    } else {
+
+        list.innerHTML =
+            chores.map(chore => {
+
+                const remaining =
+                    chore.duration -
+                    chore.elapsed;
+
+                const percentage =
+                    Math.min(
+                        100,
+                        (
+                            chore.elapsed /
+                            chore.duration
+                        ) * 100
+                    );
+
+                let countdown = "";
+
+                if (
+                    remaining <= 10 &&
+                    remaining > 0 &&
+                    chore.running
+                ) {
+
+                    countdown =
+                        `<div class="countdown warning">
+                            ⚠️ ${remaining} seconds remaining!
+                         </div>`;
+                }
+
+                if (
+                    remaining <= 0 &&
+                    chore.running
+                ) {
+
+                    countdown =
+                        `<div class="countdown warning">
+                            ⏰ TIME'S UP!
+                         </div>`;
+                }
+
+                return `
+
+                <article class="
+                    chore
+                    ${chore.running ? "active" : ""}
+                    ${chore.completed ? "completed" : ""}
+                ">
+
+                    <div class="chore-top">
+
+                        <div>
+                            <div class="chore-name">
+                                ${escapeHTML(chore.name)}
+                            </div>
+
+                            <div class="target">
+                                Goal: ${Math.floor(chore.duration / 60)} minutes
+                            </div>
+                        </div>
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteChore(${chore.id})"
+                        >
+                            🗑️ Delete
+                        </button>
+
+                    </div>
+
+                    <div class="timer">
+
+                        <div class="time">
+                            ${formatTime(remaining)}
+                        </div>
+
+                        ${countdown}
+
+                    </div>
+
+                    <div class="progress">
+
+                        <div
+                            class="progress-bar"
+                            style="width:${percentage}%"
+                        ></div>
+
+                    </div>
+
+                    <div class="controls">
+
+                        ${
+                            !chore.running && !chore.completed
+                            ?
+                            `<button
+                                class="start-btn"
+                                onclick="startChore(${chore.id})"
+                            >
+                                ▶️ Start
+                            </button>`
+                            :
+                            ""
+                        }
+
+                        ${
+                            chore.running
+                            ?
+                            `<button
+                                class="pause-btn"
+                                onclick="pauseChore(${chore.id})"
+                            >
+                                ⏸️ Pause
+                            </button>`
+                            :
+                            ""
+                        }
+
+                        ${
+                            !chore.completed
+                            ?
+                            `<button
+                                class="reset-btn"
+                                onclick="resetChore(${chore.id})"
+                            >
+                                🔄 Reset
+                            </button>`
+                            :
+                            ""
+                        }
+
+                        ${
+                            !chore.completed
+                            ?
+                            `<button
+                                class="complete-btn"
+                                onclick="completeChore(${chore.id})"
+                            >
+                                ✅ Complete
+                            </button>`
+                            :
+                            `<button
+                                class="complete-btn"
+                                disabled
+                            >
+                                ✅ Completed
+                            </button>`
+                        }
+
+                    </div>
+
+                </article>
+
+                `;
+
+            }).join("");
+
+    }
+
+    updateStats();
+
+}
+
+/* =========================
+   STATS
+========================= */
+
+function updateStats() {
+
+    const total =
+        chores.length;
+
+    const completed =
+        chores.filter(
+            c => c.completed
+        ).length;
+
+    const remaining =
+        total - completed;
+
+    document.getElementById(
+        "totalChores"
+    ).textContent = total;
+
+    document.getElementById(
+        "completedChores"
+    ).textContent = completed;
+
+    document.getElementById(
+        "remainingChores"
+    ).textContent = remaining;
+}
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+}
+
+/* =========================
+   SOUND ENGINE
+========================= */
+
+let audioContext = null;
+
+function getAudioContext() {
+
+    if (!audioContext) {
+
+        audioContext =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+    }
+
+    if (
+        audioContext.state ===
+        "suspended"
+    ) {
+
+        audioContext.resume();
+
+    }
+
+    return audioContext;
+}
+
+/* Basic tone */
+
+function tone(
+    frequency,
+    duration,
+    type = "sine"
+) {
+
+    const ctx =
+        getAudioContext();
+
+    const oscillator =
+        ctx.createOscillator();
+
+    const gain =
+        ctx.createGain();
+
+    oscillator.type = type;
+
+    oscillator.frequency.value =
+        frequency;
+
+    gain.gain.setValueAtTime(
+        0.25,
+        ctx.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        ctx.currentTime + duration
+    );
+
+    oscillator.connect(gain);
+
+    gain.connect(ctx.destination);
+
+    oscillator.start();
+
+    oscillator.stop(
+        ctx.currentTime + duration
+    );
+}
+
+/* Start */
+
+function playStartSound() {
+
+    tone(600, .12);
+
+    setTimeout(
+        () => tone(800, .15),
+        120
+    );
+}
+
+/* Pause */
+
+function playPauseSound() {
+
+    tone(350, .2);
+}
+
+/* Countdown */
+
+function playCountdownSound() {
+
+    tone(900, .2);
+}
+
+/* Each countdown second */
+
+function playBeep() {
+
+    tone(1000, .08);
+}
+
+/* Finished */
+
+function playFinishSound() {
+
+    tone(700, .15);
+
+    setTimeout(
+        () => tone(900, .15),
+        180
+    );
+
+    setTimeout(
+        () => tone(1100, .35),
+        360
+    );
+}
+
+/* Completed */
+
+function playCompleteSound() {
+
+    tone(600, .1);
+
+    setTimeout(
+        () => tone(800, .1),
+        120
+    );
+
+    setTimeout(
+        () => tone(1200, .3),
+        240
+    );
+}
+
+/* =========================
+   INITIAL DISPLAY
+========================= */
+
+render();
+
+</script>
+
+</body>
+</html>
+```
