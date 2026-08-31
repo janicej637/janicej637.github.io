@@ -1,218 +1,411 @@
+
 "use strict";
+
+/* =========================================================
+   AQUARIUM ADVENTURE
+   Complete main.js
+========================================================= */
+
 
 /* =========================================================
    FISH DATA
 ========================================================= */
 
 const fish = [
+
     {
         name: "Clownfish",
         scientific: "Amphiprion percula",
-        image: "https://commons.wikimedia.org/wiki/Special:FilePath/A._percula.jpg",
-        facts: "Clownfish live among sea anemones and have a protective mucus coating that helps them live among the anemone's stinging tentacles."
+        image:
+            "https://commons.wikimedia.org/wiki/Special:FilePath/A._percula.jpg",
+        facts:
+            "Clownfish live among sea anemones. Their protective mucus coating helps them live safely among the anemone's stinging tentacles."
     },
+
     {
         name: "Blue Tang",
         scientific: "Paracanthurus hepatus",
-        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Paracanthurus%20hepatus%20in%20National%20Marine%20Aquarium.jpg",
-        facts: "Blue Tangs are bright blue reef fish that spend much of their time grazing on algae."
+        image:
+            "https://commons.wikimedia.org/wiki/Special:FilePath/Paracanthurus%20hepatus%20in%20National%20Marine%20Aquarium.jpg",
+        facts:
+            "Blue Tangs are bright blue reef fish. They spend much of their time grazing on algae around coral reefs."
     },
+
     {
         name: "Yellow Tang",
         scientific: "Zebrasoma flavescens",
-        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Yellow%20Tang.jpg",
-        facts: "Yellow Tangs are tropical surgeonfish known for their brilliant yellow color."
+        image:
+            "https://commons.wikimedia.org/wiki/Special:FilePath/Yellow%20Tang.jpg",
+        facts:
+            "Yellow Tangs are brilliant yellow surgeonfish that live around tropical coral reefs and rocky areas."
     },
+
     {
         name: "Lionfish",
         scientific: "Pterois volitans",
-        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Common%20lion%20fish%20Pterois%20volitans.jpg",
-        facts: "Lionfish have beautiful fan-like fins and venomous spines. They are ambush predators."
+        image:
+            "https://commons.wikimedia.org/wiki/Special:FilePath/Common%20lion%20fish%20Pterois%20volitans.jpg",
+        facts:
+            "Lionfish have spectacular fan-like fins and venomous spines. They are ambush predators that eat smaller fish and crustaceans."
     },
+
     {
         name: "Moorish Idol",
         scientific: "Zanclus cornutus",
-        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Moorish%20idol%20Zanclus%20cornutus.jpg",
-        facts: "Moorish Idols have distinctive black, white and yellow markings and are commonly associated with coral reefs."
+        image:
+            "https://commons.wikimedia.org/wiki/Special:FilePath/Moorish%20idol%20Zanclus%20cornutus.jpg",
+        facts:
+            "Moorish Idols have distinctive black, white and yellow markings and are commonly associated with tropical coral reefs."
     },
+
     {
-        name: "Angelfish",
+        name: "Queen Angelfish",
         scientific: "Holacanthus ciliaris",
-        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Queen%20Angelfish.jpg",
-        facts: "Queen Angelfish are colorful tropical reef fish found in the western Atlantic."
+        image:
+            "https://commons.wikimedia.org/wiki/Special:FilePath/Queen%20Angelfish.jpg",
+        facts:
+            "Queen Angelfish are colorful tropical reef fish found in the western Atlantic Ocean."
     },
+
     {
         name: "Butterflyfish",
         scientific: "Chaetodon",
-        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Reef%20Butterflyfish.jpg",
-        facts: "Butterflyfish are small, colorful reef fish with flattened bodies and narrow snouts."
+        image:
+            "https://commons.wikimedia.org/wiki/Special:FilePath/Reef%20Butterflyfish.jpg",
+        facts:
+            "Butterflyfish are colorful reef fish with flattened bodies. Many species use their narrow snouts to pick food from coral and rocks."
     },
+
     {
-        name: "Triggerfish",
+        name: "Clown Triggerfish",
         scientific: "Balistoides conspicillum",
-        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Balistoides%20conspicillum%20352992832.jpg",
-        facts: "Clown Triggerfish have powerful jaws and spectacular black, white and yellow markings."
+        image:
+            "https://commons.wikimedia.org/wiki/Special:FilePath/Balistoides%20conspicillum%20352992832.jpg",
+        facts:
+            "Clown Triggerfish have spectacular white spots, yellow markings and powerful jaws used to crush hard-shelled prey."
     },
+
     {
-        name: "Pufferfish",
+        name: "White-spotted Pufferfish",
         scientific: "Arothron hispidus",
-        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Arothron%20hispidus%20%28white-spotted%20puffer%20fish%29%20at%20Prague%20sea%20aquarium.jpg",
-        facts: "Pufferfish can inflate their bodies when threatened, making them much more difficult for predators to swallow."
+        image:
+            "https://commons.wikimedia.org/wiki/Special:FilePath/Arothron%20hispidus%20%28white-spotted%20puffer%20fish%29%20at%20Prague%20sea%20aquarium.jpg",
+        facts:
+            "Pufferfish can inflate their bodies when threatened, making themselves much harder for predators to swallow."
     },
+
     {
         name: "Mandarin Fish",
         scientific: "Synchiropus splendidus",
-        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Mandarin%20fish%20%28Synchiropus%20splendidus%29%20%2845103629692%29.jpg",
-        facts: "Mandarin Fish are famous for their spectacular blue, orange and green patterns."
+        image:
+            "https://commons.wikimedia.org/wiki/Special:FilePath/Mandarin%20fish%20%28Synchiropus%20splendidus%29%20%2845103629692%29.jpg",
+        facts:
+            "Mandarin Fish are famous for spectacular blue, orange and green patterns. They live close to coral reefs and feed near the seafloor."
     }
+
 ];
 
 
 /* =========================================================
-   PAGE ELEMENTS
+   GET PAGE ELEMENTS
 ========================================================= */
 
-const grid = document.getElementById("fish-grid");
-const modal = document.getElementById("modal");
-const modalImage = document.getElementById("modal-image");
-const modalName = document.getElementById("modal-name");
-const modalFacts = document.getElementById("modal-facts");
-const closeModal = document.getElementById("close-modal");
+const grid =
+    document.getElementById("fish-grid");
 
-const dayToggle = document.getElementById("dayToggle");
-const nightToggle = document.getElementById("nightToggle");
-const soundToggle = document.getElementById("soundToggle");
+const modal =
+    document.getElementById("modal");
+
+const modalImage =
+    document.getElementById("modal-image");
+
+const modalName =
+    document.getElementById("modal-name");
+
+const modalFacts =
+    document.getElementById("modal-facts");
+
+const closeModal =
+    document.getElementById("close-modal");
+
+const dayToggle =
+    document.getElementById("dayToggle");
+
+const nightToggle =
+    document.getElementById("nightToggle");
+
+const soundToggle =
+    document.getElementById("soundToggle");
 
 
 /* =========================================================
-   RENDER FISH
+   RENDER FISH CARDS
 ========================================================= */
 
 function renderFish() {
 
-    if (!grid) return;
+    if (!grid) {
+
+        console.error(
+            "ERROR: #fish-grid was not found."
+        );
+
+        return;
+
+    }
 
     grid.innerHTML = "";
 
-    fish.forEach((item, index) => {
 
-        const card = document.createElement("article");
+    fish.forEach(
+        (item, index) => {
 
-        card.className = "fish-card";
-        card.tabIndex = 0;
+            const card =
+                document.createElement(
+                    "article"
+                );
 
-        const image = document.createElement("img");
+            card.className =
+                "fish-card";
 
-        image.src = item.image;
-        image.alt = item.name;
-        image.loading = "lazy";
-
-        image.onerror = function () {
-
-            image.onerror = null;
-
-            image.src = createFallbackImage(item.name);
-
-        };
+            card.tabIndex = 0;
 
 
-        const info = document.createElement("div");
+            /* -------------------------
+               IMAGE
+            ------------------------- */
 
-        info.className = "fish-info";
+            const image =
+                document.createElement(
+                    "img"
+                );
 
+            image.src =
+                item.image;
 
-        const title = document.createElement("h2");
+            image.alt =
+                item.name;
 
-        title.textContent = item.name;
-
-
-        const scientific = document.createElement("p");
-
-        const italic = document.createElement("em");
-
-        italic.textContent = item.scientific;
-
-        scientific.appendChild(italic);
-
-
-        info.appendChild(title);
-        info.appendChild(scientific);
-
-        card.appendChild(image);
-        card.appendChild(info);
+            image.loading =
+                "lazy";
 
 
-        card.addEventListener("click", () => {
+            /*
+             * If a remote image cannot be loaded,
+             * display a simple fallback.
+             */
 
-            openFish(index);
+            image.onerror =
+                function () {
 
-        });
+                    image.onerror =
+                        null;
 
+                    image.src =
+                        createFallbackImage(
+                            item.name
+                        );
 
-        card.addEventListener("keydown", event => {
-
-            if (
-                event.key === "Enter" ||
-                event.key === " "
-            ) {
-
-                event.preventDefault();
-
-                openFish(index);
-
-            }
-
-        });
+                };
 
 
-        grid.appendChild(card);
+            /* -------------------------
+               INFORMATION
+            ------------------------- */
 
-    });
+            const info =
+                document.createElement(
+                    "div"
+                );
+
+            info.className =
+                "fish-info";
+
+
+            const title =
+                document.createElement(
+                    "h2"
+                );
+
+            title.textContent =
+                item.name;
+
+
+            const scientific =
+                document.createElement(
+                    "p"
+                );
+
+
+            const italic =
+                document.createElement(
+                    "em"
+                );
+
+            italic.textContent =
+                item.scientific;
+
+
+            scientific.appendChild(
+                italic
+            );
+
+
+            info.appendChild(
+                title
+            );
+
+            info.appendChild(
+                scientific
+            );
+
+
+            card.appendChild(
+                image
+            );
+
+            card.appendChild(
+                info
+            );
+
+
+            /* -------------------------
+               CLICK
+            ------------------------- */
+
+            card.addEventListener(
+                "click",
+                function () {
+
+                    openFish(index);
+
+                }
+            );
+
+
+            /* -------------------------
+               KEYBOARD
+            ------------------------- */
+
+            card.addEventListener(
+                "keydown",
+                function (event) {
+
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+
+                        event.preventDefault();
+
+                        openFish(index);
+
+                    }
+
+                }
+            );
+
+
+            grid.appendChild(
+                card
+            );
+
+        }
+    );
 
 }
 
 
 /* =========================================================
-   MODAL
+   OPEN FISH INFORMATION
 ========================================================= */
 
 function openFish(index) {
 
-    const item = fish[index];
+    const item =
+        fish[index];
 
-    if (!item || !modal) return;
+    if (
+        !item ||
+        !modal
+    ) {
 
-    modalImage.src = item.image;
-    modalImage.alt = item.name;
+        return;
 
-    modalName.textContent = item.name;
+    }
 
-    modalFacts.textContent = item.facts;
 
-    modal.classList.add("open");
+    modalImage.src =
+        item.image;
+
+    modalImage.alt =
+        item.name;
+
+
+    modalImage.onerror =
+        function () {
+
+            modalImage.onerror =
+                null;
+
+            modalImage.src =
+                createFallbackImage(
+                    item.name
+                );
+
+        };
+
+
+    modalName.textContent =
+        item.name;
+
+    modalFacts.textContent =
+        item.facts;
+
+
+    modal.classList.add(
+        "open"
+    );
+
 
     modal.setAttribute(
         "aria-hidden",
         "false"
     );
 
-    document.body.style.overflow = "hidden";
+
+    document.body.style.overflow =
+        "hidden";
 
 }
 
 
+/* =========================================================
+   CLOSE FISH INFORMATION
+========================================================= */
+
 function closeFish() {
 
-    if (!modal) return;
+    if (!modal) {
 
-    modal.classList.remove("open");
+        return;
+
+    }
+
+
+    modal.classList.remove(
+        "open"
+    );
+
 
     modal.setAttribute(
         "aria-hidden",
         "true"
     );
 
-    document.body.style.overflow = "";
+
+    document.body.style.overflow =
+        "";
 
 }
 
@@ -231,9 +424,11 @@ if (modal) {
 
     modal.addEventListener(
         "click",
-        event => {
+        function (event) {
 
-            if (event.target === modal) {
+            if (
+                event.target === modal
+            ) {
 
                 closeFish();
 
@@ -245,11 +440,17 @@ if (modal) {
 }
 
 
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
 document.addEventListener(
     "keydown",
-    event => {
+    function (event) {
 
-        if (event.key === "Escape") {
+        if (
+            event.key === "Escape"
+        ) {
 
             closeFish();
 
@@ -260,24 +461,33 @@ document.addEventListener(
 
 
 /* =========================================================
-   DAY / NIGHT
+   DAY MODE
 ========================================================= */
 
 function setDay() {
 
-    document.body.classList.remove("night");
+    document.body.classList.remove(
+        "night"
+    );
+
 
     if (dayToggle) {
 
-        dayToggle.classList.add("active");
+        dayToggle.classList.add(
+            "active"
+        );
 
     }
+
 
     if (nightToggle) {
 
-        nightToggle.classList.remove("active");
+        nightToggle.classList.remove(
+            "active"
+        );
 
     }
+
 
     localStorage.setItem(
         "aquariumMode",
@@ -287,21 +497,34 @@ function setDay() {
 }
 
 
+/* =========================================================
+   NIGHT MODE
+========================================================= */
+
 function setNight() {
 
-    document.body.classList.add("night");
+    document.body.classList.add(
+        "night"
+    );
+
 
     if (nightToggle) {
 
-        nightToggle.classList.add("active");
+        nightToggle.classList.add(
+            "active"
+        );
 
     }
+
 
     if (dayToggle) {
 
-        dayToggle.classList.remove("active");
+        dayToggle.classList.remove(
+            "active"
+        );
 
     }
+
 
     localStorage.setItem(
         "aquariumMode",
@@ -310,6 +533,10 @@ function setNight() {
 
 }
 
+
+/* =========================================================
+   DAY/NIGHT BUTTONS
+========================================================= */
 
 if (dayToggle) {
 
@@ -328,239 +555,96 @@ if (nightToggle) {
         setNight
     );
 
-
 }
 
 
 /* =========================================================
-   OCEAN SOUND ENGINE
-   Uses Web Audio API instead of an external MP3.
+   UNDERWATER RUMBLE AUDIO
 ========================================================= */
 
-let audioContext = null;
+/*
+ * IMPORTANT:
+ *
+ * Put this MP3 in the SAME folder as:
+ *
+ *     index16.html
+ *     main.js
+ *
+ * The exact filename must be:
+ *
+ * pwlpl-underwater-rumble-sound-effect-521068.mp3
+ *
+ * The "./" makes it clear that the browser should look
+ * in the current GitHub Pages directory.
+ */
 
-let masterGain = null;
-
-let oceanNoise = null;
-
-let oceanFilter = null;
-
-let oceanLFO = null;
-
-let oceanLFOGain = null;
-
-let soundOn = false;
+const underwaterAudio =
+    new Audio(
+        "./pwlpl-underwater-rumble-sound-effect-521068.mp3"
+    );
 
 
 /*
- * Creates a looping filtered noise sound.
- *
- * The combination of noise + filtering + slow amplitude
- * modulation produces a soft ocean/wave ambience.
+ * Loop continuously.
  */
 
-function createOceanSound() {
-
-    if (audioContext) {
-
-        return;
-
-    }
+underwaterAudio.loop =
+    true;
 
 
-    const AudioContext =
-        window.AudioContext ||
-        window.webkitAudioContext;
+/*
+ * Initial volume.
+ *
+ * 0.35 = 35%
+ */
+
+underwaterAudio.volume =
+    0.35;
 
 
-    if (!AudioContext) {
-
-        if (soundToggle) {
-
-            soundToggle.textContent =
-                "⚠️ Audio Not Supported";
-
-        }
-
-        return;
-
-    }
-
-
-    audioContext =
-        new AudioContext();
-
-
-    masterGain =
-        audioContext.createGain();
-
-    masterGain.gain.value =
-        0.16;
-
-
-    /*
-     * Create 4 seconds of random noise.
-     */
-
-    const duration = 4;
-
-    const bufferSize =
-        audioContext.sampleRate *
-        duration;
-
-
-    const noiseBuffer =
-        audioContext.createBuffer(
-            1,
-            bufferSize,
-            audioContext.sampleRate
-        );
-
-
-    const data =
-        noiseBuffer.getChannelData(0);
-
-
-    for (
-        let i = 0;
-        i < bufferSize;
-        i++
-    ) {
-
-        data[i] =
-            Math.random() * 2 - 1;
-
-    }
-
-
-    oceanNoise =
-        audioContext.createBufferSource();
-
-    oceanNoise.buffer =
-        noiseBuffer;
-
-    oceanNoise.loop =
-        true;
-
-
-    /*
-     * Low-pass filter removes harsh high frequencies.
-     */
-
-    oceanFilter =
-        audioContext.createBiquadFilter();
-
-    oceanFilter.type =
-        "lowpass";
-
-    oceanFilter.frequency.value =
-        950;
-
-    oceanFilter.Q.value =
-        0.7;
-
-
-    /*
-     * Slow LFO creates the rise and fall of waves.
-     */
-
-    oceanLFO =
-        audioContext.createOscillator();
-
-    oceanLFO.type =
-        "sine";
-
-    oceanLFO.frequency.value =
-        0.075;
-
-
-    oceanLFOGain =
-        audioContext.createGain();
-
-    oceanLFOGain.gain.value =
-        0.12;
-
-
-    oceanLFO.connect(
-        oceanLFOGain
-    );
-
-    oceanLFOGain.connect(
-        masterGain.gain
-    );
-
-
-    oceanNoise.connect(
-        oceanFilter
-    );
-
-    oceanFilter.connect(
-        masterGain
-    );
-
-    masterGain.connect(
-        audioContext.destination
-    );
-
-
-    oceanNoise.start();
-
-    oceanLFO.start();
-
-}
+let soundOn =
+    false;
 
 
 /* =========================================================
-   TURN OCEAN SOUND ON
+   START UNDERWATER SOUND
 ========================================================= */
 
 async function startOceanSound() {
 
+    if (!underwaterAudio) {
+
+        return;
+
+    }
+
+
     try {
 
-        createOceanSound();
+        /*
+         * Reset to beginning when starting.
+         */
 
-        if (!audioContext) {
-
-            return;
-
-        }
+        underwaterAudio.currentTime =
+            0;
 
 
         /*
-         * resume() is important because browsers can
-         * create an AudioContext in the suspended state.
+         * Play() is called as a result of the
+         * user's button click.
          */
 
-        if (
-            audioContext.state ===
-            "suspended"
-        ) {
-
-            await audioContext.resume();
-
-        }
+        await underwaterAudio.play();
 
 
-        masterGain.gain.cancelScheduledValues(
-            audioContext.currentTime
-        );
-
-
-        masterGain.gain.setTargetAtTime(
-            0.16,
-            audioContext.currentTime,
-            0.25
-        );
-
-
-        soundOn = true;
+        soundOn =
+            true;
 
 
         if (soundToggle) {
 
             soundToggle.textContent =
-                "🔊 Ocean Sounds ON";
+                "🔊 Underwater Sound ON";
 
             soundToggle.classList.add(
                 "active"
@@ -578,17 +662,35 @@ async function startOceanSound() {
     } catch (error) {
 
         console.error(
-            "Ocean audio error:",
+            "Unable to play underwater sound:",
             error
         );
+
+
+        soundOn =
+            false;
 
 
         if (soundToggle) {
 
             soundToggle.textContent =
-                "⚠️ Sound Error";
+                "⚠️ Sound File Error";
+
+            soundToggle.classList.remove(
+                "active"
+            );
 
         }
+
+
+        /*
+         * Give the user a useful console message.
+         */
+
+        console.error(
+            "Make sure this file exists beside index16.html:",
+            "pwlpl-underwater-rumble-sound-effect-521068.mp3"
+        );
 
     }
 
@@ -596,39 +698,37 @@ async function startOceanSound() {
 
 
 /* =========================================================
-   TURN OCEAN SOUND OFF
+   STOP UNDERWATER SOUND
 ========================================================= */
 
-async function stopOceanSound() {
+function stopOceanSound() {
 
-    if (!audioContext) {
-
-        soundOn = false;
+    if (!underwaterAudio) {
 
         return;
 
     }
 
 
-    masterGain.gain.cancelScheduledValues(
-        audioContext.currentTime
-    );
+    underwaterAudio.pause();
 
 
-    masterGain.gain.setTargetAtTime(
-        0,
-        audioContext.currentTime,
-        0.18
-    );
+    /*
+     * Reset to beginning.
+     */
+
+    underwaterAudio.currentTime =
+        0;
 
 
-    soundOn = false;
+    soundOn =
+        false;
 
 
     if (soundToggle) {
 
         soundToggle.textContent =
-            "🔇 Ocean Sounds";
+            "🔇 Underwater Sound";
 
         soundToggle.classList.remove(
             "active"
@@ -653,15 +753,15 @@ if (soundToggle) {
 
     soundToggle.addEventListener(
         "click",
-        async () => {
+        function () {
 
             if (soundOn) {
 
-                await stopOceanSound();
+                stopOceanSound();
 
             } else {
 
-                await startOceanSound();
+                startOceanSound();
 
             }
 
@@ -672,16 +772,87 @@ if (soundToggle) {
 
 
 /* =========================================================
+   HANDLE AUDIO ERRORS
+========================================================= */
+
+underwaterAudio.addEventListener(
+    "error",
+    function () {
+
+        console.error(
+            "The underwater MP3 could not be loaded."
+        );
+
+
+        console.error(
+            "Expected filename:",
+            "pwlpl-underwater-rumble-sound-effect-521068.mp3"
+        );
+
+
+        if (soundToggle) {
+
+            soundToggle.textContent =
+                "⚠️ MP3 Not Found";
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   HANDLE AUDIO END
+========================================================= */
+
+underwaterAudio.addEventListener(
+    "ended",
+    function () {
+
+        /*
+         * Normally this will never execute because
+         * loop=true.
+         *
+         * It is included as an additional safeguard.
+         */
+
+        if (soundOn) {
+
+            underwaterAudio.currentTime =
+                0;
+
+            underwaterAudio.play()
+                .catch(
+                    function (error) {
+
+                        console.error(
+                            "Unable to restart audio:",
+                            error
+                        );
+
+                    }
+                );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
    FALLBACK FISH IMAGE
 ========================================================= */
 
-function createFallbackImage(name) {
+function createFallbackImage(
+    name
+) {
 
     const safeName =
-        name.replace(
-            /[<>&"]/g,
-            ""
-        );
+        String(name)
+            .replace(
+                /[<>&"]/g,
+                ""
+            );
 
 
     const svg = `
@@ -760,6 +931,7 @@ function createFallbackImage(name) {
             </text>
 
         </svg>
+
     `;
 
 
@@ -781,7 +953,9 @@ const savedMode =
     );
 
 
-if (savedMode === "night") {
+if (
+    savedMode === "night"
+) {
 
     setNight();
 
@@ -792,31 +966,40 @@ if (savedMode === "night") {
 }
 
 
+/* =========================================================
+   RESTORE SOUND BUTTON STATE
+========================================================= */
+
 /*
- * We intentionally DO NOT automatically start audio.
+ * We do NOT automatically play the sound here.
  *
- * Browsers require a user gesture such as a click before
- * starting audible Web Audio.
+ * The browser requires a user gesture before audio can
+ * begin, so the user must press the sound button.
  */
 
-if (
+const savedSound =
     localStorage.getItem(
         "oceanSound"
-    ) === "on"
+    );
+
+
+if (
+    savedSound === "on" &&
+    soundToggle
 ) {
 
-    if (soundToggle) {
-
-        soundToggle.textContent =
-            "🔊 Start Ocean Sounds";
-
-    }
+    soundToggle.textContent =
+        "🔊 Start Underwater Sound";
 
 }
 
 
 /* =========================================================
-   START APPLICATION
+   INITIALIZE
 ========================================================= */
 
 renderFish();
+
+console.log(
+    "Aquarium Adventure initialized."
+);
