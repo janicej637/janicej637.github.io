@@ -1,229 +1,168 @@
 "use strict";
 
-
 /* =========================================================
    FISH DATA
 ========================================================= */
 
 const fish = [
-
     {
-        name:"Clownfish",
-        scientific:"Amphiprion percula",
-        image:"https://commons.wikimedia.org/wiki/Special:FilePath/A._percula.jpg",
-        facts:"Clownfish live among sea anemones. Their protective mucus coating allows them to live safely among the anemone's stinging tentacles."
+        name: "Clownfish",
+        scientific: "Amphiprion percula",
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/A._percula.jpg",
+        facts: "Clownfish live among sea anemones and have a protective mucus coating that helps them live among the anemone's stinging tentacles."
     },
-
     {
-        name:"Blue Tang",
-        scientific:"Paracanthurus hepatus",
-        image:"https://commons.wikimedia.org/wiki/Special:FilePath/Paracanthurus%20hepatus%20in%20National%20Marine%20Aquarium.jpg",
-        facts:"The Blue Tang is famous for its bright blue body and dark markings. It spends much of its time grazing on algae around coral reefs."
+        name: "Blue Tang",
+        scientific: "Paracanthurus hepatus",
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Paracanthurus%20hepatus%20in%20National%20Marine%20Aquarium.jpg",
+        facts: "Blue Tangs are bright blue reef fish that spend much of their time grazing on algae."
     },
-
     {
-        name:"Yellow Tang",
-        scientific:"Zebrasoma flavescens",
-        image:"https://commons.wikimedia.org/wiki/Special:FilePath/Yellow%20Tang.jpg",
-        facts:"Yellow Tangs are bright yellow surgeonfish that live around tropical reefs. They are important algae grazers."
+        name: "Yellow Tang",
+        scientific: "Zebrasoma flavescens",
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Yellow%20Tang.jpg",
+        facts: "Yellow Tangs are tropical surgeonfish known for their brilliant yellow color."
     },
-
     {
-        name:"Lionfish",
-        scientific:"Pterois volitans",
-        image:"https://commons.wikimedia.org/wiki/Special:FilePath/Common%20lion%20fish%20Pterois%20volitans.jpg",
-        facts:"Lionfish have spectacular fan-like fins and venomous spines. They are ambush predators that eat smaller fish and crustaceans."
+        name: "Lionfish",
+        scientific: "Pterois volitans",
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Common%20lion%20fish%20Pterois%20volitans.jpg",
+        facts: "Lionfish have beautiful fan-like fins and venomous spines. They are ambush predators."
     },
-
     {
-        name:"Moorish Idol",
-        scientific:"Zanclus cornutus",
-        image:"https://commons.wikimedia.org/wiki/Special:FilePath/Moorish%20idol%20Zanclus%20cornutus.jpg",
-        facts:"The Moorish Idol has bold black, white and yellow markings and a long dorsal filament. It is commonly associated with coral reefs."
+        name: "Moorish Idol",
+        scientific: "Zanclus cornutus",
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Moorish%20idol%20Zanclus%20cornutus.jpg",
+        facts: "Moorish Idols have distinctive black, white and yellow markings and are commonly associated with coral reefs."
     },
-
     {
-        name:"Angelfish",
-        scientific:"Holacanthus ciliaris",
-        image:"https://commons.wikimedia.org/wiki/Special:FilePath/Queen%20Angelfish.jpg",
-        facts:"Queen Angelfish are colorful reef fish found in the tropical western Atlantic. Adults commonly inhabit coral and rocky reefs."
+        name: "Angelfish",
+        scientific: "Holacanthus ciliaris",
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Queen%20Angelfish.jpg",
+        facts: "Queen Angelfish are colorful tropical reef fish found in the western Atlantic."
     },
-
     {
-        name:"Butterflyfish",
-        scientific:"Chaetodon",
-        image:"https://commons.wikimedia.org/wiki/Special:FilePath/Reef%20Butterflyfish.jpg",
-        facts:"Butterflyfish are small, colorful reef fish with flattened bodies. Many species use their narrow snouts to pick food from coral and rocks."
+        name: "Butterflyfish",
+        scientific: "Chaetodon",
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Reef%20Butterflyfish.jpg",
+        facts: "Butterflyfish are small, colorful reef fish with flattened bodies and narrow snouts."
     },
-
     {
-        name:"Triggerfish",
-        scientific:"Balistoides conspicillum",
-        image:"https://commons.wikimedia.org/wiki/Special:FilePath/Balistoides%20conspicillum%20352992832.jpg",
-        facts:"The Clown Triggerfish has striking spots and yellow markings. Triggerfish have powerful jaws that help them eat hard-shelled prey."
+        name: "Triggerfish",
+        scientific: "Balistoides conspicillum",
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Balistoides%20conspicillum%20352992832.jpg",
+        facts: "Clown Triggerfish have powerful jaws and spectacular black, white and yellow markings."
     },
-
     {
-        name:"Pufferfish",
-        scientific:"Arothron hispidus",
-        image:"https://commons.wikimedia.org/wiki/Special:FilePath/Arothron%20hispidus%20%28white-spotted%20puffer%20fish%29%20at%20Prague%20sea%20aquarium.jpg",
-        facts:"Pufferfish can inflate their bodies when threatened. The white-spotted puffer occurs in tropical Indo-Pacific waters."
+        name: "Pufferfish",
+        scientific: "Arothron hispidus",
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Arothron%20hispidus%20%28white-spotted%20puffer%20fish%29%20at%20Prague%20sea%20aquarium.jpg",
+        facts: "Pufferfish can inflate their bodies when threatened, making them much more difficult for predators to swallow."
     },
-
     {
-        name:"Mandarin Fish",
-        scientific:"Synchiropus splendidus",
-        image:"https://commons.wikimedia.org/wiki/Special:FilePath/Mandarin%20fish%20%28Synchiropus%20splendidus%29%20%2845103629692%29.jpg",
-        facts:"Mandarin Fish are famous for their spectacular blue, orange and green patterns. They live close to coral reefs and feed near the seafloor."
+        name: "Mandarin Fish",
+        scientific: "Synchiropus splendidus",
+        image: "https://commons.wikimedia.org/wiki/Special:FilePath/Mandarin%20fish%20%28Synchiropus%20splendidus%29%20%2845103629692%29.jpg",
+        facts: "Mandarin Fish are famous for their spectacular blue, orange and green patterns."
     }
-
 ];
 
 
 /* =========================================================
-   ELEMENTS
+   PAGE ELEMENTS
 ========================================================= */
 
-const grid =
-    document.getElementById("fish-grid");
+const grid = document.getElementById("fish-grid");
+const modal = document.getElementById("modal");
+const modalImage = document.getElementById("modal-image");
+const modalName = document.getElementById("modal-name");
+const modalFacts = document.getElementById("modal-facts");
+const closeModal = document.getElementById("close-modal");
 
-const modal =
-    document.getElementById("modal");
-
-const modalImage =
-    document.getElementById("modal-image");
-
-const modalName =
-    document.getElementById("modal-name");
-
-const modalFacts =
-    document.getElementById("modal-facts");
-
-const closeModal =
-    document.getElementById("close-modal");
-
-const dayToggle =
-    document.getElementById("dayToggle");
-
-const nightToggle =
-    document.getElementById("nightToggle");
-
-const soundToggle =
-    document.getElementById("soundToggle");
+const dayToggle = document.getElementById("dayToggle");
+const nightToggle = document.getElementById("nightToggle");
+const soundToggle = document.getElementById("soundToggle");
 
 
 /* =========================================================
    RENDER FISH
 ========================================================= */
 
-function renderFish(){
+function renderFish() {
 
-    if(!grid){
-        return;
-    }
+    if (!grid) return;
 
     grid.innerHTML = "";
 
-    fish.forEach((item,index)=>{
+    fish.forEach((item, index) => {
 
-        const card =
-            document.createElement("article");
+        const card = document.createElement("article");
 
-        card.className =
-            "fish-card";
-
+        card.className = "fish-card";
         card.tabIndex = 0;
 
-        const image =
-            document.createElement("img");
+        const image = document.createElement("img");
 
-        image.src =
-            item.image;
+        image.src = item.image;
+        image.alt = item.name;
+        image.loading = "lazy";
 
-        image.alt =
-            item.name;
-
-        image.loading =
-            "lazy";
-
-
-        image.onerror = function(){
+        image.onerror = function () {
 
             image.onerror = null;
 
-            image.src =
-                createFallbackImage(
-                    item.name
-                );
+            image.src = createFallbackImage(item.name);
 
         };
 
 
-        const info =
-            document.createElement("div");
+        const info = document.createElement("div");
 
-        info.className =
-            "fish-info";
+        info.className = "fish-info";
 
 
-        const title =
-            document.createElement("h2");
+        const title = document.createElement("h2");
 
-        title.textContent =
-            item.name;
+        title.textContent = item.name;
 
 
-        const scientific =
-            document.createElement("p");
+        const scientific = document.createElement("p");
 
-        const italic =
-            document.createElement("em");
+        const italic = document.createElement("em");
 
-        italic.textContent =
-            item.scientific;
+        italic.textContent = item.scientific;
 
-        scientific.appendChild(
-            italic
-        );
+        scientific.appendChild(italic);
 
 
         info.appendChild(title);
-
-        info.appendChild(
-            scientific
-        );
-
+        info.appendChild(scientific);
 
         card.appendChild(image);
-
         card.appendChild(info);
 
 
-        card.addEventListener(
-            "click",
-            ()=>{
+        card.addEventListener("click", () => {
+
+            openFish(index);
+
+        });
+
+
+        card.addEventListener("keydown", event => {
+
+            if (
+                event.key === "Enter" ||
+                event.key === " "
+            ) {
+
+                event.preventDefault();
+
                 openFish(index);
-            }
-        );
-
-
-        card.addEventListener(
-            "keydown",
-            event=>{
-
-                if(
-                    event.key === "Enter" ||
-                    event.key === " "
-                ){
-
-                    event.preventDefault();
-
-                    openFish(index);
-
-                }
 
             }
-        );
+
+        });
 
 
         grid.appendChild(card);
@@ -234,183 +173,459 @@ function renderFish(){
 
 
 /* =========================================================
-   FISH MODAL
+   MODAL
 ========================================================= */
 
-function openFish(index){
+function openFish(index) {
 
-    const item =
-        fish[index];
+    const item = fish[index];
 
-    if(!item){
-        return;
-    }
+    if (!item || !modal) return;
 
-    modalImage.src =
-        item.image;
+    modalImage.src = item.image;
+    modalImage.alt = item.name;
 
-    modalImage.alt =
-        item.name;
+    modalName.textContent = item.name;
 
-    modalName.textContent =
-        item.name;
+    modalFacts.textContent = item.facts;
 
-    modalFacts.textContent =
-        item.facts;
-
-    modal.classList.add(
-        "open"
-    );
+    modal.classList.add("open");
 
     modal.setAttribute(
         "aria-hidden",
         "false"
     );
 
-    document.body.style.overflow =
-        "hidden";
+    document.body.style.overflow = "hidden";
+
 }
 
 
-function closeFish(){
+function closeFish() {
 
-    modal.classList.remove(
-        "open"
-    );
+    if (!modal) return;
+
+    modal.classList.remove("open");
 
     modal.setAttribute(
         "aria-hidden",
         "true"
     );
 
-    document.body.style.overflow =
-        "";
+    document.body.style.overflow = "";
 
 }
+
+
+if (closeModal) {
+
+    closeModal.addEventListener(
+        "click",
+        closeFish
+    );
+
+}
+
+
+if (modal) {
+
+    modal.addEventListener(
+        "click",
+        event => {
+
+            if (event.target === modal) {
+
+                closeFish();
+
+            }
+
+        }
+    );
+
+}
+
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Escape") {
+
+            closeFish();
+
+        }
+
+    }
+);
 
 
 /* =========================================================
    DAY / NIGHT
 ========================================================= */
 
-function setDay(){
+function setDay() {
 
-    document.body.classList.remove(
-        "night"
-    );
+    document.body.classList.remove("night");
 
-    dayToggle.classList.add(
-        "active"
-    );
+    if (dayToggle) {
 
-    nightToggle.classList.remove(
-        "active"
-    );
+        dayToggle.classList.add("active");
+
+    }
+
+    if (nightToggle) {
+
+        nightToggle.classList.remove("active");
+
+    }
 
     localStorage.setItem(
         "aquariumMode",
         "day"
     );
+
 }
 
 
-function setNight(){
+function setNight() {
 
-    document.body.classList.add(
-        "night"
-    );
+    document.body.classList.add("night");
 
-    nightToggle.classList.add(
-        "active"
-    );
+    if (nightToggle) {
 
-    dayToggle.classList.remove(
-        "active"
-    );
+        nightToggle.classList.add("active");
+
+    }
+
+    if (dayToggle) {
+
+        dayToggle.classList.remove("active");
+
+    }
 
     localStorage.setItem(
         "aquariumMode",
         "night"
     );
+
 }
 
 
-dayToggle.addEventListener(
-    "click",
-    setDay
-);
+if (dayToggle) {
+
+    dayToggle.addEventListener(
+        "click",
+        setDay
+    );
+
+}
 
 
-nightToggle.addEventListener(
-    "click",
-    setNight
-);
+if (nightToggle) {
+
+    nightToggle.addEventListener(
+        "click",
+        setNight
+    );
+
+
+}
 
 
 /* =========================================================
-   OCEAN SOUND
+   OCEAN SOUND ENGINE
+   Uses Web Audio API instead of an external MP3.
 ========================================================= */
 
-/*
-    The browser will not allow an audio file to autoplay
-    without user interaction.
+let audioContext = null;
 
-    This button starts/stops the ocean ambience after the
-    visitor clicks it.
+let masterGain = null;
 
-    Replace the URL below with your preferred ocean-wave
-    MP3 if you have one.
-*/
+let oceanNoise = null;
 
-const oceanAudio =
-    new Audio(
-        "https://cdn.pixabay.com/audio/2022/05/13/audio_257f8f5d7c.mp3"
-    );
+let oceanFilter = null;
 
-oceanAudio.loop =
-    true;
+let oceanLFO = null;
 
-oceanAudio.volume =
-    0.35;
-
+let oceanLFOGain = null;
 
 let soundOn = false;
 
 
-function toggleSound(){
+/*
+ * Creates a looping filtered noise sound.
+ *
+ * The combination of noise + filtering + slow amplitude
+ * modulation produces a soft ocean/wave ambience.
+ */
 
-    if(!soundOn){
+function createOceanSound() {
 
-        oceanAudio.play()
-            .then(()=>{
+    if (audioContext) {
 
-                soundOn = true;
+        return;
 
-                soundToggle.textContent =
-                    "🔊 Ocean Sounds ON";
+    }
 
-                soundToggle.classList.add(
-                    "active"
-                );
 
-                localStorage.setItem(
-                    "oceanSound",
-                    "on"
-                );
+    const AudioContext =
+        window.AudioContext ||
+        window.webkitAudioContext;
 
-            })
-            .catch(()=>{
 
-                soundToggle.textContent =
-                    "🔊 Click Again for Sound";
+    if (!AudioContext) {
 
-            });
+        if (soundToggle) {
 
-    }else{
+            soundToggle.textContent =
+                "⚠️ Audio Not Supported";
 
-        oceanAudio.pause();
+        }
+
+        return;
+
+    }
+
+
+    audioContext =
+        new AudioContext();
+
+
+    masterGain =
+        audioContext.createGain();
+
+    masterGain.gain.value =
+        0.16;
+
+
+    /*
+     * Create 4 seconds of random noise.
+     */
+
+    const duration = 4;
+
+    const bufferSize =
+        audioContext.sampleRate *
+        duration;
+
+
+    const noiseBuffer =
+        audioContext.createBuffer(
+            1,
+            bufferSize,
+            audioContext.sampleRate
+        );
+
+
+    const data =
+        noiseBuffer.getChannelData(0);
+
+
+    for (
+        let i = 0;
+        i < bufferSize;
+        i++
+    ) {
+
+        data[i] =
+            Math.random() * 2 - 1;
+
+    }
+
+
+    oceanNoise =
+        audioContext.createBufferSource();
+
+    oceanNoise.buffer =
+        noiseBuffer;
+
+    oceanNoise.loop =
+        true;
+
+
+    /*
+     * Low-pass filter removes harsh high frequencies.
+     */
+
+    oceanFilter =
+        audioContext.createBiquadFilter();
+
+    oceanFilter.type =
+        "lowpass";
+
+    oceanFilter.frequency.value =
+        950;
+
+    oceanFilter.Q.value =
+        0.7;
+
+
+    /*
+     * Slow LFO creates the rise and fall of waves.
+     */
+
+    oceanLFO =
+        audioContext.createOscillator();
+
+    oceanLFO.type =
+        "sine";
+
+    oceanLFO.frequency.value =
+        0.075;
+
+
+    oceanLFOGain =
+        audioContext.createGain();
+
+    oceanLFOGain.gain.value =
+        0.12;
+
+
+    oceanLFO.connect(
+        oceanLFOGain
+    );
+
+    oceanLFOGain.connect(
+        masterGain.gain
+    );
+
+
+    oceanNoise.connect(
+        oceanFilter
+    );
+
+    oceanFilter.connect(
+        masterGain
+    );
+
+    masterGain.connect(
+        audioContext.destination
+    );
+
+
+    oceanNoise.start();
+
+    oceanLFO.start();
+
+}
+
+
+/* =========================================================
+   TURN OCEAN SOUND ON
+========================================================= */
+
+async function startOceanSound() {
+
+    try {
+
+        createOceanSound();
+
+        if (!audioContext) {
+
+            return;
+
+        }
+
+
+        /*
+         * resume() is important because browsers can
+         * create an AudioContext in the suspended state.
+         */
+
+        if (
+            audioContext.state ===
+            "suspended"
+        ) {
+
+            await audioContext.resume();
+
+        }
+
+
+        masterGain.gain.cancelScheduledValues(
+            audioContext.currentTime
+        );
+
+
+        masterGain.gain.setTargetAtTime(
+            0.16,
+            audioContext.currentTime,
+            0.25
+        );
+
+
+        soundOn = true;
+
+
+        if (soundToggle) {
+
+            soundToggle.textContent =
+                "🔊 Ocean Sounds ON";
+
+            soundToggle.classList.add(
+                "active"
+            );
+
+        }
+
+
+        localStorage.setItem(
+            "oceanSound",
+            "on"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Ocean audio error:",
+            error
+        );
+
+
+        if (soundToggle) {
+
+            soundToggle.textContent =
+                "⚠️ Sound Error";
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   TURN OCEAN SOUND OFF
+========================================================= */
+
+async function stopOceanSound() {
+
+    if (!audioContext) {
 
         soundOn = false;
+
+        return;
+
+    }
+
+
+    masterGain.gain.cancelScheduledValues(
+        audioContext.currentTime
+    );
+
+
+    masterGain.gain.setTargetAtTime(
+        0,
+        audioContext.currentTime,
+        0.18
+    );
+
+
+    soundOn = false;
+
+
+    if (soundToggle) {
 
         soundToggle.textContent =
             "🔇 Ocean Sounds";
@@ -419,71 +634,55 @@ function toggleSound(){
             "active"
         );
 
-        localStorage.setItem(
-            "oceanSound",
-            "off"
-        );
-
     }
+
+
+    localStorage.setItem(
+        "oceanSound",
+        "off"
+    );
 
 }
 
 
-soundToggle.addEventListener(
-    "click",
-    toggleSound
-);
+/* =========================================================
+   SOUND BUTTON
+========================================================= */
+
+if (soundToggle) {
+
+    soundToggle.addEventListener(
+        "click",
+        async () => {
+
+            if (soundOn) {
+
+                await stopOceanSound();
+
+            } else {
+
+                await startOceanSound();
+
+            }
+
+        }
+    );
+
+}
 
 
 /* =========================================================
-   MODAL EVENTS
+   FALLBACK FISH IMAGE
 ========================================================= */
 
-closeModal.addEventListener(
-    "click",
-    closeFish
-);
+function createFallbackImage(name) {
 
+    const safeName =
+        name.replace(
+            /[<>&"]/g,
+            ""
+        );
 
-modal.addEventListener(
-    "click",
-    event=>{
-
-        if(
-            event.target === modal
-        ){
-
-            closeFish();
-
-        }
-
-    }
-);
-
-
-document.addEventListener(
-    "keydown",
-    event=>{
-
-        if(
-            event.key === "Escape"
-        ){
-
-            closeFish();
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   FALLBACK IMAGE
-========================================================= */
-
-function createFallbackImage(
-    name
-){
 
     const svg = `
 
@@ -517,11 +716,13 @@ function createFallbackImage(
 
             </defs>
 
+
             <rect
                 width="900"
                 height="600"
                 fill="url(#water)"
             />
+
 
             <ellipse
                 cx="450"
@@ -531,10 +732,12 @@ function createFallbackImage(
                 fill="#ff9f1c"
             />
 
+
             <polygon
                 points="280,300 130,205 130,395"
                 fill="#ff7b00"
             />
+
 
             <circle
                 cx="540"
@@ -542,6 +745,7 @@ function createFallbackImage(
                 r="13"
                 fill="#111"
             />
+
 
             <text
                 x="450"
@@ -552,11 +756,12 @@ function createFallbackImage(
                 font-size="34"
                 font-weight="bold"
             >
-                ${name}
+                ${safeName}
             </text>
 
         </svg>
     `;
+
 
     return (
         "data:image/svg+xml;charset=UTF-8," +
@@ -567,7 +772,7 @@ function createFallbackImage(
 
 
 /* =========================================================
-   RESTORE SAVED SETTINGS
+   RESTORE DAY/NIGHT SETTING
 ========================================================= */
 
 const savedMode =
@@ -576,35 +781,42 @@ const savedMode =
     );
 
 
-if(savedMode === "night"){
+if (savedMode === "night") {
+
     setNight();
-}else{
+
+} else {
+
     setDay();
+
 }
 
 
 /*
-   Sound is deliberately NOT automatically started.
-   The browser requires user interaction before audio
-   playback.
-*/
+ * We intentionally DO NOT automatically start audio.
+ *
+ * Browsers require a user gesture such as a click before
+ * starting audible Web Audio.
+ */
 
-const savedSound =
+if (
     localStorage.getItem(
         "oceanSound"
-    );
+    ) === "on"
+) {
 
+    if (soundToggle) {
 
-if(savedSound === "on"){
+        soundToggle.textContent =
+            "🔊 Start Ocean Sounds";
 
-    soundToggle.textContent =
-        "🔊 Ocean Sounds";
+    }
 
 }
 
 
 /* =========================================================
-   START
+   START APPLICATION
 ========================================================= */
 
 renderFish();
