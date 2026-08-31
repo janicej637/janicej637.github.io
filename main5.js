@@ -1072,7 +1072,7 @@ function handleSelection(
         100;
 
 
-    updateXP();
+    /*updateXP();*/
 
 
     state.currentQuestionIndex++;
@@ -1202,7 +1202,7 @@ function handleMinigameMatch(
             150;
 
 
-        updateXP();
+        /*updateXP();*/
 
 
         selectedTarget.classList.add(
@@ -1794,7 +1794,7 @@ function resetQuest() {
         [];
 
 
-    updateXP();
+   /*updateXP();*/
 
 
     updateProgress(
@@ -1978,7 +1978,7 @@ function initializeMindQuest() {
 
     initializeControls();
 
-    updateXP();
+    /*updateXP();*/
 
     updateProgress(
         0
