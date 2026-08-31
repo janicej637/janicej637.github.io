@@ -15,7 +15,7 @@ minigameIndex: 0,
 xp: 0,
 sfxEnabled: true,
 
-```
+
 scores: {
     visual: 0,
     auditory: 0,
@@ -61,10 +61,10 @@ const strategyList = document.getElementById("strategy-list");
 /*
 XP counter is OPTIONAL.
 
-```
+
 Your HTML currently has the XP display commented out.
 Therefore we use a null-safe selector.
-```
+
 
 */
 
@@ -83,7 +83,7 @@ This avoids browser autoplay restrictions.
 
 function getAudioContext() {
 
-```
+
 if (!audioContext) {
 
     const AudioContext =
@@ -98,7 +98,7 @@ if (!audioContext) {
 }
 
 return audioContext;
-```
+
 
 }
 
@@ -108,7 +108,7 @@ Resume audio if browser has suspended it.
 
 function prepareAudio() {
 
-```
+
 const ctx = getAudioContext();
 
 if (!ctx) {
@@ -118,7 +118,7 @@ if (!ctx) {
 if (ctx.state === "suspended") {
     ctx.resume();
 }
-```
+
 
 }
 
@@ -128,7 +128,7 @@ Play a simple synthesized tone.
 
 function playAudioTone(freq, waveType, length) {
 
-```
+
 if (!state.sfxEnabled) {
     return;
 }
@@ -180,7 +180,7 @@ try {
         error
     );
 }
-```
+
 
 }
 
@@ -190,19 +190,19 @@ SOUND EFFECTS
 
 function triggerClickSFX() {
 
-```
+
 playAudioTone(
     580,
     "triangle",
     0.12
 );
-```
+
 
 }
 
 function triggerProgressionSFX() {
 
-```
+
 playAudioTone(
     480,
     "sine",
@@ -218,25 +218,25 @@ setTimeout(() => {
     );
 
 }, 80);
-```
+
 
 }
 
 function triggerWrongSFX() {
 
-```
+
 playAudioTone(
     220,
     "sawtooth",
     0.25
 );
-```
+
 
 }
 
 function triggerVictorySFX() {
 
-```
+
 playAudioTone(
     523,
     "sine",
@@ -272,7 +272,7 @@ setTimeout(() => {
     );
 
 }, 300);
-```
+
 
 }
 
@@ -282,7 +282,7 @@ QUESTION BANK
 
 const masterQuestionBank = [
 
-```
+
 {
     question:
         "A giant scroll drops in front of you containing a secret spell. How do you learn it?",
@@ -519,7 +519,7 @@ const masterQuestionBank = [
 
     ]
 }
-```
+
 
 ];
 
@@ -529,7 +529,7 @@ BONUS ROUND DATA
 
 const minigameData = [
 
-```
+
 {
     text:
         "Using a text-to-speech engine to listen to a book",
@@ -557,7 +557,7 @@ const minigameData = [
     category:
         "kinesthetic"
 }
-```
+
 
 ];
 
@@ -571,7 +571,7 @@ SFX toggle
 
 if (btnSfx) {
 
-```
+
 btnSfx.addEventListener(
     "click",
     () => {
@@ -592,7 +592,7 @@ btnSfx.addEventListener(
 
     }
 );
-```
+
 
 }
 
@@ -602,7 +602,7 @@ Start game
 
 if (btnStart) {
 
-```
+
 btnStart.addEventListener(
     "click",
     () => {
@@ -615,7 +615,7 @@ btnStart.addEventListener(
 
     }
 );
-```
+
 
 }
 
@@ -625,7 +625,7 @@ Restart game
 
 if (btnRestart) {
 
-```
+
 btnRestart.addEventListener(
     "click",
     () => {
@@ -638,7 +638,7 @@ btnRestart.addEventListener(
 
     }
 );
-```
+
 
 }
 
@@ -648,12 +648,12 @@ Export / Print report
 
 if (btnExport) {
 
-```
+
 btnExport.addEventListener(
     "click",
     saveAsHighFidelityPDF
 );
-```
+
 
 }
 
@@ -665,7 +665,7 @@ document
 .querySelectorAll(".zone-btn")
 .forEach(button => {
 
-```
+
     button.addEventListener(
         "click",
         event => {
@@ -680,7 +680,7 @@ document
     );
 
 });
-```
+
 
 /* =========================================================
 QUESTION RANDOMIZER
@@ -688,7 +688,7 @@ QUESTION RANDOMIZER
 
 function generateDynamicQuestions() {
 
-```
+
 const shuffled =
     [...masterQuestionBank];
 
@@ -720,7 +720,7 @@ for (
 
 state.activeQuestions =
     shuffled.slice(0, 5);
-```
+
 
 }
 
@@ -730,7 +730,7 @@ START QUEST
 
 function startQuest() {
 
-```
+
 state.currentQuestionIndex = 0;
 state.minigameIndex = 0;
 
@@ -745,7 +745,7 @@ if (quizScreen) {
 }
 
 loadQuestion();
-```
+
 
 }
 
@@ -755,7 +755,7 @@ LOAD QUESTION
 
 function loadQuestion() {
 
-```
+
 const currentQuestion =
     state.activeQuestions[
         state.currentQuestionIndex
@@ -861,7 +861,7 @@ if (optionsContainer) {
 
 
 updateProgress();
-```
+
 
 }
 
@@ -874,7 +874,7 @@ type,
 selectedCard
 ) {
 
-```
+
 /*
     Prevent double-clicking an answer.
 */
@@ -969,7 +969,7 @@ setTimeout(
     },
     350
 );
-```
+
 
 }
 
@@ -979,7 +979,7 @@ BONUS ROUND
 
 function launchBonusRound() {
 
-```
+
 if (quizScreen) {
     quizScreen.classList.remove("active");
 }
@@ -991,7 +991,7 @@ if (minigameScreen) {
 updateProgress();
 
 loadMinigameCard();
-```
+
 
 }
 
@@ -1001,7 +1001,7 @@ LOAD BONUS CARD
 
 function loadMinigameCard() {
 
-```
+
 if (
     state.minigameIndex <
     minigameData.length
@@ -1024,7 +1024,7 @@ if (
     showResults();
 
 }
-```
+
 
 }
 
@@ -1036,7 +1036,7 @@ function handleMinigameMatch(
 selectedTarget
 ) {
 
-```
+
 if (
     !selectedTarget ||
     state.minigameIndex >=
@@ -1124,7 +1124,7 @@ setTimeout(
     },
     500
 );
-```
+
 
 }
 
@@ -1134,7 +1134,7 @@ PROGRESS BAR
 
 function updateProgress() {
 
-```
+
 if (!progressBar) {
     return;
 }
@@ -1168,7 +1168,7 @@ percent =
 
 progressBar.style.width =
     `${percent}%`;
-```
+
 
 }
 
@@ -1178,7 +1178,7 @@ RESULTS
 
 function showResults() {
 
-```
+
 triggerVictorySFX();
 
 
@@ -1377,7 +1377,7 @@ if (strategyList) {
     );
 
 }
-```
+
 
 }
 
@@ -1387,7 +1387,7 @@ PRINT / SAVE REPORT
 
 function saveAsHighFidelityPDF() {
 
-```
+
 prepareAudio();
 
 triggerVictorySFX();
@@ -1661,7 +1661,7 @@ printWindow.document.write(`
 
 
 printWindow.document.close();
-```
+
 
 }
 
@@ -1671,7 +1671,7 @@ HTML ESCAPE
 
 function escapeHTML(value) {
 
-```
+
 return String(value)
     .replace(
         /&/g,
@@ -1693,7 +1693,7 @@ return String(value)
         /'/g,
         "&#039;"
     );
-```
+
 
 }
 
@@ -1703,7 +1703,7 @@ RESET GAME
 
 function resetQuest() {
 
-```
+
 state.currentQuestionIndex =
     0;
 
