@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Routine Coach</title>
+    <link rel="stylesheet" href="main20.css">
+</head>
+
+<body>
+
+<div id="lightshow" aria-hidden="true"></div>
+
+<div class="app">
+ <p>
+    <a href=" https://janicej637.github.io/" style="color: #000080;"><img src="https://clipart-library.com/data_images/469756.png" alt="Home" width="80" height="30"> </a>
+  </p>
+
+<header class="topbar">
+    <div>
+        <div class="eyebrow">ROUTINE COACH</div>
+        <h1>My Routines</h1>
+        <p class="subtitle">
+            Build routines, group chores and let your coach keep you moving.
+        </p>
+    </div>
+
+    <button id="lightshow-toggle" class="toggle" type="button">
+        💡 Light Show: OFF
+    </button>
+</header>
+
+
+<section class="dashboard">
+
+    <!-- ROUTINE LIST -->
+    <aside class="panel routine-panel">
+
+        <div class="panel-heading">
+            <h2>Routines</h2>
+
+            <button
+                id="new-routine"
+                class="icon-btn"
+                type="button"
+                title="Create routine">
+                ＋
+            </button>
+        </div>
+
+
+        <div class="routine-filters">
+
+            <button class="filter active" data-period="all">
+                All
+            </button>
+
+            <button class="filter" data-period="morning">
+                Morning
+            </button>
+
+            <button class="filter" data-period="noon">
+                Noon
+            </button>
+
+            <button class="filter" data-period="night">
+                Night
+            </button>
+
+            <button class="filter" data-period="daily">
+                Daily
+            </button>
+
+            <button class="filter" data-period="weekly">
+                Weekly
+            </button>
+
+            <button class="filter" data-period="monthly">
+                Monthly
+            </button>
+
+            <button class="filter" data-period="annual">
+                Annual
+            </button>
+
+        </div>
+
+
+        <div id="routine-list" class="routine-list">
+
+            <div class="empty">
+                No routines yet.<br>
+                Click ＋ to create your first routine.
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN COLUMN -->
+    <main class="main-column">
+
+
+        <!-- ROUTINE BUILDER -->
+        <section class="panel editor-panel">
+
+            <div class="panel-heading">
+
+                <div>
+                    <span class="section-label">
+                        ROUTINE BUILDER
+                    </span>
+
+                    <h2 id="editor-title">
+                        Create your first routine
+                    </h2>
+                </div>
+
+                <button
+                    id="delete-routine"
+                    class="danger ghost hidden"
+                    type="button">
+                    Delete
+                </button>
+
+            </div>
+
+
+            <form id="routine-form">
+
+                <div class="form-grid">
+
+                    <label>
+                        Routine name
+
+                        <input
+                            id="routine-name"
+                            type="text"
+                            maxlength="60"
+                            placeholder="Morning Routine"
+                            required>
+                    </label>
+
+
+                    <label>
+                        Schedule
+
+                        <select id="routine-period">
+
+                            <option value="morning">
+                                Morning
+                            </option>
+
+                            <option value="noon">
+                                Noon
+                            </option>
+
+                            <option value="night">
+                                Night
+                            </option>
+
+                            <option value="daily">
+                                Daily
+                            </option>
+
+                            <option value="weekly">
+                                Weekly
+                            </option>
+
+                            <option value="monthly">
+                                Monthly
+                            </option>
+
+                            <option value="annual">
+                                Annual
+                            </option>
+
+                        </select>
+
+                    </label>
+
+                </div>
+
+
+                <div class="subheading">
+
+                    <div>
+                        <span class="section-label">
+                            CHORES & SUB-CHORES
+                        </span>
+
+                        <h3>
+                            Build the sequence
+                        </h3>
+                    </div>
+
+                    <button
+                        id="add-chore"
+                        class="small-btn"
+                        type="button">
+                        ＋ Add chore
+                    </button>
+
+                </div>
+
+
+                <div id="chore-editor"></div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        class="primary"
+                        type="submit">
+                        Save Routine
+                    </button>
+
+                    <button
+                        id="reset-editor"
+                        class="secondary"
+                        type="button">
+                        Clear
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- TIMER / COACH -->
+        <section class="panel player-panel">
+
+            <div class="player-top">
+
+                <div>
+
+                    <span class="section-label">
+                        ACTIVE ROUTINE
+                    </span>
+
+                    <h2 id="active-routine-name">
+                        No routine running
+                    </h2>
+
+                    <p id="active-subchore">
+                        Select a routine and press Start.
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="timer"
+                    id="timer">
+                    00:00
+                </div>
+
+            </div>
+
+
+            <div class="progress-track">
+
+                <div
+                    id="timer-progress"
+                    class="progress-fill">
+                </div>
+
+            </div>
+
+
+            <div
+                class="coach-card"
+                id="coach-message">
+
+                <span>🎙️</span>
+
+                <p>
+                    Coach is ready. Start a routine when you're
+                    ready to go.
+                </p>
+
+            </div>
+
+
+            <div class="now-playing">
+
+                <div>
+
+                    <span class="muted">
+                        CURRENT CHORE
+                    </span>
+
+                    <strong id="current-chore">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span class="muted">
+                        SUB-CHORE
+                    </span>
+
+                    <strong id="current-index">
+                        —
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="player-controls">
+
+                <button
+                    id="start-routine"
+                    class="primary big"
+                    type="button">
+                    ▶ Start Routine
+                </button>
+
+
+                <button
+                    id="pause-routine"
+                    class="secondary big"
+                    type="button"
+                    disabled>
+                    Ⅱ Pause
+                </button>
+
+
+                <button
+                    id="stop-routine"
+                    class="danger big"
+                    type="button">
+                    ■ Stop
+                </button>
+
+            </div>
+
+
+            <p class="tip">
+
+                Near the end of each sub-chore, the coach will
+                tell you to pause if you need more time.
+                Otherwise the next sub-chore starts automatically.
+
+            </p>
+
+        </section>
+
+    </main>
+
+</section>
+
+
+<footer>
+    Routine Coach • Morning • Noon • Night • Daily • Weekly • Monthly • Annual
+</footer>
+
+
+</div>
+
+<script src="main20.js"></script>
+
+</body>
+</html>
