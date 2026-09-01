@@ -208,17 +208,9 @@
 
                 <div id="chore-editor"></div>
 
-                <!-- CHORES & SUB-CHORES BUILDER SECTION -->
-<div class="builder-section">
-    <h3>Chores & Sub-Chores</h3>
-    
-    <!-- This container must exist so JavaScript can append new items to it -->
-    <div id="chores-list-container">
-        <!-- Dynamic chores lists will inject here -->
-    </div>
-
+         
     <!-- The exact target button ID matched to your script element -->
-    <button id="add-chore-btn" type="button">＋ Add Chore</button>
+    <button id="add-chore" type="button">＋ Add Chore</button>
 </div>
 
                 <div class="form-actions">
@@ -379,63 +371,7 @@
 
 </div>
 
-    
-document.addEventListener("DOMContentLoaded", () => {
-    const container = document.getElementById("chores-list-container");
-    const addChoreBtn = document.getElementById("add-chore-btn");
-    let choreCounter = 0;
 
-    // Handle "Add Chore" logic safely
-    addChoreBtn.addEventListener("click", () => {
-        choreCounter++;
-        
-        // Generate a wrapper element block for the new chore row
-        const choreRow = document.createElement("div");
-        choreRow.className = "chore-item-row";
-        choreRow.id = `chore-row-${choreCounter}`;
-        choreRow.style.margin = "15px 0";
-        choreRow.style.padding = "10px";
-        choreRow.style.border = "1px dashed #ccc";
-
-        // Layout template containing core chore fields and sub-chore nests
-        choreRow.innerHTML = `
-            <div class="chore-main-inputs" style="display: flex; gap: 10px; margin-bottom: 8px;">
-                <input type="text" placeholder="Chore name (e.g., Make Bed)" class="chore-name-input" style="flex: 2; padding: 6px;">
-                <input type="number" placeholder="Duration (min)" class="chore-duration-input" style="width: 100px; padding: 6px;" min="1">
-                <button type="button" class="remove-chore-btn" style="background-color: #ff4d4d; color: white; border: none; padding: 6px 12px; cursor: pointer;">✕</button>
-            </div>
-            <div class="sub-chores-nested-list" style="margin-left: 20px; font-size: 0.9em;">
-                <!-- Sub-chores wrap here -->
-            </div>
-            <button type="button" class="add-sub-chore-btn" style="margin-left: 20px; background-color: #e0e0e0; border: none; padding: 4px 8px; font-size: 0.85em; cursor: pointer; margin-top: 5px;">＋ Add Sub-Chore</button>
-        `;
-
-        // Attach dynamic listener for the nested Remove Chore action button
-        choreRow.querySelector(".remove-chore-btn").addEventListener("click", () => {
-            choreRow.remove();
-        });
-
-        // Attach dynamic listener to append Sub-Chores specifically inside this block
-        const subContainer = choreRow.querySelector(".sub-chores-nested-list");
-        choreRow.querySelector(".add-sub-chore-btn").addEventListener("click", () => {
-            const subRow = document.createElement("div");
-            subRow.style.display = "flex";
-            subRow.style.gap = "5px";
-            subRow.style.margin = "4px 0";
-            
-            subRow.innerHTML = `
-                <input type="text" placeholder="Sub-chore step" class="sub-chore-input" style="flex: 1; padding: 4px;">
-                <button type="button" class="remove-sub-btn" style="background: none; border: none; color: red; cursor: pointer;">✕</button>
-            `;
-            
-            subRow.querySelector(".remove-sub-btn").addEventListener("click", () => subRow.remove());
-            subContainer.appendChild(subRow);
-        });
-
-        // Smoothly inject the populated card row structure into the master DOM tree view
-        container.appendChild(choreRow);
-    });
-});
 <script src="main20.js"></script>
 </body>
 </html>
