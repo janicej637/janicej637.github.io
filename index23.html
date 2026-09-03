@@ -356,7 +356,9 @@ const streakDisplay = document.getElementById('streak-display');
                                        stepcurrentCardIndex = (currentCardIndex + 1) % currentDeck.length;
                                        
                                        loadCard();
-                                      }function filterCategory(cat) {// Update Active Tab Button Styles
+                                      }
+        
+        function filterCategory(cat) {// Update Active Tab Button Styles
         
         const buttons = document.querySelectorAll('.btn-cat');
         buttons.forEach(btn => btn.classList.remove('active'));
