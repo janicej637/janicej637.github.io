@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL & PL/SQL Flashcard Mastery</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --primary: #38bdf8;
+            --primary-hover: #7dd3fc;
+            --success: #4ade80;
+            --error: #f87171;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .game-metrics {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            background: var(--bg-card);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            border: 1px solid #334155;
+        }
+
+        .metric {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .metric span {
+            color: var(--primary);
+        }
+
+        .category-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-cat {
+            background: #334155;
+            color: var(--text-light);
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cat.active, .btn-cat:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        /* 3D Flashcard Container */
+        .flashcard-container {
+            width: 100%;
+            max-width: 550px;
+            height: 320px;
+            perspective: 1000px;
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 2px solid #334155;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-front {
+            background: var(--bg-card);
+        }
+
+        .card-back {
+            background: #111827;
+            transform: rotateY(180deg);
+            border-color: #475569;
+        }
+
+        .card-tag {
+            align-self: flex-start;
+            background: #334155;
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: bold;
+        }
+
+        .card-main-text {
+            font-size: 1.35rem;
+            line-height: 1.6;
+            font-weight: 500;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        code {
+            background: #1e293b;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            color: var(--success);
+            text-align: left;
+            width: 100%;
+            white-space: pre-wrap;
+            display: block;
+            border-left: 4px solid var(--primary);
+        }
+
+        .click-hint {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        /* Action Buttons */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+            max-width: 550px;
+            justify-content: center;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.85rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn-action:active {
+            transform: scale(0.98);
+        }
+
+        .btn-review {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-gotit {
+            background: var(--success);
+            color: var(--bg-dark);
+        }
+
+        .disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>SQL & PL/SQL Flashcard Mastery</h1>
+        <p class="subtitle">Test your knowledge of relational queries and procedural code blocks!</p>
+    </header>
+
+    <div class="game-metrics">
+        <div class="metric">Score: <span id="score-display">0</span></div>
+        <div class="metric">Streak: <span id="streak-display">0🔥</span></div>
+    </div>
+
+    <div class="category-selector">
+        <button class="btn-cat active" onclick="filterCategory('ALL')">All Concepts</button>
+        <button class="btn-cat" onclick="filterCategory('SQL')">SQL Basics</button>
+        <button class="btn-cat" onclick="filterCategory('DML')">DML Mutations</button>
+        <button class="btn-cat" onclick="filterCategory('PLSQL')">PL/SQL Blocks</button>
+    </div>
+
+    <div class="flashcard-container" onclick="flipCard()">
+        <div class="flashcard" id="card-element">
+            
+            <!-- FRONT -->
+            <div class="card-face card-front">
+                <span class="card-tag" id="tag-front">Loading...</span>
+                <div class="card-main-text" id="question-text">Loading question...</div>
+                <div class="click-hint">💡 Click card to reveal answer</div>
+            </div>
+
+            <!-- BACK -->
+            <div class="card-face card-back">
+                <span class="card-tag" id="tag-back">Answer</span>
+                <div class="card-main-text">
+                    <code id="answer-text">Loading answer...</code>
+                </div>
+                <div class="click-hint">Click again to view question</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-action btn-review disabled" id="btn-review" onclick="handleScore(false); event.stopPropagation();">❌ Need Review</button>
+        <button class="btn-action btn-gotit disabled" id="btn-gotit" onclick="handleScore(true); event.stopPropagation();">✅ Got It!</button>
+    </div>
+
+    <script>
+        // Flashcard Database Array
+        const flashcardData = [
+            {
+                category: "SQL",
+                question: "How do you filter grouped records generated by a GROUP BY clause?",
+                answer: "SELECT department_id, AVG(salary)\nFROM employees\nGROUP BY department_id\nHAVING AVG(salary) > 5000;"
+            },
+            {
+                category: "SQL",
+                question: "Which join returns all rows from the left table even if there are no matches in the right table?",
+                answer: "SELECT * \nFROM orders o \nLEFT JOIN customers c \nON o.customer_id = c.customer_id;"
+            },
+            {
+                category: "DML",
+                question: "What is the proper syntax to modify existing rows inside a table structure?",
+                answer: "UPDATE employees\nSET status = 'Active'\nWHERE hire_date > '01-JAN-2025';"
+            },
+            {
+                category: "DML",
+                question: "How do you completely empty a table structure without logging individual row deletions?",
+                answer: "TRUNCATE TABLE logs_archive;"
+            },
+            {
+                category: "PLSQL",
+                question: "What is the basic structure of an anonymous declarative PL/SQL block?",
+                answer: "DECLARE\n  v_text VARCHAR2(50) := 'Hello';\nBEGIN\n  DBMS_OUTPUT.PUT_LINE(v_text);\nEXCEPTION\n  WHEN OTHERS THEN NULL;\nEND;"
+            },
+            {
+                category: "PLSQL",
+                question: "How do you open and fetch data using an explicit cursor framework?",
+                answer: "CURSOR c1 IS SELECT id FROM items;\n...\nOPEN c1;\nFETCH c1 INTO v_item_id;\nCLOSE c1;"
+            }
+        ];
+
+        let currentDeck = [...flashcardData];
+        let currentCardIndex = 0;
+        let score = 0;
+        let streak = 0;
+        let hasFlipped = false;
+
+        const cardElement = document.getElementById('card-element');
+        const questionText = document.getElementById('question-text');
+        const answerText = document.getElementById('answer-text');
+        const tagFront = document.getElementById('tag-front');
+        const tagBack = document.getElementById('tag-back');
+        const scoreDisplay = document.getElementById('score-display');
+const streakDisplay = document.getElementById('streak-display');
+      const btnReview = document.getElementById('btn-review');
+      const btnGotIt = document.getElementById('btn-gotit');
+      function loadCard() {if (currentDeck.length === 0) {questionText.textContent = "Nicely done! You've gone through all the selected cards.";
+                                                          answerText.textContent = "-- No more data items available --";
+                                                          tagFront.textContent = "Empty Deck";tagBack.textContent = "Empty";
+                                                          btnReview.classList.add('disabled');btnGotIt.classList.add('disabled');
+                                                          return;}
+                           // Ensure card is unlipped when loading 
+                           
+                           new datacardElement.classList.remove('flipped');
+                           hasFlipped = false;
+                           btnReview.classList.add('disabled');btnGotIt.classList.add('disabled');
+                           // Set content after minimal timeout to let css flip catch up if coming from action 
+                           
+                           itemsetTimeout(() => {const card = currentDeck[currentCardIndex];
+                                                 tagFront.textContent = card.category;
+                                                 tagBack.textContent = ${card.category} Answer;questionText.textContent = card.question;answerText.textContent = card.answer;
+                                                }, 150);
+                          }
+      function flipCard() {if (currentDeck.length === 0) return;
+                           cardElement.classList.toggle('flipped');
+                           if(!hasFlipped) {hasFlipped = true;
+                                            btnReview.classList.remove('disabled');btnGotIt.classList.remove('disabled');
+                                           }}
+      function handleScore(isCorrect) {if(!hasFlipped) return;
+                                       if (isCorrect) {score += 10;streak++;
+                                                      } 
+                                       else {streak = 0
+                                         ;
+                                            }scoreDisplay.textContent = score;
+                                       streakDisplay.textContent = ${streak}🔥;
+                                       
+                                       // Advance index 
+                                       
+                                       stepcurrentCardIndex = (currentCardIndex + 1) % currentDeck.length;
+                                       
+                                       loadCard();
+                                      }function filterCategory(cat) {// Update Active Tab Button Styles
+        
+        const buttons = document.querySelectorAll('.btn-cat');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        if (cat === 'ALL') {currentDeck = [...flashcardData];
+                           } else {currentDeck = flashcardData.filter(card => card.category === cat);
+                                  }currentCardIndex = 0;
+        loadCard()
+          ;}// Initialize First Card State on Page 
+      LoadloadCard();
