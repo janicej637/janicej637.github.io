@@ -93,11 +93,10 @@
             color: var(--bg-dark);
         }
 
-        /* 3D Flashcard Container */
         .flashcard-container {
             width: 100%;
-            max-width: 550px;
-            height: 320px;
+            max-width: 580px;
+            height: 350px;
             perspective: 1000px;
             cursor: pointer;
             margin-bottom: 2rem;
@@ -152,7 +151,7 @@
         }
 
         .card-main-text {
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             line-height: 1.6;
             font-weight: 500;
             text-align: center;
@@ -168,13 +167,14 @@
             padding: 1rem;
             border-radius: 8px;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--success);
             text-align: left;
             width: 100%;
             white-space: pre-wrap;
             display: block;
             border-left: 4px solid var(--primary);
+            overflow-x: auto;
         }
 
         .click-hint {
@@ -184,12 +184,11 @@
             font-style: italic;
         }
 
-        /* Action Buttons */
         .controls {
             display: flex;
             gap: 1rem;
             width: 100%;
-            max-width: 550px;
+            max-width: 580px;
             justify-content: center;
         }
 
@@ -229,7 +228,7 @@
 
     <header>
         <h1>SQL & PL/SQL Flashcard Mastery</h1>
-        <p class="subtitle">Test your knowledge of relational queries and procedural code blocks!</p>
+        <p class="subtitle">An interactive learning app with dynamic, procedurally generated syntax loops!</p>
     </header>
 
     <div class="game-metrics">
@@ -238,19 +237,19 @@
     </div>
 
     <div class="category-selector">
-        <button class="btn-cat active" onclick="filterCategory('ALL')">All Concepts</button>
-        <button class="btn-cat" onclick="filterCategory('SQL')">SQL Basics</button>
-        <button class="btn-cat" onclick="filterCategory('DML')">DML Mutations</button>
-        <button class="btn-cat" onclick="filterCategory('PLSQL')">PL/SQL Blocks</button>
+        <button class="btn-cat active" data-cat="ALL">All Concepts</button>
+        <button class="btn-cat" data-cat="SQL">SQL Queries</button>
+        <button class="btn-cat" data-cat="DML">DML Mutations</button>
+        <button class="btn-cat" data-cat="PLSQL">PL/SQL Blocks</button>
     </div>
 
-    <div class="flashcard-container" onclick="flipCard()">
+    <div class="flashcard-container" id="flashcard-box">
         <div class="flashcard" id="card-element">
             
             <!-- FRONT -->
             <div class="card-face card-front">
                 <span class="card-tag" id="tag-front">Loading...</span>
-                <div class="card-main-text" id="question-text">Loading question...</div>
+                <div class="card-main-text" id="question-text">Generating prompt dynamically...</div>
                 <div class="click-hint">💡 Click card to reveal answer</div>
             </div>
 
@@ -258,7 +257,7 @@
             <div class="card-face card-back">
                 <span class="card-tag" id="tag-back">Answer</span>
                 <div class="card-main-text">
-                    <code id="answer-text">Loading answer...</code>
+                    <code id="answer-text">Generating answer block...</code>
                 </div>
                 <div class="click-hint">Click again to view question</div>
             </div>
@@ -267,109 +266,52 @@
     </div>
 
     <div class="controls">
-        <button class="btn-action btn-review disabled" id="btn-review" onclick="handleScore(false); event.stopPropagation();">❌ Need Review</button>
-        <button class="btn-action btn-gotit disabled" id="btn-gotit" onclick="handleScore(true); event.stopPropagation();">✅ Got It!</button>
+        <button class="btn-action btn-review disabled" id="btn-review">❌ Need Review</button>
+        <button class="btn-action btn-gotit disabled" id="btn-gotit">✅ Got It!</button>
     </div>
 
     <script>
-        // Flashcard Database Array
-        const flashcardData = [
+        // Dictionary entities to substitute dynamically
+        const columns = ['salary', 'bonus', 'employee_id', 'department_id', 'revenue', 'cost_center', 'rating', 'experience_years'];
+        const tables = ['employees', 'contractors', 'sales_ledger', 'store_inventory', 'corporate_accounts', 'regional_branches'];
+        const conditions = ['status = \'Active\'', 'hire_date > \'01-JAN-2024\'', 'performance_tier = \'A\'', 'region = \'NORTH\''];
+        const variables = ['v_total_count', 'v_max_threshold', 'v_emp_salary', 'v_calculated_tax', 'v_processing_flag'];
+        const exceptions = ['NO_DATA_FOUND', 'TOO_MANY_ROWS', 'ZERO_DIVIDE', 'DUP_VAL_ON_INDEX'];
+
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        // Procedural generator blueprints mimicking dynamic runtime logic
+        const templates = [
             {
                 category: "SQL",
-                question: "How do you filter grouped records generated by a GROUP BY clause?",
-                answer: "SELECT department_id, AVG(salary)\nFROM employees\nGROUP BY department_id\nHAVING AVG(salary) > 5000;"
+                generate: () => {
+                    const col = getRandomItem(columns);
+                    const tbl = getRandomItem(tables);
+                    const val = Math.floor(Math.random() * 5000) + 1500;
+                    return {
+                        question: `Write a standard query calculating the AVERAGE value of '${col}' from the '${tbl}' table grouped by 'department_id', filtering for average metrics exceeding ${val}.`,
+                        answer: `SELECT department_id, AVG(${col})\nFROM ${tbl}\nGROUP BY department_id\nHAVING AVG(${col}) > ${val};`
+                    };
+                }
             },
             {
                 category: "SQL",
-                question: "Which join returns all rows from the left table even if there are no matches in the right table?",
-                answer: "SELECT * \nFROM orders o \nLEFT JOIN customers c \nON o.customer_id = c.customer_id;"
+                generate: () => {
+                    const tblA = getRandomItem(tables);
+                    const tblB = "lookup_details";
+                    return {
+                        question: `Write a structural query returning all rows from the primary table '${tblA}' matched against data from table '${tblB}' safely using a standard LEFT JOIN connection on an ID value.`,
+                        answer: `SELECT *\nFROM ${tblA} a\nLEFT JOIN ${tblB} b\n  ON a.id = b.target_id;`
+                    };
+                }
             },
             {
                 category: "DML",
-                question: "What is the proper syntax to modify existing rows inside a table structure?",
-                answer: "UPDATE employees\nSET status = 'Active'\nWHERE hire_date > '01-JAN-2025';"
-            },
-            {
-                category: "DML",
-                question: "How do you completely empty a table structure without logging individual row deletions?",
-                answer: "TRUNCATE TABLE logs_archive;"
-            },
-            {
-                category: "PLSQL",
-                question: "What is the basic structure of an anonymous declarative PL/SQL block?",
-                answer: "DECLARE\n  v_text VARCHAR2(50) := 'Hello';\nBEGIN\n  DBMS_OUTPUT.PUT_LINE(v_text);\nEXCEPTION\n  WHEN OTHERS THEN NULL;\nEND;"
-            },
-            {
-                category: "PLSQL",
-                question: "How do you open and fetch data using an explicit cursor framework?",
-                answer: "CURSOR c1 IS SELECT id FROM items;\n...\nOPEN c1;\nFETCH c1 INTO v_item_id;\nCLOSE c1;"
-            }
-        ];
-
-        let currentDeck = [...flashcardData];
-        let currentCardIndex = 0;
-        let score = 0;
-        let streak = 0;
-        let hasFlipped = false;
-
-        const cardElement = document.getElementById('card-element');
-        const questionText = document.getElementById('question-text');
-        const answerText = document.getElementById('answer-text');
-        const tagFront = document.getElementById('tag-front');
-        const tagBack = document.getElementById('tag-back');
-        const scoreDisplay = document.getElementById('score-display');
-const streakDisplay = document.getElementById('streak-display');
-      const btnReview = document.getElementById('btn-review');
-      const btnGotIt = document.getElementById('btn-gotit');
-      function loadCard() {if (currentDeck.length === 0) {questionText.textContent = "Nicely done! You've gone through all the selected cards.";
-                                                          answerText.textContent = "-- No more data items available --";
-                                                          tagFront.textContent = "Empty Deck";tagBack.textContent = "Empty";
-                                                          btnReview.classList.add('disabled');btnGotIt.classList.add('disabled');
-                                                          return;}
-                           // Ensure card is unlipped when loading 
-                           
-                           new datacardElement.classList.remove('flipped');
-                           hasFlipped = false;
-                           btnReview.classList.add('disabled');btnGotIt.classList.add('disabled');
-                           // Set content after minimal timeout to let css flip catch up if coming from action 
-                           
-                           itemsetTimeout(() => {const card = currentDeck[currentCardIndex];
-                                                 tagFront.textContent = card.category;
-                                                 tagBack.textContent = ${card.category} Answer;questionText.textContent = card.question;answerText.textContent = card.answer;
-                                                }, 150);
-                          }
-      function flipCard() {if (currentDeck.length === 0) return;
-                           cardElement.classList.toggle('flipped');
-                           if(!hasFlipped) {hasFlipped = true;
-                                            btnReview.classList.remove('disabled');btnGotIt.classList.remove('disabled');
-                                           }}
-      function handleScore(isCorrect) {if(!hasFlipped) return;
-                                       if (isCorrect) {score += 10;streak++;
-                                                      } 
-                                       else {streak = 0
-                                         ;
-                                            }scoreDisplay.textContent = score;
-                                       streakDisplay.textContent = ${streak}🔥;
-                                       
-                                       // Advance index 
-                                       
-                                       stepcurrentCardIndex = (currentCardIndex + 1) % currentDeck.length;
-                                       
-                                       loadCard();
-                                      }
-        
-        function filterCategory(cat) {// Update Active Tab Button Styles
-        
-        const buttons = document.querySelectorAll('.btn-cat');
-        buttons.forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-        if (cat === 'ALL') {
-            currentDeck = [...flashcardData];
-                           } else {
-            currentDeck = flashcardData.filter(card => card.category === cat);
-                                  }
-            currentCardIndex = 0;
-        loadCard();
-        
-        }// Initialize First Card State on Page 
-      LoadloadCard();
+                generate: () => {
+                    const tbl = getRandomItem(tables);
+                    const col = getRandomItem(columns);
+                    const cond = getRandomItem(conditions);
+                    const increase = Math.floor(Math.random() * 20) + 5;
+return {question: Construct a data mutation script that modifies the target table '${tbl}' to increase '${col}' values by ${increase}% specifically where ${cond}.,answer: UPDATE ${tbl}\nSET ${col} = ${col} * ${1 + (increase/100)}\nWHERE ${cond};};}},{category: "DML",generate: () => {const tbl = getRandomItem(tables);return {question: Write a database engine statement to completely clear out all row variables inside the '${tbl}' table instantly without generating rollback log records.,answer: TRUNCATE TABLE ${tbl};};}},{category: "PLSQL",generate: () => {const vName = getRandomItem(variables);const exc = getRandomItem(exceptions);return {question: Structure an anonymous block initializing a standard runtime variable called '${vName}' typed as NUMBER, handling structural exceptions cleanly with the internal parameter '${exc}'.,answer: DECLARE\n  ${vName} NUMBER := 100;\nBEGIN\n  -- Executable assignments go here\n  NULL;\nEXCEPTION\n  WHEN ${exc} THEN\n    DBMS_OUTPUT.PUT_LINE('Handled boundary failure.');\nEND;};}},{category: "PLSQL",generate: () => {const col = getRandomItem(columns);const tbl = getRandomItem(tables);return {question: Write a clean execution block establishing a cursor configuration scanning for rows matching the '${col}' data structure derived from the '${tbl}' table.,answer: DECLARE\n  CURSOR c_dynamic IS \n    SELECT ${col} FROM ${tbl};\n  v_buffer ${tbl}.${col}%TYPE;\nBEGIN\n  OPEN c_dynamic;\n  FETCH c_dynamic INTO v_buffer;\n  CLOSE c_dynamic;\nEND;}}}];let selectedCategory = 'ALL';let currentCard = null;let score = 0;let streak = 0;let hasFlipped = false;const cardElement = document.getElementById('card-element');const questionText = document.getElementById('question-text');const answerText = document.getElementById('answer-text');const tagFront = document.getElementById('tag-front');const tagBack = document.getElementById('tag-back');const scoreDisplay = document.getElementById('score-display');const streakDisplay = document.getElementById('streak-display');const btnReview = document.getElementById('btn-review');const btnGotIt = document.getElementById('btn-gotit');const flashcardBox = document.getElementById('flashcard-box');function generateNewCard() {const availableTemplates = selectedCategory === 'ALL'? templates: templates.filter(t => t.category === selectedCategory);const activeTemplate = getRandomItem(availableTemplates);currentCard = activeTemplate.generate();currentCard.category = activeTemplate.category;cardElement.classList.remove('flipped');hasFlipped = false;btnReview.classList.add('disabled');btnGotIt.classList.add('disabled');setTimeout(() => {tagFront.textContent = currentCard.category;tagBack.textContent = ${currentCard.category} Answer Blueprint;questionText.textContent = currentCard.question;answerText.textContent = currentCard.answer;}, 150);}function flipCard() {cardElement.classList.toggle('flipped');if(!hasFlipped) {hasFlipped = true;btnReview.classList.remove('disabled');btnGotIt.classList.remove('disabled');}}function handleScore(isCorrect) {if(!hasFlipped) return;if (isCorrect) {score += 15;streak++;} else {streak = 0;}scoreDisplay.textContent = score;streakDisplay.textContent = ${streak}🔥;generateNewCard();}// --- Standard Modern Event Listeners ---flashcardBox.addEventListener('click', flipCard);btnReview.addEventListener('click', (e) => {e.stopPropagation();handleScore(false);});btnGotIt.addEventListener('click', (e) => {e.stopPropagation();handleScore(true);});document.querySelectorAll('.btn-cat').forEach(button => {button.addEventListener('click', (e) => {document.querySelectorAll('.btn-cat').forEach(btn => btn.classList.remove('active'));e.target.classList.add('active');selectedCategory = e.target.getAttribute('data-cat');generateNewCard();});});// Initialize dynamic sequence on application startupgenerateNewCard();
