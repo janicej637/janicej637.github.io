@@ -363,9 +363,13 @@ const streakDisplay = document.getElementById('streak-display');
         const buttons = document.querySelectorAll('.btn-cat');
         buttons.forEach(btn => btn.classList.remove('active'));
         event.target.classList.add('active');
-        if (cat === 'ALL') {currentDeck = [...flashcardData];
-                           } else {currentDeck = flashcardData.filter(card => card.category === cat);
-                                  }currentCardIndex = 0;
-        loadCard()
-          ;}// Initialize First Card State on Page 
+        if (cat === 'ALL') {
+            currentDeck = [...flashcardData];
+                           } else {
+            currentDeck = flashcardData.filter(card => card.category === cat);
+                                  }
+            currentCardIndex = 0;
+        loadCard();
+        
+        }// Initialize First Card State on Page 
       LoadloadCard();
