@@ -275,32 +275,6 @@ A Multivariate Categorical Data Visualization Technique
     transition: transform 0.5s ease;
 }
 
-/* Creating deep 3D bars using linear lighting gradients and right-side shading variables */
-.bar, rect, [class*="bar-element"] {
-    background: linear-gradient(90deg, 
-        rgba(56, 189, 248, 1) 0%, 
-        rgba(14, 165, 233, 1) 70%, 
-        rgba(3, 105, 161, 1) 100%
-    ) !important;
-    border-radius: 4px 4px 0 0;
-    box-shadow: 
-        5px 0px 10px rgba(0, 0, 0, 0.4),
-        inset -3px 0px 5px rgba(0, 0, 0, 0.5); /* Internal edge shadow mimics side depth */
-    transform: translateZ(20px);
-    filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.6));
-}
-
-/* Optional hover state to make the 3D bars tilt slightly on user interaction */
-.chart-container:hover {
-    transform: rotateX(10deg) rotateY(-5deg);
-}
-
-/* Grid plane backing adjustment to separate background markers from foreground components */
-.grid-line, line, .axis-line {
-    opacity: 0.15;
-    transform: translateZ(-10px);
-}
-
   
 </style>
 
@@ -2240,6 +2214,85 @@ function pivCrossDim(pivotX, dimensionsInQuestion) {
 
         // console.log(graphLine[i]);
       }
+
+      /**
+ * 3D Bar Chart Engine Override
+ * Automatically transforms flat chart elements into volumetric 3D blocks.
+ */
+function apply3DTransformsToCharts() {
+    // 1. Identify the container boundaries and enable 3D space
+    const chartWrappers = document.querySelectorAll('.chart-container, .bar-chart-wrapper, svg');
+    chartWrappers.forEach(container => {
+        container.style.perspective = "1200px";
+        container.style.transformStyle = "preserve-3d";
+        container.style.overflow = "visible"; // Prevent clipping of 3D depth layers
+    });
+
+    // 2. Select flat target rect elements or bar container divs
+    const flatBars = document.querySelectorAll('.bar, rect, [class*="bar-element"]');
+    
+    flatBars.forEach(bar => {
+        // Skip elements that have already been converted to 3D
+        if (bar.dataset.is3d === "true") return;
+        bar.dataset.is3d = "true";
+
+        // Read layout dimensions dynamically
+        const rect = bar.getBoundingClientRect();
+        const barWidth = rect.width || parseFloat(bar.getAttribute('width')) || 40;
+        const depth = 25; // Define the isometric 3D depth thickness in pixels
+
+        // Apply programmatic 3D styling and lighting to the front face
+        bar.style.transformStyle = "preserve-3d";
+        bar.style.position = "relative";
+        bar.style.background = "linear-gradient(to right, #2563eb, #1d4ed8)"; 
+        bar.style.transform = `translateZ(${depth}px)`;
+
+        // If the chart uses standard DOM divs, generate matching structural side-walls
+        if (bar instanceof HTMLElement) {
+            // Generate Top Face Wall
+            const topFace = document.createElement('div');
+            topFace.style.position = "absolute";
+            topFace.style.width = `${barWidth}px`;
+            topFace.style.height = `${depth}px`;
+            topFace.style.top = `-${depth}px`;
+            topFace.style.left = "0px";
+            topFace.style.background = "#60a5fa"; // Lighter tint for direct top lighting
+            topFace.style.transformOrigin = "bottom center";
+            topFace.style.transform = "rotateX(90deg)";
+            
+            // Generate Right Profile Face Wall
+            const rightFace = document.createElement('div');
+            rightFace.style.position = "absolute";
+            rightFace.style.width = `${depth}px`;
+            rightFace.style.height = "100%";
+            rightFace.style.top = "0px";
+            rightFace.style.right = `-${depth}px`;
+            rightFace.style.background = "#1e3a8a"; // Darker shadow shade for angled depth
+            rightFace.style.transformOrigin = "left center";
+            rightFace.style.transform = "rotateY(90deg)";
+
+            // Append elements into the spatial bar structure
+            bar.appendChild(topFace);
+            bar.appendChild(rightFace);
+        }
+    });
+}
+
+// Execute the translation engine after the data objects compile or render to the DOM
+window.addEventListener('DOMContentLoaded', () => {
+    // Initial runtime execution pass
+    setTimeout(apply3DTransformsToCharts, 500);
+
+    // If your data charts dynamically update or filter, intercept your update transitions:
+    const originalFetchOrRender = window.updateChartData || window.renderCharts;
+    if (typeof originalFetchOrRender === 'function') {
+        window.updateChartData = function(...args) {
+            originalFetchOrRender(...args);
+            setTimeout(apply3DTransformsToCharts, 200); // Re-apply 3D layers onto fresh DOM structures
+        };
+    }
+});
+
       var graphDiv = document.getElementsByClassName("ytick2");
       for (var i = 0; i < graphDiv.length; i++) {
         graphDiv[i].setAttribute("writing-mode", "vertical-lr");
