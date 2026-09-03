@@ -2278,7 +2278,21 @@ function apply3DTransformsToCharts() {
     });
 }
 
-// Execute the translation engine after the data objects compile or render to the DOM
+
+
+      var graphDiv = document.getElementsByClassName("ytick2");
+      for (var i = 0; i < graphDiv.length; i++) {
+        graphDiv[i].setAttribute("writing-mode", "vertical-lr");
+        graphDiv[i].setAttribute("transform", "translate(50%,50%)");
+
+        // console.log(document.getElementsByClassName("ytick"));
+      }
+    }
+  });
+  format = "Crossover";
+}
+  
+  // Execute the translation engine after the data objects compile or render to the DOM
 window.addEventListener('DOMContentLoaded', () => {
     // Initial runtime execution pass
     setTimeout(apply3DTransformsToCharts, 500);
@@ -2293,15 +2307,89 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-      var graphDiv = document.getElementsByClassName("ytick2");
-      for (var i = 0; i < graphDiv.length; i++) {
-        graphDiv[i].setAttribute("writing-mode", "vertical-lr");
-        graphDiv[i].setAttribute("transform", "translate(50%,50%)");
+  /**
+ * D3.js SVG 3D Bar Transformation Engine
+ * Hooks into D3 rendering cycles to morph 2D rects into 3D isometric blocks.
+ */
+function injectD3Isometric3D() {
+    // 1. Target all generated D3 bar rectangles on the page
+    const svgBars = d3.selectAll("rect.bar, .chart-container svg rect, g.bars rect");
+    const depth = 15; // Set the spatial thickness of the 3D block in pixels
 
-        // console.log(document.getElementsByClassName("ytick"));
-      }
-    }
-  });
-  format = "Crossover";
+    svgBars.each(function(d, i) {
+        const rectNode = d3.select(this);
+        
+        // Skip elements that have already been converted to 3D geometry
+        if (rectNode.attr("data-has-3d") === "true") return;
+        rectNode.attr("data-has-3d", "true");
+
+        // 2. Extract structural positioning coordinates from the native D3 element
+        const x = parseFloat(rectNode.attr("x")) || 0;
+        const y = parseFloat(rectNode.attr("y")) || 0;
+        const width = parseFloat(rectNode.attr("width")) || 0;
+        const height = parseFloat(rectNode.attr("height")) || 0;
+        const parentGroup = d3.select(this.parentNode);
+
+        // Extract the base rendering color to calculate lighting gradients
+        const baseColor = rectNode.style("fill") || rectNode.attr("fill") || "#38bdf8";
+
+        // 3. Generate the Top Isometric Face Path
+        // Coordinates trace a flat rhomboid shifting up and backwards
+        const topPathCoords = `
+            M ${x},${y} 
+            L ${x + depth},${y - depth} 
+            L ${x + width + depth},${y - depth} 
+            L ${x + width},${y} Z
+        `;
+        parentGroup.append("path")
+            .attr("d", topPathCoords)
+            .attr("class", "bar-3d-top")
+            .style("fill", d3.color(baseColor).brighter(0.6)) // Brighter tint for top lighting
+            .style("pointer-events", "none");
+
+        // 4. Generate the Right Profile Face Path
+        // Coordinates trace the side wall dropping parallel to the height axis
+        const rightPathCoords = `
+            M ${x + width},${y} 
+            L ${x + width + depth},${y - depth} 
+            L ${x + width + depth},${y + height - depth} 
+            L ${x + width},${y + height} Z
+        `;
+        parentGroup.append("path")
+            .attr("d", rightPathCoords)
+            .attr("class", "bar-3d-right")
+            .style("fill", d3.color(baseColor).darker(0.6)) // Darker shade for structural shadows
+            .style("pointer-events", "none");
+            
+        // 5. Apply a slight gradient shader to the original front rect face to unify the light source
+        rectNode.style("fill", d3.color(baseColor).brighter(0.1));
+    });
 }
+
+/**
+ * Lifecycle Hook Interceptor
+ * Ensures 3D code loops re-fire seamlessly when changing datasets (Titanic, Mushrooms, etc.)
+ */
+function interceptD3RenderCycles() {
+    // Initial runtime execution pass
+    setTimeout(injectD3Isometric3D, 600);
+
+    // Automatically monitor your dataset buttons (Titanic, Mushrooms, Covid, Survey)
+    const datasets = document.querySelectorAll('button, .menu-item, [onclick*="update"]');
+    datasets.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Re-inject the 3D rendering layer immediately after D3 completes its DOM redraw transition
+            setTimeout(injectD3Isometric3D, 350);
+            setTimeout(injectD3Isometric3D, 800); // Secondary safety check catch-all
+        });
+    });
+}
+
+// Run the script initialization engine
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", interceptD3RenderCycles);
+} else {
+    interceptD3RenderCycles();
+}
+
 </script>
