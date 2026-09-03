@@ -261,6 +261,47 @@ A Multivariate Categorical Data Visualization Technique
     padding-left: 15px;
     padding-right: 0;
   }
+
+ /* Container skewing to create a simulated 3D isometric perspective view */
+.chart-container, .bar-chart-wrapper {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    box-shadow: 
+        20px 20px 60px #090d16,
+        -20px -20px 60px #151f32;
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.5s ease;
+}
+
+/* Creating deep 3D bars using linear lighting gradients and right-side shading variables */
+.bar, rect, [class*="bar-element"] {
+    background: linear-gradient(90deg, 
+        rgba(56, 189, 248, 1) 0%, 
+        rgba(14, 165, 233, 1) 70%, 
+        rgba(3, 105, 161, 1) 100%
+    ) !important;
+    border-radius: 4px 4px 0 0;
+    box-shadow: 
+        5px 0px 10px rgba(0, 0, 0, 0.4),
+        inset -3px 0px 5px rgba(0, 0, 0, 0.5); /* Internal edge shadow mimics side depth */
+    transform: translateZ(20px);
+    filter: drop-shadow(4px 4px 8px rgba(0, 0, 0, 0.6));
+}
+
+/* Optional hover state to make the 3D bars tilt slightly on user interaction */
+.chart-container:hover {
+    transform: rotateX(10deg) rotateY(-5deg);
+}
+
+/* Grid plane backing adjustment to separate background markers from foreground components */
+.grid-line, line, .axis-line {
+    opacity: 0.15;
+    transform: translateZ(-10px);
+}
+
+  
 </style>
 
 <body id="grad1" style="align: center; justify-content: center;">
