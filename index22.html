@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic SQL & PL/SQL Flashcards</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --primary: #38bdf8;
+            --primary-hover: #7dd3fc;
+            --success: #4ade80;
+            --error: #f87171;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .game-metrics {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            background: var(--bg-card);
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            border: 1px solid #334155;
+        }
+
+        .metric {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .metric span {
+            color: var(--primary);
+        }
+
+        .category-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn-cat {
+            background: #334155;
+            color: var(--text-light);
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cat.active, .btn-cat:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
+        }
+
+        .flashcard-container {
+            width: 100%;
+            max-width: 580px;
+            height: 350px;
+            perspective: 1000px;
+            cursor: pointer;
+            margin-bottom: 2rem;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 2px solid #334155;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-front {
+            background: var(--bg-card);
+        }
+
+        .card-back {
+            background: #111827;
+            transform: rotateY(180deg);
+            border-color: #475569;
+        }
+
+        .card-tag {
+            align-self: flex-start;
+            background: #334155;
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: bold;
+        }
+
+        .card-main-text {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            font-weight: 500;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        code {
+            background: #1e293b;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            color: var(--success);
+            text-align: left;
+            width: 100%;
+            white-space: pre-wrap;
+            display: block;
+            border-left: 4px solid var(--primary);
+            overflow-x: auto;
+        }
+
+        .click-hint {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+            max-width: 580px;
+            justify-content: center;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 0.85rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn-action:active {
+            transform: scale(0.98);
+        }
+
+        .btn-review {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-gotit {
+            background: var(--success);
+            color: var(--bg-dark);
+        }
+
+        .disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Dynamic SQL Flashcards</h1>
+        <p class="subtitle">An AI-style procedural dictionary generating unique syntax questions infinitely!</p>
+    </header>
+
+    <div class="game-metrics">
+        <div class="metric">Score: <span id="score-display">0</span></div>
+        <div class="metric">Streak: <span id="streak-display">0🔥</span></div>
+    </div>
+
+    <div class="category-selector">
+        <button class="btn-cat active" onclick="filterCategory('ALL')">All Infinite Concepts</button>
+        <button class="btn-cat" onclick="filterCategory('SQL')">SQL Queries</button>
+        <button class="btn-cat" onclick="filterCategory('DML')">DML Mutations</button>
+        <button class="btn-cat" onclick="filterCategory('PLSQL')">PL/SQL Blocks</button>
+    </div>
+
+    <div class="flashcard-container" onclick="flipCard()">
+        <div class="flashcard" id="card-element">
+            
+            <!-- FRONT -->
+            <div class="card-face card-front">
+                <span class="card-tag" id="tag-front">Loading...</span>
+                <div class="card-main-text" id="question-text">Generating prompt dynamically...</div>
+                <div class="click-hint">💡 Click card to reveal answer</div>
+            </div>
+
+            <!-- BACK -->
+            <div class="card-face card-back">
+                <span class="card-tag" id="tag-back">Answer</span>
+                <div class="card-main-text">
+                    <code id="answer-text">Generating answer block...</code>
+                </div>
+                <div class="click-hint">Click again to view question</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-action btn-review disabled" id="btn-review" onclick="handleScore(false); event.stopPropagation();">❌ Need Review</button>
+        <button class="btn-action btn-gotit disabled" id="btn-gotit" onclick="handleScore(true); event.stopPropagation();">✅ Got It!</button>
+    </div>
+
+    <script>
+        // Dictionary entities to substitute dynamically
+        const columns = ['salary', 'bonus', 'employee_id', 'department_id', 'revenue', 'cost_center', 'rating', 'experience_years'];
+        const tables = ['employees', 'contractors', 'sales_ledger', 'store_inventory', 'corporate_accounts', 'regional_branches'];
+        const conditions = ['status = \'Active\'', 'hire_date > \'01-JAN-2024\'', 'performance_tier = \'A\'', 'region = ' + '\'NORTH\''];
+        const variables = ['v_total_count', 'v_max_threshold', 'v_emp_salary', 'v_calculated_tax', 'v_processing_flag'];
+        const exceptions = ['NO_DATA_FOUND', 'TOO_MANY_ROWS', 'ZERO_DIVIDE', 'DUP_VAL_ON_INDEX'];
+
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        // Procedural generator blueprints mimicking runtime LLM parameters
+        const templates = [
+            {
+                category: "SQL",
+                generate: () => {
+                    const col = getRandomItem(columns);
+                    const tbl = getRandomItem(tables);
+                    const val = Math.floor(Math.random() * 5000) + 1500;
+                    return {
+                        question: `Write a standard query calculating the AVERAGE value of '${col}' from the '${tbl}' table grouped by 'department_id', filtering for average metrics exceeding ${val}.`,
+                        answer: `SELECT department_id, AVG(${col})\nFROM ${tbl}\nGROUP BY department_id\nHAVING AVG(${col}) > ${val};`
+                    };
+                }
+            },
+            {
+                category: "SQL",
+                generate: () => {
+                    const tblA = getRandomItem(tables);
+                    const tblB = "lookup_details";
+                    return {
+                        question: `Write a structural query returning all rows from the primary table '${tblA}' matched against data from table '${tblB}' safely using a standard LEFT JOIN connection on an ID value.`,
+                        answer: `SELECT *\nFROM ${tblA} a\nLEFT JOIN ${tblB} b\n  ON a.id = b.target_id;`
+                    };
+                }
+            },
+            {
+                category: "DML",
+                generate: () => {
+                    const tbl = getRandomItem(tables);
+const col = getRandomItem(columns);
+const cond = getRandomItem(conditions);
+const increase = Math.floor(Math.random() * 20) + 5;
+                    return {
+                        question: `Construct a structural data mutation script that modifies the target table '${tbl}' to increase '${col}' values by ${increase}% specifically where ${cond}.`,
+                        answer: `UPDATE ${tbl}\nSET ${col} = ${col} * ${1 + (increase/100)}\nWHERE ${cond};`
+                    };
+                }
+            },
+            {
+                category: "DML",
+                generate: () => {
+                    const tbl = getRandomItem(tables);
+                    return {
+                        question: `Write a fast database engine statement to completely clear out all row variables inside the '${tbl}' table instantly without generating rollback log records.`,
+                        answer: `TRUNCATE TABLE ${tbl};`
+                    };
+                }
+            },
+            {
+                category: "PLSQL",
+                generate: () => {
+                    const vName = getRandomItem(variables);
+                    const exc = getRandomItem(exceptions);
+                    return {
+                        question: `Structure an anonymous block initializing a standard runtime variable called '${vName}' typed as NUMBER, handling structural exceptions cleanly with the internal Oracle parameter '${exc}'.`,
+                        answer: `DECLARE\n  ${vName} NUMBER := 100;\nBEGIN\n  -- Executable assignments go here\n  NULL;\nEXCEPTION\n  WHEN ${exc} THEN\n    DBMS_OUTPUT.PUT_LINE('Handled boundary failure.');\nEND;`
+                    };
+                }
+            },
+            {
+                category: "PLSQL",
+                generate: () => {
+                    const col = getRandomItem(columns);
+                    const tbl = getRandomItem(tables);
+                    return {
+                        question: `Write a clean execution block establishing a cursor configuration scanning for rows matching the '${col}' data structure derived from the '${tbl}' table.`,
+                        answer: `DECLARE\n  CURSOR c_dynamic IS \n    SELECT ${col} FROM ${tbl};\n  v_buffer ${tbl}.${col}%TYPE;\nBEGIN\n  OPEN c_dynamic;\n  FETCH c_dynamic INTO v_buffer;\n  CLOSE c_dynamic;\nEND;`
+                    }
+                }
+            }
+        ];
+
+        let selectedCategory = 'ALL';
+        let currentCard = null;
+        let score = 0;
+        let streak = 0;
+        let hasFlipped = false;
+
+        const cardElement = document.getElementById('card-element');
+        const questionText = document.getElementById('question-text');
+        const answerText = document.getElementById('answer-text');
+        const tagFront = document.getElementById('tag-front');
+        const tagBack = document.getElementById('tag-back');
+        const scoreDisplay = document.getElementById('score-display');
+        const streakDisplay = document.getElementById('streak-display');
+        const btnReview = document.getElementById('btn-review');
+        const btnGotIt = document.getElementById('btn-gotit');
+
+        function generateNewCard() {
+            // Filter template array based on active navigation tab context
+            const availableTemplates = selectedCategory === 'ALL' 
+                ? templates 
+                : templates.filter(t => t.category === selectedCategory);
+
+            // Execute the generative generator function
+            const activeTemplate = getRandomItem(availableTemplates);
+            currentCard = activeTemplate.generate();
+            currentCard.category = activeTemplate.category;
+
+            // Clear visual rotation transformations
+            cardElement.classList.remove('flipped');
+            hasFlipped = false;
+            btnReview.classList.add('disabled');
+            btnGotIt.classList.add('disabled');
+
+            // Inject the generated payload definitions into the front-end layout elements
+            setTimeout(() => {
+                tagFront.textContent = currentCard.category;
+                tagBack.textContent = `${currentCard.category} Answer Blueprint`;
+                questionText.textContent = currentCard.question;
+                answerText.textContent = currentCard.answer;
+            }, 150);
+        }
+
+        function flipCard() {
+            cardElement.classList.toggle('flipped');
+            if(!hasFlipped) {
+                hasFlipped = true;
+                btnReview.classList.remove('disabled');
+                btnGotIt.classList.remove('disabled');
+            }
+        }
+
+        function handleScore(isCorrect) {
+            if(!hasFlipped) return;
+
+            if (isCorrect) {
+                score += 15; // Increased value for dynamic variants
+                streak++;
+            } else {
+                streak = 0;
+            }
+
+            scoreDisplay.textContent = score;
+            streakDisplay.textContent = `${streak}🔥`;
+
+            // Seamlessly fetch next procedurally created configuration
+            generateNewCard();
+        }
+
+        function filterCategory(cat) {
+            const buttons = document.querySelectorAll('.btn-cat');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            selectedCategory = cat;
+            generateNewCard();
+        }
+
+        // Initialize dynamic card generator sequence on page launch
+        generateNewCard();
+    </script>
+</body>
+</html>
