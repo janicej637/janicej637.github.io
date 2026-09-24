@@ -1,28 +1,41 @@
 
 /*
- * Pivoting Parallel Charts (PPC) - Corrected Core Engine
- *
- * Features:
- *   - Titanic
- *   - Mushrooms
- *   - Covid
- *   - Survey
- *   - Standard Mode
- *   - Paired Mode
- *   - Dimension selection
- *   - Minimum 3 dimensions
- *   - Pivot-axis selection
- *   - Safe dataset switching
- *   - D3 parallel-set rendering
- *   - Automatic creation of missing UI containers
- */
+===========================================================
+ PIVOTING PARALLEL CHARTS
+ index26 - 3D Visualization Engine
+===========================================================
+
+ Keeps index26 features:
+   • Titanic
+   • Mushrooms
+   • Covid
+   • Survey
+   • Standard Mode
+   • Paired Mode
+   • Dimension selection
+   • Pivot selection
+
+ Adds index25-style visualization:
+   • Three.js 3D categorical bars
+   • Pivot colors
+   • Axis labels
+   • 3D rotation
+   • Zoom
+   • Axis dragging / reordering
+   • Click axis to pivot
+   • Tooltip
+   • Dimension summary
+   • Camera reset
+   • Axis reset
+===========================================================
+*/
 
 "use strict";
 
 
 /* =========================================================
-   1. GLOBAL APPLICATION STATE
-   ========================================================= */
+   APPLICATION STATE
+========================================================= */
 
 const State = {
 
@@ -34,14 +47,40 @@ const State = {
 
     activePivotAxis: null,
 
-    rawRecords: []
+    rawRecords: [],
+
+    axisOrder: [],
+
+    scene: null,
+
+    camera: null,
+
+    renderer: null,
+
+    controls: null,
+
+    axisObjects: [],
+
+    animationId: null,
+
+    raycaster: null,
+
+    mouse: null,
+
+    draggingAxis: null,
+
+    dragStartX: 0,
+
+    originalAxisX: 0,
+
+    cameraHome: null
 
 };
 
 
 /* =========================================================
-   2. DATASET CONFIGURATION
-   ========================================================= */
+   DATASETS
+========================================================= */
 
 const DatasetConfig = {
 
@@ -54,7 +93,7 @@ const DatasetConfig = {
             "Survived"
         ],
 
-        generate: () => {
+        generate() {
 
             const records = [];
 
@@ -63,26 +102,24 @@ const DatasetConfig = {
                 records.push({
 
                     Class:
-                        Math.random() > 0.4
+                        Math.random() > .4
                             ? "Third"
-                            : (
-                                Math.random() > 0.5
-                                    ? "Second"
-                                    : "First"
-                            ),
+                            : Math.random() > .5
+                                ? "Second"
+                                : "First",
 
                     Sex:
-                        Math.random() > 0.52
+                        Math.random() > .52
                             ? "Male"
                             : "Female",
 
                     Age:
-                        Math.random() > 0.2
+                        Math.random() > .2
                             ? "Adult"
                             : "Child",
 
                     Survived:
-                        Math.random() > 0.6
+                        Math.random() > .6
                             ? "Yes"
                             : "No"
 
@@ -104,7 +141,7 @@ const DatasetConfig = {
             "Edibility"
         ],
 
-        generate: () => {
+        generate() {
 
             const records = [];
 
@@ -113,26 +150,24 @@ const DatasetConfig = {
                 records.push({
 
                     CapShape:
-                        Math.random() > 0.5
+                        Math.random() > .5
                             ? "Convex"
                             : "Flat",
 
                     CapColor:
-                        Math.random() > 0.6
+                        Math.random() > .6
                             ? "Brown"
-                            : (
-                                Math.random() > 0.4
-                                    ? "Gray"
-                                    : "Red"
-                            ),
+                            : Math.random() > .4
+                                ? "Gray"
+                                : "Red",
 
                     Odor:
-                        Math.random() > 0.7
+                        Math.random() > .7
                             ? "Pungent"
                             : "Almond",
 
                     Edibility:
-                        Math.random() > 0.45
+                        Math.random() > .45
                             ? "Edible"
                             : "Poisonous"
 
@@ -154,7 +189,7 @@ const DatasetConfig = {
             "Outcome"
         ],
 
-        generate: () => {
+        generate() {
 
             const records = [];
 
@@ -163,26 +198,24 @@ const DatasetConfig = {
                 records.push({
 
                     AgeGroup:
-                        Math.random() > 0.6
+                        Math.random() > .6
                             ? "Elderly"
-                            : (
-                                Math.random() > 0.3
-                                    ? "Adult"
-                                    : "Youth"
-                            ),
+                            : Math.random() > .3
+                                ? "Adult"
+                                : "Youth",
 
                     RiskFactors:
-                        Math.random() > 0.4
+                        Math.random() > .4
                             ? "Present"
                             : "None",
 
                     Hospitalization:
-                        Math.random() > 0.7
+                        Math.random() > .7
                             ? "ICU"
                             : "Ward",
 
                     Outcome:
-                        Math.random() > 0.85
+                        Math.random() > .85
                             ? "Deceased"
                             : "Recovered"
 
@@ -204,7 +237,7 @@ const DatasetConfig = {
             "Employment"
         ],
 
-        generate: () => {
+        generate() {
 
             const records = [];
 
@@ -213,26 +246,24 @@ const DatasetConfig = {
                 records.push({
 
                     Education:
-                        Math.random() > 0.5
+                        Math.random() > .5
                             ? "Degree"
                             : "HighSchool",
 
                     Income:
-                        Math.random() > 0.7
+                        Math.random() > .7
                             ? "High"
-                            : (
-                                Math.random() > 0.4
-                                    ? "Medium"
-                                    : "Low"
-                            ),
+                            : Math.random() > .4
+                                ? "Medium"
+                                : "Low",
 
                     Satisfaction:
-                        Math.random() > 0.4
+                        Math.random() > .4
                             ? "Satisfied"
                             : "Unsatisfied",
 
                     Employment:
-                        Math.random() > 0.2
+                        Math.random() > .2
                             ? "Employed"
                             : "Unemployed"
 
@@ -248,229 +279,242 @@ const DatasetConfig = {
 
 
 /* =========================================================
-   3. DOM READY
-   ========================================================= */
+   THREE.JS LOADER
+========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+function loadThree() {
 
-    ensureRequiredUI();
+    return new Promise((resolve, reject) => {
 
-    initDatasetTabs();
+        if (window.THREE) {
 
-    initModeToggles();
+            resolve();
 
-    switchDataset(State.activeDataset);
+            return;
+        }
 
-    window.addEventListener(
-        "resize",
-        debounce(
-            () => renderPPCChart(),
-            150
-        )
-    );
 
-});
+        const script =
+            document.createElement("script");
+
+        script.src =
+            "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+
+        script.onload =
+            resolve;
+
+        script.onerror =
+            reject;
+
+        document.head.appendChild(script);
+
+    });
+
+}
 
 
 /* =========================================================
-   4. CREATE MISSING UI ELEMENTS
-   ========================================================= */
+   INITIALIZATION
+========================================================= */
 
-function ensureRequiredUI() {
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
-    /*
-     * Dimension selector
-     */
+        createInterface();
 
-    let selector =
-        document.getElementById(
-            "dimension-selector-box"
-        );
+        initDatasetTabs();
 
-    if (!selector) {
+        initModeControls();
 
-        selector =
-            document.createElement("div");
+        initDimensionControls();
 
-        selector.id =
-            "dimension-selector-box";
+        initChartButtons();
 
-        selector.className =
-            "dimension-selector-box";
 
-        const warning =
-            document.getElementById(
-                "dimension-warning"
+        try {
+
+            await loadThree();
+
+            switchDataset(
+                "titanic"
             );
 
-        if (warning && warning.parentNode) {
+        } catch (error) {
 
-            warning.parentNode.insertBefore(
-                selector,
-                warning
+            console.error(
+                "Three.js failed to load.",
+                error
             );
 
-        } else {
+            showChartMessage(
+                "Three.js could not be loaded."
+            );
 
-            const mode =
-                document.querySelector(
-                    'input[name="viewMode"]'
-                );
-
-            if (
-                mode &&
-                mode.parentNode
-            ) {
-
-                mode.parentNode.appendChild(
-                    selector
-                );
-
-            } else {
-
-                document.body.appendChild(
-                    selector
-                );
-            }
         }
+
     }
+);
 
 
-    /*
-     * Dimension warning
-     */
+/* =========================================================
+   CREATE MISSING INTERFACE
+========================================================= */
 
-    let warning =
-        document.getElementById(
-            "dimension-warning"
-        );
-
-    if (!warning) {
-
-        warning =
-            document.createElement("div");
-
-        warning.id =
-            "dimension-warning";
-
-        warning.className =
-            "hidden";
-
-        warning.textContent =
-            "Select 3 or more dimensions to visualize.";
-
-        selector.parentNode.insertBefore(
-            warning,
-            selector.nextSibling
-        );
-    }
-
-
-    /*
-     * Chart container
-     */
+function createInterface() {
 
     let chart =
         document.getElementById(
             "parallel-chart-canvas"
         );
 
+
     if (!chart) {
 
         chart =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
         chart.id =
             "parallel-chart-canvas";
 
-        chart.style.width =
-            "100%";
-
-        chart.style.minHeight =
-            "500px";
-
-        chart.style.position =
-            "relative";
-
         document.body.appendChild(
             chart
         );
+
+    }
+
+
+    chart.style.width =
+        "100%";
+
+    chart.style.height =
+        "650px";
+
+    chart.style.minHeight =
+        "500px";
+
+    chart.style.position =
+        "relative";
+
+    chart.style.overflow =
+        "hidden";
+
+
+    let warning =
+        document.getElementById(
+            "dimension-warning"
+        );
+
+
+    if (!warning) {
+
+        warning =
+            document.createElement(
+                "div"
+            );
+
+        warning.id =
+            "dimension-warning";
+
+        chart.parentNode.insertBefore(
+            warning,
+            chart
+        );
+
+    }
+
+
+    let selector =
+        document.getElementById(
+            "dimension-selector-box"
+        );
+
+
+    if (!selector) {
+
+        selector =
+            document.createElement(
+                "div"
+            );
+
+        selector.id =
+            "dimension-selector-box";
+
+        chart.parentNode.insertBefore(
+            selector,
+            chart
+        );
+
     }
 
 
     /*
-     * Tooltip
+     * Status information
      */
 
-    let tooltip =
+    let status =
         document.getElementById(
-            "chart-tooltip"
+            "ppc-status"
         );
 
-    if (!tooltip) {
 
-        tooltip =
-            document.createElement("div");
+    if (!status) {
 
-        tooltip.id =
-            "chart-tooltip";
+        status =
+            document.createElement(
+                "div"
+            );
 
-        tooltip.className =
-            "hidden";
+        status.id =
+            "ppc-status";
 
-        document.body.appendChild(
-            tooltip
+        chart.parentNode.insertBefore(
+            status,
+            chart
         );
+
     }
 
 }
 
 
 /* =========================================================
-   5. DATASET TABS
-   ========================================================= */
+   DATASET TABS
+========================================================= */
 
 function initDatasetTabs() {
 
     document
-        .querySelectorAll(".tab-btn")
+        .querySelectorAll(
+            ".tab-btn"
+        )
         .forEach(button => {
 
             button.addEventListener(
                 "click",
-                function () {
+                () => {
 
                     document
                         .querySelectorAll(
                             ".tab-btn"
                         )
-                        .forEach(btn => {
+                        .forEach(
+                            b =>
+                                b.classList.remove(
+                                    "active"
+                                )
+                        );
 
-                            btn.classList.remove(
-                                "active"
-                            );
-
-                        });
-
-                    this.classList.add(
+                    button.classList.add(
                         "active"
                     );
 
-                    const datasetName =
-                        this.getAttribute(
-                            "data-dataset"
-                        );
 
-                    if (
-                        DatasetConfig[
-                            datasetName
-                        ]
-                    ) {
-
-                        switchDataset(
-                            datasetName
-                        );
-                    }
+                    switchDataset(
+                        button.dataset.dataset
+                    );
 
                 }
             );
@@ -481,10 +525,10 @@ function initDatasetTabs() {
 
 
 /* =========================================================
-   6. MODE TOGGLES
-   ========================================================= */
+   MODE CONTROLS
+========================================================= */
 
-function initModeToggles() {
+function initModeControls() {
 
     document
         .querySelectorAll(
@@ -494,18 +538,19 @@ function initModeToggles() {
 
             radio.addEventListener(
                 "change",
-                function () {
+                () => {
 
-                    if (!this.checked) {
+                    if (!radio.checked) {
                         return;
                     }
 
                     State.viewMode =
-                        this.value === "paired"
+                        radio.value ===
+                        "paired"
                             ? "paired"
                             : "standard";
 
-                    renderPPCChart();
+                    render3D();
 
                 }
             );
@@ -516,23 +561,163 @@ function initModeToggles() {
 
 
 /* =========================================================
-   7. SWITCH DATASET
-   ========================================================= */
+   DIMENSION CONTROLS
+========================================================= */
 
-function switchDataset(datasetName) {
+function initDimensionControls() {
+
+    /*
+     * Delegated listener.
+     *
+     * This also works when the checkboxes are
+     * recreated after switching datasets.
+     */
+
+    document.addEventListener(
+        "change",
+        event => {
+
+            if (
+                !event.target.matches(
+                    "#dimension-selector-box input[type='checkbox']"
+                )
+            ) {
+
+                return;
+            }
+
+
+            const dimension =
+                event.target.value;
+
+
+            if (
+                event.target.checked
+            ) {
+
+                if (
+                    !State.selectedDimensions.includes(
+                        dimension
+                    )
+                ) {
+
+                    State.selectedDimensions.push(
+                        dimension
+                    );
+
+                }
+
+            } else {
+
+                State.selectedDimensions =
+                    State.selectedDimensions.filter(
+                        d =>
+                            d !== dimension
+                    );
+
+
+                if (
+                    State.activePivotAxis ===
+                    dimension
+                ) {
+
+                    State.activePivotAxis =
+                        State.selectedDimensions[
+                            State.selectedDimensions.length - 1
+                        ] || null;
+
+                }
+
+            }
+
+
+            State.axisOrder =
+                State.selectedDimensions.slice();
+
+
+            updateWarning();
+
+            render3D();
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CHART BUTTONS
+========================================================= */
+
+function initChartButtons() {
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            const id =
+                event.target.id;
+
+
+            if (
+                id ===
+                "reset-axis-order"
+            ) {
+
+                resetAxisOrder();
+
+            }
+
+
+            if (
+                id ===
+                "reset-camera"
+            ) {
+
+                resetCamera();
+
+            }
+
+
+            if (
+                id ===
+                "first-axis-pivot"
+            ) {
+
+                if (
+                    State.axisOrder.length
+                ) {
+
+                    State.activePivotAxis =
+                        State.axisOrder[0];
+
+                    render3D();
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   DATASET SWITCH
+========================================================= */
+
+function switchDataset(
+    datasetName
+) {
 
     const config =
         DatasetConfig[
             datasetName
         ];
 
+
     if (!config) {
-
-        console.error(
-            "Unknown dataset:",
-            datasetName
-        );
-
         return;
     }
 
@@ -541,119 +726,69 @@ function switchDataset(datasetName) {
         datasetName;
 
 
-    /*
-     * Generate records.
-     */
-
     State.rawRecords =
         config.generate();
 
 
-    /*
-     * Reset dimensions.
-     */
-
     State.selectedDimensions =
-        [...config.dimensions];
+        config.dimensions.slice();
 
 
-    /*
-     * Last dimension is default pivot.
-     */
+    State.axisOrder =
+        config.dimensions.slice();
+
 
     State.activePivotAxis =
-        State.selectedDimensions[
-            State.selectedDimensions.length - 1
-        ] || null;
+        State.axisOrder[
+            State.axisOrder.length - 1
+        ];
 
 
-    /*
-     * Update title.
-     */
+    updateDatasetTitle();
 
-    const titleContainer =
-        document.getElementById(
-            "active-dataset-title"
-        );
+    renderDimensionControls();
 
-    if (titleContainer) {
+    updateWarning();
 
-        titleContainer.innerText =
-            `${capitalize(datasetName)} Parallel Set Analysis`;
-
-    }
-
-
-    /*
-     * Highlight correct tab.
-     */
-
-    document
-        .querySelectorAll(".tab-btn")
-        .forEach(button => {
-
-            button.classList.toggle(
-                "active",
-                button.getAttribute(
-                    "data-dataset"
-                ) === datasetName
-            );
-
-        });
-
-
-    renderDimensionCheckboxes(
-        config.dimensions
-    );
-
-
-    updateDimensionWarning();
-
-    renderPPCChart();
+    render3D();
 
 }
 
 
 /* =========================================================
-   8. DIMENSION CHECKBOXES
-   ========================================================= */
+   DIMENSION UI
+========================================================= */
 
-function renderDimensionCheckboxes(
-    allDimensions
-) {
+function renderDimensionControls() {
 
-    const selectorBox =
+    const box =
         document.getElementById(
             "dimension-selector-box"
         );
 
-    if (!selectorBox) {
+
+    if (!box) {
         return;
     }
 
 
-    selectorBox.innerHTML = "";
+    box.innerHTML = "";
 
 
-    /*
-     * Add heading.
-     */
+    const title =
+        document.createElement(
+            "div"
+        );
 
-    const heading =
-        document.createElement("div");
+    title.innerHTML =
+        "<strong>Control Dimensions</strong>";
 
-    heading.className =
-        "dimension-selector-heading";
-
-    heading.textContent =
-        "Choose Dimensions";
-
-    selectorBox.appendChild(
-        heading
+    box.appendChild(
+        title
     );
 
 
-    allDimensions.forEach(
+    State.axisOrder.forEach(
         dimension => {
 
             const label =
@@ -661,8 +796,21 @@ function renderDimensionCheckboxes(
                     "label"
                 );
 
-            label.className =
-                "check-item";
+
+            label.style.display =
+                "inline-flex";
+
+            label.style.alignItems =
+                "center";
+
+            label.style.gap =
+                "6px";
+
+            label.style.margin =
+                "6px";
+
+            label.style.cursor =
+                "pointer";
 
 
             const input =
@@ -682,12 +830,12 @@ function renderDimensionCheckboxes(
                 );
 
 
-            const text =
+            const span =
                 document.createElement(
                     "span"
                 );
 
-            text.textContent =
+            span.textContent =
                 dimension;
 
 
@@ -696,89 +844,11 @@ function renderDimensionCheckboxes(
             );
 
             label.appendChild(
-                text
+                span
             );
 
 
-            input.addEventListener(
-                "change",
-                function () {
-
-                    const value =
-                        this.value;
-
-
-                    if (this.checked) {
-
-                        if (
-                            !State.selectedDimensions.includes(
-                                value
-                            )
-                        ) {
-
-                            State.selectedDimensions.push(
-                                value
-                            );
-
-                        }
-
-                    } else {
-
-                        State.selectedDimensions =
-                            State.selectedDimensions.filter(
-                                dimensionName =>
-                                    dimensionName !== value
-                            );
-
-
-                        /*
-                         * If pivot was removed,
-                         * select another active dimension.
-                         */
-
-                        if (
-                            State.activePivotAxis ===
-                            value
-                        ) {
-
-                            State.activePivotAxis =
-                                State.selectedDimensions[
-                                    State.selectedDimensions.length - 1
-                                ] || null;
-
-                        }
-
-                    }
-
-
-                    /*
-                     * Always update warning safely.
-                     */
-
-                    updateDimensionWarning();
-
-
-                    /*
-                     * Only render if enough dimensions.
-                     */
-
-                    if (
-                        State.selectedDimensions.length >= 3
-                    ) {
-
-                        renderPPCChart();
-
-                    } else {
-
-                        clearChart();
-
-                    }
-
-                }
-            );
-
-
-            selectorBox.appendChild(
+            box.appendChild(
                 label
             );
 
@@ -789,61 +859,44 @@ function renderDimensionCheckboxes(
 
 
 /* =========================================================
-   9. DIMENSION WARNING
-   ========================================================= */
+   WARNING
+========================================================= */
 
-function updateDimensionWarning() {
+function updateWarning() {
 
     const warning =
         document.getElementById(
             "dimension-warning"
         );
 
+
     if (!warning) {
         return;
     }
 
 
-    const tooFew =
-        State.selectedDimensions.length < 3;
+    const count =
+        State.selectedDimensions.length;
 
 
-    warning.classList.toggle(
-        "hidden",
-        !tooFew
-    );
-
-
-    if (tooFew) {
+    if (count < 3) {
 
         warning.textContent =
             `Select ${
-                3 - State.selectedDimensions.length
+                3 - count
             } more dimension${
-                3 - State.selectedDimensions.length === 1
+                3 - count === 1
                     ? ""
                     : "s"
             } to visualize.`;
 
-    }
+        warning.style.display =
+            "block";
 
-}
+    } else {
 
-
-/* =========================================================
-   10. CLEAR CHART
-   ========================================================= */
-
-function clearChart() {
-
-    const canvas =
-        document.getElementById(
-            "parallel-chart-canvas"
-        );
-
-    if (canvas) {
-
-        canvas.innerHTML = "";
+        warning.style.display =
+            "none";
 
     }
 
@@ -851,1091 +904,325 @@ function clearChart() {
 
 
 /* =========================================================
-   11. MAIN PPC RENDERER
-   ========================================================= */
+   TITLE
+========================================================= */
 
-function renderPPCChart() {
+function updateDatasetTitle() {
 
-    const canvas =
+    const title =
         document.getElementById(
-            "parallel-chart-canvas"
+            "active-dataset-title"
         );
 
 
-    if (!canvas) {
+    if (!title) {
         return;
     }
 
 
-    canvas.innerHTML = "";
+    title.textContent =
+        capitalize(
+            State.activeDataset
+        );
+
+}
 
 
-    /*
-     * Validate D3.
-     */
+/* =========================================================
+   RENDER 3D
+========================================================= */
+
+function render3D() {
 
     if (
-        typeof window.d3 ===
-        "undefined"
+        !window.THREE
     ) {
-
-        canvas.innerHTML =
-            `<div class="chart-error">
-                D3.js is not loaded.
-                Please include D3 before app.js.
-            </div>`;
-
-        console.error(
-            "PPC Error: D3.js is not loaded."
-        );
 
         return;
     }
 
-
-    /*
-     * Need at least three dimensions.
-     */
 
     if (
         State.selectedDimensions.length < 3
     ) {
 
+        destroyScene();
+
+        showChartMessage(
+            "Select 3 or more dimensions to visualize."
+        );
+
+        updateStatus();
+
         return;
     }
+
+
+    createScene();
+
+    drawChart();
+
+    updateStatus();
+
+}
+
+
+/* =========================================================
+   CREATE THREE.JS SCENE
+========================================================= */
+
+function createScene() {
+
+    const container =
+        document.getElementById(
+            "parallel-chart-canvas"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    destroyScene();
+
+
+    State.scene =
+        new THREE.Scene();
+
+
+    State.scene.background =
+        new THREE.Color(
+            0x07111f
+        );
+
+
+    const width =
+        container.clientWidth ||
+        900;
+
+    const height =
+        container.clientHeight ||
+        650;
+
+
+    State.camera =
+        new THREE.PerspectiveCamera(
+            45,
+            width / height,
+            0.1,
+            3000
+        );
+
+
+    State.camera.position.set(
+        0,
+        420,
+        850
+    );
+
+
+    State.camera.lookAt(
+        0,
+        120,
+        0
+    );
+
+
+    State.renderer =
+        new THREE.WebGLRenderer({
+            antialias: true
+        });
+
+
+    State.renderer.setPixelRatio(
+        Math.min(
+            window.devicePixelRatio,
+            2
+        )
+    );
+
+
+    State.renderer.setSize(
+        width,
+        height
+    );
+
+
+    container.appendChild(
+        State.renderer.domElement
+    );
 
 
     /*
-     * Need data.
+     * Lights
      */
 
-    if (
-        !State.rawRecords ||
-        !State.rawRecords.length
-    ) {
+    const ambient =
+        new THREE.AmbientLight(
+            0xffffff,
+            0.75
+        );
 
-        canvas.innerHTML =
-            `<div class="chart-error">
-                No records available for this dataset.
-            </div>`;
-
-        return;
-    }
+    State.scene.add(
+        ambient
+    );
 
 
-    const canvasWidth =
-        canvas.clientWidth || 900;
+    const light =
+        new THREE.DirectionalLight(
+            0xffffff,
+            1.0
+        );
 
-    const canvasHeight =
-        canvas.clientHeight || 520;
+    light.position.set(
+        200,
+        500,
+        400
+    );
+
+    State.scene.add(
+        light
+    );
 
 
-    const padding = {
+    /*
+     * Grid
+     */
 
-        top: 75,
+    const grid =
+        new THREE.GridHelper(
+            1200,
+            24,
+            0x31506e,
+            0x1a2b3e
+        );
 
-        right: 70,
+    grid.position.y =
+        0;
 
-        bottom: 45,
+    State.scene.add(
+        grid
+    );
 
-        left: 70
 
+    /*
+     * Mouse controls.
+     */
+
+    setupMouseControls();
+
+
+    State.cameraHome = {
+        x: 0,
+        y: 420,
+        z: 850
     };
 
 
-    const svg =
-        d3.select(canvas)
-            .append("svg")
-            .attr(
-                "width",
-                "100%"
-            )
-            .attr(
-                "height",
-                canvasHeight
-            )
-            .attr(
-                "viewBox",
-                `0 0 ${canvasWidth} ${canvasHeight}`
-            )
-            .attr(
-                "preserveAspectRatio",
-                "xMidYMid meet"
-            );
-
-
-    const innerWidth =
-        Math.max(
-            100,
-            canvasWidth -
-            padding.left -
-            padding.right
-        );
-
-
-    const innerHeight =
-        Math.max(
-            100,
-            canvasHeight -
-            padding.top -
-            padding.bottom
-        );
-
-
-    const mainGroup =
-        svg.append("g")
-            .attr(
-                "transform",
-                `translate(
-                    ${padding.left},
-                    ${padding.top}
-                )`
-            );
-
-
-    /*
-     * Horizontal dimension scale.
-     */
-
-    const xScale =
-        d3.scalePoint()
-            .domain(
-                State.selectedDimensions
-            )
-            .range([
-                0,
-                innerWidth
-            ]);
-
-
-    /*
-     * Unique categories.
-     */
-
-    const uniqueValuesMap = {};
-
-
-    State.selectedDimensions.forEach(
-        dimension => {
-
-            uniqueValuesMap[
-                dimension
-            ] =
-                Array.from(
-                    new Set(
-                        State.rawRecords
-                            .map(
-                                record =>
-                                    record[
-                                        dimension
-                                    ]
-                            )
-                            .filter(
-                                value =>
-                                    value !==
-                                    undefined &&
-                                    value !== null
-                            )
-                    )
-                ).sort();
-
-        }
-    );
-
-
-    /*
-     * Pivot categories.
-     */
-
-    const pivotCategories =
-        uniqueValuesMap[
-            State.activePivotAxis
-        ] || [];
-
-
-    const colorManager =
-        d3.scaleOrdinal()
-            .domain(
-                pivotCategories
-            )
-            .range(
-                d3.schemeTableau10
-            );
-
-
-    const pillarThickness =
-        34;
-
-
-    const structuralScales = {};
-
-
-    /* =====================================================
-       12. DRAW DIMENSION PILLARS
-       ===================================================== */
-
-    State.selectedDimensions.forEach(
-        dimension => {
-
-            const frequencies = {};
-
-
-            uniqueValuesMap[
-                dimension
-            ].forEach(
-                value => {
-
-                    frequencies[
-                        value
-                    ] = 0;
-
-                }
-            );
-
-
-            State.rawRecords.forEach(
-                record => {
-
-                    const value =
-                        record[
-                            dimension
-                        ];
-
-                    if (
-                        frequencies[
-                            value
-                        ] !== undefined
-                    ) {
-
-                        frequencies[
-                            value
-                        ]++;
-
-                    }
-
-                }
-            );
-
-
-            const total =
-                State.rawRecords.length;
-
-
-            const values =
-                uniqueValuesMap[
-                    dimension
-                ];
-
-
-            const gap =
-                values.length > 1
-                    ? Math.min(
-                        10,
-                        14 / values.length
-                    )
-                    : 0;
-
-
-            const usableHeight =
-                Math.max(
-                    50,
-                    innerHeight -
-                    gap *
-                    Math.max(
-                        0,
-                        values.length - 1
-                    )
-                );
-
-
-            let currentY = 0;
-
-
-            const slices = {};
-
-
-            values.forEach(
-                value => {
-
-                    const height =
-                        (
-                            frequencies[
-                                value
-                            ] /
-                            total
-                        ) *
-                        usableHeight;
-
-
-                    slices[
-                        value
-                    ] = {
-
-                        yStart:
-                            currentY,
-
-                        yEnd:
-                            currentY +
-                            height,
-
-                        size:
-                            height
-
-                    };
-
-
-                    currentY +=
-                        height +
-                        gap;
-
-                }
-            );
-
-
-            structuralScales[
-                dimension
-            ] =
-                slices;
-
-
-            const axisGroup =
-                mainGroup
-                    .append("g")
-                    .attr(
-                        "class",
-                        "axis-column-group"
-                    )
-                    .attr(
-                        "transform",
-                        `translate(
-                            ${
-                                xScale(
-                                    dimension
-                                ) -
-                                pillarThickness / 2
-                            },
-                            0
-                        )`
-                    );
-
-
-            /*
-             * Axis header.
-             */
-
-            axisGroup
-                .append("text")
-                .attr(
-                    "class",
-                    `axis-header-text ${
-                        dimension ===
-                        State.activePivotAxis
-                            ? "pivot-active"
-                            : ""
-                    }`
-                )
-                .attr(
-                    "x",
-                    pillarThickness / 2
-                )
-                .attr(
-                    "y",
-                    -28
-                )
-                .attr(
-                    "text-anchor",
-                    "middle"
-                )
-                .style(
-                    "cursor",
-                    "pointer"
-                )
-                .text(
-                    dimension
-                )
-                .on(
-                    "click",
-                    () => {
-
-                        State.activePivotAxis =
-                            dimension;
-
-                        renderPPCChart();
-
-                    }
-                );
-
-
-            /*
-             * Pivot indicator.
-             */
-
-            if (
-                dimension ===
-                State.activePivotAxis
-            ) {
-
-                axisGroup
-                    .append("text")
-                    .attr(
-                        "x",
-                        pillarThickness / 2
-                    )
-                    .attr(
-                        "y",
-                        -10
-                    )
-                    .attr(
-                        "text-anchor",
-                        "middle"
-                    )
-                    .attr(
-                        "font-size",
-                        "10px"
-                    )
-                    .attr(
-                        "fill",
-                        "#f59e0b"
-                    )
-                    .text(
-                        "PIVOT"
-                    );
-
-            }
-
-
-            /*
-             * Category blocks.
-             */
-
-            values.forEach(
-                value => {
-
-                    const metrics =
-                        slices[value];
-
-
-                    if (
-                        !metrics ||
-                        metrics.size <= 0
-                    ) {
-
-                        return;
-                    }
-
-
-                    /*
-                     * Determine color.
-                     */
-
-                    let fill;
-
-
-                    if (
-                        State.viewMode ===
-                        "standard"
-                    ) {
-
-                        fill =
-                            colorManager(
-                                State.activePivotAxis ===
-                                dimension
-                                    ? value
-                                    : State.activePivotAxis &&
-                                      State.rawRecords.find(
-                                          record =>
-                                              record[
-                                                  dimension
-                                              ] === value
-                                      )?.[
-                                          State.activePivotAxis
-                                      ]
-                            );
-
-                    } else {
-
-                        /*
-                         * Paired mode uses the
-                         * local dimension category.
-                         */
-
-                        fill =
-                            colorManager(
-                                value
-                            );
-
-                    }
-
-
-                    /*
-                     * Fallback if D3 cannot
-                     * resolve a category.
-                     */
-
-                    if (!fill) {
-
-                        fill =
-                            "#24292e";
-
-                    }
-
-
-                    axisGroup
-                        .append("rect")
-                        .attr(
-                            "x",
-                            0
-                        )
-                        .attr(
-                            "y",
-                            metrics.yStart
-                        )
-                        .attr(
-                            "width",
-                            pillarThickness
-                        )
-                        .attr(
-                            "height",
-                            metrics.size
-                        )
-                        .attr(
-                            "fill",
-                            fill
-                        )
-                        .attr(
-                            "stroke",
-                            "#ffffff"
-                        )
-                        .attr(
-                            "stroke-opacity",
-                            0.18
-                        )
-                        .attr(
-                            "rx",
-                            4
-                        )
-                        .on(
-                            "mouseover",
-                            event => {
-
-                                showTooltip(
-                                    event,
-                                    `<strong>${escapeHtml(
-                                        dimension
-                                    )}</strong><br>
-                                    ${escapeHtml(
-                                        value
-                                    )}<br>
-                                    ${frequencies[
-                                        value
-                                    ]} records`
-                                );
-
-                            }
-                        )
-                        .on(
-                            "mouseout",
-                            hideTooltip
-                        );
-
-
-                    /*
-                     * Category labels.
-                     */
-
-                    if (
-                        metrics.size > 20
-                    ) {
-
-                        axisGroup
-                            .append("text")
-                            .attr(
-                                "x",
-                                pillarThickness / 2
-                            )
-                            .attr(
-                                "y",
-                                metrics.yStart +
-                                metrics.size / 2 +
-                                4
-                            )
-                            .attr(
-                                "fill",
-                                "#ffffff"
-                            )
-                            .attr(
-                                "font-size",
-                                "10px"
-                            )
-                            .attr(
-                                "text-anchor",
-                                "middle"
-                            )
-                            .style(
-                                "pointer-events",
-                                "none"
-                            )
-                            .text(
-                                value
-                            );
-
-                    }
-
-                });
-
-        }
-    );
-
-
-    /* =====================================================
-       13. DRAW CONNECTIONS
-       ===================================================== */
-
-    for (
-        let i = 0;
-        i <
-        State.selectedDimensions.length - 1;
-        i++
-    ) {
-
-        const leftDimension =
-            State.selectedDimensions[i];
-
-        const rightDimension =
-            State.selectedDimensions[
-                i + 1
-            ];
-
-
-        const aggregates = {};
-
-
-        State.rawRecords.forEach(
-            record => {
-
-                const leftValue =
-                    record[
-                        leftDimension
-                    ];
-
-                const rightValue =
-                    record[
-                        rightDimension
-                    ];
-
-                const pivotValue =
-                    record[
-                        State.activePivotAxis
-                    ];
-
-
-                /*
-                 * Standard Mode:
-                 * left + right + pivot
-                 *
-                 * Paired Mode:
-                 * left + right
-                 */
-
-                const key =
-                    State.viewMode ===
-                    "standard"
-
-                        ? [
-                            leftValue,
-                            rightValue,
-                            pivotValue
-                        ].join("|||")
-
-                        : [
-                            leftValue,
-                            rightValue
-                        ].join("|||");
-
-
-                if (
-                    !aggregates[key]
-                ) {
-
-                    aggregates[key] = {
-
-                        leftVal:
-                            leftValue,
-
-                        rightVal:
-                            rightValue,
-
-                        pivotVal:
-                            pivotValue,
-
-                        volume:
-                            0
-
-                    };
-
-                }
-
-
-                aggregates[key].volume++;
-
-            }
-        );
-
-
-        const leftOffsets = {};
-
-        const rightOffsets = {};
-
-
-        Object.values(
-            aggregates
-        ).forEach(
-            stream => {
-
-                const leftScale =
-                    structuralScales[
-                        leftDimension
-                    ]?.[
-                        stream.leftVal
-                    ];
-
-
-                const rightScale =
-                    structuralScales[
-                        rightDimension
-                    ]?.[
-                        stream.rightVal
-                    ];
-
-
-                if (
-                    !leftScale ||
-                    !rightScale
-                ) {
-
-                    return;
-                }
-
-
-                if (
-                    leftOffsets[
-                        stream.leftVal
-                    ] === undefined
-                ) {
-
-                    leftOffsets[
-                        stream.leftVal
-                    ] =
-                        leftScale.yStart;
-
-                }
-
-
-                if (
-                    rightOffsets[
-                        stream.rightVal
-                    ] === undefined
-                ) {
-
-                    rightOffsets[
-                        stream.rightVal
-                    ] =
-                        rightScale.yStart;
-
-                }
-
-
-                const streamThickness =
-                    (
-                        stream.volume /
-                        State.rawRecords.length
-                    ) *
-                    innerHeight;
-
-
-                if (
-                    streamThickness <= 0
-                ) {
-
-                    return;
-                }
-
-
-                const yLeftStart =
-                    leftOffsets[
-                        stream.leftVal
-                    ];
-
-
-                const yRightStart =
-                    rightOffsets[
-                        stream.rightVal
-                    ];
-
-
-                leftOffsets[
-                    stream.leftVal
-                ] +=
-                    streamThickness;
-
-
-                rightOffsets[
-                    stream.rightVal
-                ] +=
-                    streamThickness;
-
-
-                const xLeft =
-                    xScale(
-                        leftDimension
-                    ) +
-                    pillarThickness / 2;
-
-
-                const xRight =
-                    xScale(
-                        rightDimension
-                    ) -
-                    pillarThickness / 2;
-
-
-                const middleX =
-                    (
-                        xLeft +
-                        xRight
-                    ) / 2;
-
-
-                const path =
-                    d3.path();
-
-
-                path.moveTo(
-                    xLeft,
-                    yLeftStart
-                );
-
-
-                path.bezierCurveTo(
-                    middleX,
-                    yLeftStart,
-                    middleX,
-                    yRightStart,
-                    xRight,
-                    yRightStart
-                );
-
-
-                path.lineTo(
-                    xRight,
-                    yRightStart +
-                    streamThickness
-                );
-
-
-                path.bezierCurveTo(
-                    middleX,
-                    yRightStart +
-                    streamThickness,
-                    middleX,
-                    yLeftStart +
-                    streamThickness,
-                    xLeft,
-                    yLeftStart +
-                    streamThickness
-                );
-
-
-                path.closePath();
-
-
-                let ribbonColor;
-
-
-                if (
-                    State.viewMode ===
-                    "standard"
-                ) {
-
-                    ribbonColor =
-                        colorManager(
-                            stream.pivotVal
-                        );
-
-                } else {
-
-                    ribbonColor =
-                        colorManager(
-                            stream.leftVal
-                        );
-
-                }
-
-
-                mainGroup
-                    .append("path")
-                    .attr(
-                        "class",
-                        "ribbon-link"
-                    )
-                    .attr(
-                        "d",
-                        path.toString()
-                    )
-                    .attr(
-                        "fill",
-                        ribbonColor
-                    )
-                    .attr(
-                        "fill-opacity",
-                        State.viewMode ===
-                        "paired"
-                            ? 0.55
-                            : 0.45
-                    )
-                    .attr(
-                        "stroke",
-                        ribbonColor
-                    )
-                    .attr(
-                        "stroke-opacity",
-                        0.12
-                    )
-                    .on(
-                        "mouseover",
-                        event => {
-
-                            showTooltip(
-                                event,
-                                `
-                                <strong>Flow Path</strong><br>
-                                ${escapeHtml(
-                                    leftDimension
-                                )}
-                               :
-                                ${escapeHtml(
-                                    stream.leftVal
-                                )}
-                                →
-                                ${escapeHtml(
-                                    rightDimension
-                                )}
-                               :
-                                ${escapeHtml(
-                                    stream.rightVal
-                                )}
-                                <br><br>
-                                <strong>Records:</strong>
-                                ${stream.volume}
-                                `
-                            );
-
-                        }
-                    )
-                    .on(
-                        "mouseout",
-                        hideTooltip
-                    );
-
-            }
-        );
-
-    }
-
-
-    /*
-     * Chart title.
-     */
-
-    mainGroup
-        .append("text")
-        .attr(
-            "x",
-            innerWidth / 2
-        )
-        .attr(
-            "y",
-            -52
-        )
-        .attr(
-            "text-anchor",
-            "middle"
-        )
-        .attr(
-            "font-size",
-            "18px"
-        )
-        .attr(
-            "font-weight",
-            "700"
-        )
-        .attr(
-            "fill",
-            "#ffffff"
-        )
-        .text(
-            State.viewMode ===
-            "paired"
-                ? "Paired Mode"
-                : "Standard Mode"
-        );
+    animate();
 
 }
 
 
 /* =========================================================
-   14. TOOLTIP
-   ========================================================= */
+   DRAW 3D PPC
+========================================================= */
 
-function showTooltip(
-    event,
-    markup
-) {
+function drawChart() {
 
-    const tooltip =
-        document.getElementById(
-            "chart-tooltip"
+    State.axisObjects = [];
+
+
+    const dimensions =
+        State.axisOrder.filter(
+            dimension =>
+                State.selectedDimensions.includes(
+                    dimension
+                )
         );
 
-    if (!tooltip) {
+
+    if (
+        dimensions.length < 3
+    ) {
+
         return;
     }
 
 
-    tooltip.innerHTML =
-        markup;
+    const axisSpacing =
+        260;
 
 
-    tooltip.classList.remove(
-        "hidden"
+    const startX =
+        -(
+            dimensions.length - 1
+        ) *
+        axisSpacing /
+        2;
+
+
+    dimensions.forEach(
+        (dimension, index) => {
+
+            const x =
+                startX +
+                index *
+                axisSpacing;
+
+
+            const axisGroup =
+                new THREE.Group();
+
+
+            axisGroup.position.x =
+                x;
+
+
+            axisGroup.userData = {
+
+                dimension,
+
+                index
+
+            };
+
+
+            State.scene.add(
+                axisGroup
+            );
+
+
+            drawAxis(
+                axisGroup,
+                dimension
+            );
+
+
+            State.axisObjects.push(
+                axisGroup
+            );
+
+        }
     );
 
 
-    tooltip.style.position =
-        "fixed";
+    /*
+     * Draw connecting flows.
+     */
 
+    for (
+        let i = 0;
+        i < dimensions.length - 1;
+        i++
+    ) {
 
-    tooltip.style.left =
-        `${event.clientX + 16}px`;
-
-
-    tooltip.style.top =
-        `${event.clientY + 16}px`;
-
-}
-
-
-function hideTooltip() {
-
-    const tooltip =
-        document.getElementById(
-            "chart-tooltip"
-        );
-
-    if (tooltip) {
-
-        tooltip.classList.add(
-            "hidden"
+        drawConnections(
+            dimensions[i],
+            dimensions[i + 1],
+            State.axisObjects[i],
+            State.axisObjects[i + 1]
         );
 
     }
@@ -1944,10 +1231,1420 @@ function hideTooltip() {
 
 
 /* =========================================================
-   15. HTML ESCAPING
-   ========================================================= */
+   DRAW AXIS
+========================================================= */
 
-function escapeHtml(value) {
+function drawAxis(
+    group,
+    dimension
+) {
+
+    const values =
+        getValues(
+            dimension
+        );
+
+
+    const frequencies =
+        getFrequencies(
+            dimension,
+            values
+        );
+
+
+    const total =
+        State.rawRecords.length;
+
+
+    const height =
+        360;
+
+
+    const width =
+        55;
+
+
+    const gap =
+        7;
+
+
+    const available =
+        height -
+        gap *
+        Math.max(
+            0,
+            values.length - 1
+        );
+
+
+    let y =
+        0;
+
+
+    const pivot =
+        dimension ===
+        State.activePivotAxis;
+
+
+    values.forEach(
+        value => {
+
+            const proportion =
+                frequencies[value] /
+                total;
+
+
+            const segmentHeight =
+                Math.max(
+                    10,
+                    proportion *
+                    available
+                );
+
+
+            const geometry =
+                new THREE.BoxGeometry(
+                    width,
+                    segmentHeight,
+                    width
+                );
+
+
+            const color =
+                getCategoryColor(
+                    value,
+                    dimension
+                );
+
+
+            const material =
+                new THREE.MeshStandardMaterial({
+
+                    color,
+
+                    transparent:
+                        true,
+
+                    opacity:
+                        pivot
+                            ? 1
+                            : 0.85,
+
+                    roughness:
+                        0.55,
+
+                    metalness:
+                        0.08
+
+                });
+
+
+            const mesh =
+                new THREE.Mesh(
+                    geometry,
+                    material
+                );
+
+
+            mesh.position.y =
+                y +
+                segmentHeight /
+                2 +
+                15;
+
+
+            mesh.userData = {
+
+                dimension,
+
+                category:
+                    value,
+
+                count:
+                    frequencies[value]
+
+            };
+
+
+            group.add(
+                mesh
+            );
+
+
+            /*
+             * Category label.
+             */
+
+            addTextSprite(
+                group,
+                String(value),
+                width + 20,
+                mesh.position.y,
+                pivot
+                    ? "#ffffff"
+                    : "#b7c7d8"
+            );
+
+
+            y +=
+                segmentHeight +
+                gap;
+
+        }
+    );
+
+
+    /*
+     * Axis floor.
+     */
+
+    const axisGeometry =
+        new THREE.BoxGeometry(
+            5,
+            height + 30,
+            5
+        );
+
+
+    const axisMaterial =
+        new THREE.MeshBasicMaterial({
+            color:
+                pivot
+                    ? 0xf59e0b
+                    : 0x6b8aa8
+        });
+
+
+    const axisLine =
+        new THREE.Mesh(
+            axisGeometry,
+            axisMaterial
+        );
+
+
+    axisLine.position.y =
+        height / 2;
+
+
+    group.add(
+        axisLine
+    );
+
+
+    /*
+     * Dimension label.
+     */
+
+    addTextSprite(
+        group,
+        pivot
+            ? `★ ${dimension}`
+            : dimension,
+        0,
+        height + 45,
+        pivot
+            ? "#f59e0b"
+            : "#ffffff",
+        true
+    );
+
+}
+
+
+/* =========================================================
+   DRAW CONNECTIONS
+========================================================= */
+
+function drawConnections(
+    leftDimension,
+    rightDimension,
+    leftAxis,
+    rightAxis
+) {
+
+    const aggregates = {};
+
+
+    State.rawRecords.forEach(
+        record => {
+
+            const left =
+                record[
+                    leftDimension
+                ];
+
+            const right =
+                record[
+                    rightDimension
+                ];
+
+
+            const pivot =
+                record[
+                    State.activePivotAxis
+                ];
+
+
+            const key =
+                State.viewMode ===
+                "standard"
+
+                    ? `${left}|||${right}|||${pivot}`
+
+                    : `${left}|||${right}`;
+
+
+            if (
+                !aggregates[key]
+            ) {
+
+                aggregates[key] = {
+
+                    left,
+
+                    right,
+
+                    pivot,
+
+                    count: 0
+
+                };
+
+            }
+
+
+            aggregates[key].count++;
+
+        }
+    );
+
+
+    const leftValues =
+        getValues(
+            leftDimension
+        );
+
+
+    const rightValues =
+        getValues(
+            rightDimension
+        );
+
+
+    const leftY =
+        calculateCenters(
+            leftDimension,
+            leftValues
+        );
+
+
+    const rightY =
+        calculateCenters(
+            rightDimension,
+            rightValues
+        );
+
+
+    Object.values(
+        aggregates
+    ).forEach(
+        stream => {
+
+            const y1 =
+                leftY[
+                    stream.left
+                ];
+
+
+            const y2 =
+                rightY[
+                    stream.right
+                ];
+
+
+            if (
+                y1 === undefined ||
+                y2 === undefined
+            ) {
+
+                return;
+            }
+
+
+            const curve =
+                new THREE.CatmullRomCurve3([
+                    new THREE.Vector3(
+                        leftAxis.position.x,
+                        y1,
+                        0
+                    ),
+
+                    new THREE.Vector3(
+                        (
+                            leftAxis.position.x +
+                            rightAxis.position.x
+                        ) / 2,
+                        (
+                            y1 + y2
+                        ) / 2,
+                        45
+                    ),
+
+                    new THREE.Vector3(
+                        rightAxis.position.x,
+                        y2,
+                        0
+                    )
+                ]);
+
+
+            const points =
+                curve.getPoints(
+                    24
+                );
+
+
+            const geometry =
+                new THREE.BufferGeometry()
+                    .setFromPoints(
+                        points
+                    );
+
+
+            const color =
+                State.viewMode ===
+                "standard"
+
+                    ? getCategoryColor(
+                        stream.pivot,
+                        State.activePivotAxis
+                    )
+
+                    : getCategoryColor(
+                        stream.left,
+                        leftDimension
+                    );
+
+
+            const material =
+                new THREE.LineBasicMaterial({
+
+                    color,
+
+                    transparent:
+                        true,
+
+                    opacity:
+                        State.viewMode ===
+                        "paired"
+                            ? 0.48
+                            : 0.35
+
+                });
+
+
+            const line =
+                new THREE.Line(
+                    geometry,
+                    material
+                );
+
+
+            line.userData = {
+
+                left:
+                    stream.left,
+
+                right:
+                    stream.right,
+
+                count:
+                    stream.count
+
+            };
+
+
+            State.scene.add(
+                line
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CATEGORY HELPERS
+========================================================= */
+
+function getValues(
+    dimension
+) {
+
+    return [
+        ...new Set(
+            State.rawRecords.map(
+                record =>
+                    record[
+                        dimension
+                    ]
+            )
+        )
+    ];
+
+}
+
+
+function getFrequencies(
+    dimension,
+    values
+) {
+
+    const result = {};
+
+
+    values.forEach(
+        value => {
+
+            result[value] =
+                0;
+
+        }
+    );
+
+
+    State.rawRecords.forEach(
+        record => {
+
+            if (
+                result[
+                    record[dimension]
+                ] !== undefined
+            ) {
+
+                result[
+                    record[dimension]
+                ]++;
+
+            }
+
+        }
+    );
+
+
+    return result;
+
+}
+
+
+function calculateCenters(
+    dimension,
+    values
+) {
+
+    const frequencies =
+        getFrequencies(
+            dimension,
+            values
+        );
+
+
+    const result = {};
+
+
+    let y = 25;
+
+
+    const height = 360;
+
+    const gap = 7;
+
+    const usable =
+        height -
+        gap *
+        Math.max(
+            0,
+            values.length - 1
+        );
+
+
+    values.forEach(
+        value => {
+
+            const h =
+                Math.max(
+                    10,
+                    (
+                        frequencies[value] /
+                        State.rawRecords.length
+                    ) *
+                    usable
+                );
+
+
+            result[value] =
+                y +
+                h / 2;
+
+
+            y +=
+                h +
+                gap;
+
+        }
+    );
+
+
+    return result;
+
+}
+
+
+/* =========================================================
+   COLORS
+========================================================= */
+
+const CategoryColors = [
+
+    0x38bdf8,
+
+    0xf59e0b,
+
+    0x22c55e,
+
+    0xf43f5e,
+
+    0xa78bfa,
+
+    0x14b8a6,
+
+    0xfb7185,
+
+    0xfacc15,
+
+    0x60a5fa,
+
+    0xc084fc
+
+];
+
+
+const categoryColorMap =
+    new Map();
+
+
+function getCategoryColor(
+    value,
+    dimension
+) {
+
+    const key =
+        `${dimension}:${value}`;
+
+
+    if (
+        !categoryColorMap.has(
+            key
+        )
+    ) {
+
+        categoryColorMap.set(
+            key,
+            CategoryColors[
+                categoryColorMap.size %
+                CategoryColors.length
+            ]
+        );
+
+    }
+
+
+    return categoryColorMap.get(
+        key
+    );
+
+}
+
+
+/* =========================================================
+   TEXT SPRITES
+========================================================= */
+
+function addTextSprite(
+    parent,
+    text,
+    x,
+    y,
+    color = "#ffffff",
+    large = false
+) {
+
+    const canvas =
+        document.createElement(
+            "canvas"
+        );
+
+
+    const context =
+        canvas.getContext(
+            "2d"
+        );
+
+
+    const fontSize =
+        large
+            ? 34
+            : 22;
+
+
+    context.font =
+        `700 ${fontSize}px Arial`;
+
+
+    const width =
+        context.measureText(
+            text
+        ).width +
+        24;
+
+
+    canvas.width =
+        width;
+
+
+    canvas.height =
+        fontSize +
+        20;
+
+
+    context.font =
+        `700 ${fontSize}px Arial`;
+
+
+    context.fillStyle =
+        color;
+
+
+    context.textAlign =
+        "center";
+
+
+    context.textBaseline =
+        "middle";
+
+
+    context.fillText(
+        text,
+        width / 2,
+        canvas.height / 2
+    );
+
+
+    const texture =
+        new THREE.CanvasTexture(
+            canvas
+        );
+
+
+    texture.needsUpdate =
+        true;
+
+
+    const material =
+        new THREE.SpriteMaterial({
+
+            map:
+                texture,
+
+            transparent:
+                true,
+
+            depthWrite:
+                false
+
+        });
+
+
+    const sprite =
+        new THREE.Sprite(
+            material
+        );
+
+
+    sprite.position.set(
+        x,
+        y,
+        35
+    );
+
+
+    sprite.scale.set(
+        width / 3,
+        canvas.height / 3,
+        1
+    );
+
+
+    parent.add(
+        sprite
+    );
+
+}
+
+
+/* =========================================================
+   MOUSE / 3D INTERACTION
+========================================================= */
+
+function setupMouseControls() {
+
+    const canvas =
+        State.renderer.domElement;
+
+
+    State.raycaster =
+        new THREE.Raycaster();
+
+
+    State.mouse =
+        new THREE.Vector2();
+
+
+    let rotating = false;
+
+    let lastX = 0;
+
+    let lastY = 0;
+
+
+    canvas.addEventListener(
+        "pointerdown",
+        event => {
+
+            lastX =
+                event.clientX;
+
+            lastY =
+                event.clientY;
+
+
+            State.mouse.x =
+                (
+                    event.clientX /
+                    canvas.clientWidth
+                ) *
+                2 -
+                1;
+
+
+            State.mouse.y =
+                -(
+                    event.clientY /
+                    canvas.clientHeight
+                ) *
+                2 +
+                1;
+
+
+            State.raycaster.setFromCamera(
+                State.mouse,
+                State.camera
+            );
+
+
+            const hits =
+                State.raycaster.intersectObjects(
+                    State.axisObjects,
+                    true
+                );
+
+
+            if (
+                hits.length
+            ) {
+
+                let object =
+                    hits[0].object;
+
+
+                while (
+                    object.parent &&
+                    !State.axisObjects.includes(
+                        object
+                    )
+                ) {
+
+                    object =
+                        object.parent;
+
+                }
+
+
+                if (
+                    State.axisObjects.includes(
+                        object
+                    )
+                ) {
+
+                    State.draggingAxis =
+                        object;
+
+                    State.dragStartX =
+                        event.clientX;
+
+                    State.originalAxisX =
+                        object.position.x;
+
+                    return;
+                }
+
+            }
+
+
+            rotating = true;
+
+        }
+    );
+
+
+    canvas.addEventListener(
+        "pointermove",
+        event => {
+
+            const dx =
+                event.clientX -
+                lastX;
+
+
+            const dy =
+                event.clientY -
+                lastY;
+
+
+            lastX =
+                event.clientX;
+
+            lastY =
+                event.clientY;
+
+
+            if (
+                State.draggingAxis
+            ) {
+
+                State.draggingAxis.position.x =
+                    State.originalAxisX +
+                    (
+                        event.clientX -
+                        State.dragStartX
+                    ) *
+                    1.5;
+
+                return;
+
+            }
+
+
+            if (rotating) {
+
+                State.scene.rotation.y +=
+                    dx * 0.006;
+
+                State.scene.rotation.x +=
+                    dy * 0.004;
+
+            }
+
+        }
+    );
+
+
+    canvas.addEventListener(
+        "pointerup",
+        () => {
+
+            if (
+                State.draggingAxis
+            ) {
+
+                reorderDraggedAxis();
+
+            }
+
+
+            State.draggingAxis =
+                null;
+
+            rotating =
+                false;
+
+        }
+    );
+
+
+    canvas.addEventListener(
+        "wheel",
+        event => {
+
+            event.preventDefault();
+
+
+            State.camera.position.z +=
+                event.deltaY *
+                0.7;
+
+
+            State.camera.position.z =
+                THREE.MathUtils.clamp(
+                    State.camera.position.z,
+                    350,
+                    1500
+                );
+
+        },
+        {
+            passive: false
+        }
+    );
+
+
+    canvas.addEventListener(
+        "click",
+        event => {
+
+            if (
+                Math.abs(
+                    event.clientX -
+                    State.dragStartX
+                ) > 8
+            ) {
+
+                return;
+
+            }
+
+
+            State.mouse.x =
+                (
+                    event.clientX /
+                    canvas.clientWidth
+                ) *
+                2 -
+                1;
+
+
+            State.mouse.y =
+                -(
+                    event.clientY /
+                    canvas.clientHeight
+                ) *
+                2 +
+                1;
+
+
+            State.raycaster.setFromCamera(
+                State.mouse,
+                State.camera
+            );
+
+
+            const hits =
+                State.raycaster.intersectObjects(
+                    State.axisObjects,
+                    true
+                );
+
+
+            if (
+                hits.length
+            ) {
+
+                let axis =
+                    hits[0].object;
+
+
+                while (
+                    axis.parent &&
+                    !State.axisObjects.includes(
+                        axis
+                    )
+                ) {
+
+                    axis =
+                        axis.parent;
+
+                }
+
+
+                if (
+                    axis.userData &&
+                    axis.userData.dimension
+                ) {
+
+                    State.activePivotAxis =
+                        axis.userData.dimension;
+
+                    render3D();
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   AXIS REORDERING
+========================================================= */
+
+function reorderDraggedAxis() {
+
+    const axis =
+        State.draggingAxis;
+
+
+    if (!axis) {
+        return;
+    }
+
+
+    const dimension =
+        axis.userData.dimension;
+
+
+    const x =
+        axis.position.x;
+
+
+    let nearestIndex =
+        0;
+
+
+    let nearestDistance =
+        Infinity;
+
+
+    State.axisObjects.forEach(
+        (other, index) => {
+
+            if (
+                other === axis
+            ) {
+                return;
+            }
+
+
+            const distance =
+                Math.abs(
+                    x -
+                    other.position.x
+                );
+
+
+            if (
+                distance <
+                nearestDistance
+            ) {
+
+                nearestDistance =
+                    distance;
+
+                nearestIndex =
+                    index;
+
+            }
+
+        }
+    );
+
+
+    const oldIndex =
+        State.axisOrder.indexOf(
+            dimension
+        );
+
+
+    if (
+        oldIndex === -1
+    ) {
+        return;
+    }
+
+
+    State.axisOrder.splice(
+        oldIndex,
+        1
+    );
+
+
+    State.axisOrder.splice(
+        nearestIndex,
+        0,
+        dimension
+    );
+
+
+    render3D();
+
+}
+
+
+/* =========================================================
+   RESET AXIS ORDER
+========================================================= */
+
+function resetAxisOrder() {
+
+    State.axisOrder =
+        DatasetConfig[
+            State.activeDataset
+        ].dimensions.slice();
+
+
+    State.selectedDimensions =
+        State.axisOrder.slice();
+
+
+    State.activePivotAxis =
+        State.axisOrder[
+            State.axisOrder.length - 1
+        ];
+
+
+    renderDimensionControls();
+
+    render3D();
+
+}
+
+
+/* =========================================================
+   RESET CAMERA
+========================================================= */
+
+function resetCamera() {
+
+    if (
+        !State.camera ||
+        !State.scene
+    ) {
+
+        return;
+    }
+
+
+    State.camera.position.set(
+        0,
+        420,
+        850
+    );
+
+
+    State.camera.lookAt(
+        0,
+        150,
+        0
+    );
+
+
+    State.scene.rotation.set(
+        0,
+        0,
+        0
+    );
+
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+function animate() {
+
+    State.animationId =
+        requestAnimationFrame(
+            animate
+        );
+
+
+    if (
+        State.renderer &&
+        State.scene &&
+        State.camera
+    ) {
+
+        State.renderer.render(
+            State.scene,
+            State.camera
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DESTROY SCENE
+========================================================= */
+
+function destroyScene() {
+
+    if (
+        State.animationId
+    ) {
+
+        cancelAnimationFrame(
+            State.animationId
+        );
+
+        State.animationId =
+            null;
+
+    }
+
+
+    if (
+        State.renderer
+    ) {
+
+        State.renderer.dispose();
+
+    }
+
+
+    const container =
+        document.getElementById(
+            "parallel-chart-canvas"
+        );
+
+
+    if (container) {
+
+        container.innerHTML =
+            "";
+
+    }
+
+
+    State.scene =
+        null;
+
+    State.camera =
+        null;
+
+    State.renderer =
+        null;
+
+    State.axisObjects =
+        [];
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function updateStatus() {
+
+    const status =
+        document.getElementById(
+            "ppc-status"
+        );
+
+
+    if (!status) {
+        return;
+    }
+
+
+    status.innerHTML = `
+
+        <div>
+            <strong>Records:</strong>
+            ${State.rawRecords.length}
+        </div>
+
+        <div>
+            <strong>Dimensions:</strong>
+            ${State.selectedDimensions.length}
+        </div>
+
+        <div>
+            <strong>Pivot:</strong>
+            ${escapeHTML(
+                State.activePivotAxis ||
+                "—"
+            )}
+        </div>
+
+        <div>
+            <strong>Mode:</strong>
+            ${
+                State.viewMode ===
+                "paired"
+                    ? "Paired"
+                    : "Standard"
+            }
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   CHART MESSAGE
+========================================================= */
+
+function showChartMessage(
+    message
+) {
+
+    const container =
+        document.getElementById(
+            "parallel-chart-canvas"
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    container.innerHTML = `
+
+        <div style="
+            height:100%;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            color:#aabbd0;
+            font-size:18px;
+            text-align:center;
+        ">
+
+            ${escapeHTML(message)}
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(
+    value
+) {
 
     return String(value)
 
@@ -1980,52 +2677,89 @@ function escapeHtml(value) {
 
 
 /* =========================================================
-   16. CAPITALIZE
-   ========================================================= */
+   CAPITALIZE
+========================================================= */
 
-function capitalize(value) {
+function capitalize(
+    value
+) {
 
-    if (!value) {
-        return "";
-    }
-
-    return (
-        value.charAt(0).toUpperCase() +
-        value.slice(1)
-    );
+    return value
+        ? value.charAt(0).toUpperCase() +
+          value.slice(1)
+        : "";
 
 }
 
 
 /* =========================================================
-   17. DEBOUNCE
-   ========================================================= */
+   RESIZE
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    debounce(
+        () => {
+
+            if (
+                State.renderer &&
+                State.camera
+            ) {
+
+                const container =
+                    document.getElementById(
+                        "parallel-chart-canvas"
+                    );
+
+
+                const width =
+                    container.clientWidth;
+
+
+                const height =
+                    container.clientHeight;
+
+
+                State.camera.aspect =
+                    width / height;
+
+
+                State.camera.updateProjectionMatrix();
+
+
+                State.renderer.setSize(
+                    width,
+                    height
+                );
+
+            }
+
+        },
+        150
+    )
+);
+
+
+/* =========================================================
+   DEBOUNCE
+========================================================= */
 
 function debounce(
     callback,
     delay
 ) {
 
-    let timeoutToken = null;
+    let timer;
 
-
-    return function (...args) {
+    return function () {
 
         clearTimeout(
-            timeoutToken
+            timer
         );
 
-
-        timeoutToken =
+        timer =
             setTimeout(
-                () => {
-
-                    callback.apply(
-                        this,
-                        args
-                    );
-
-                },
+                callback,
                 delay
             );
 
@@ -2035,69 +2769,58 @@ function debounce(
 
 
 /* =========================================================
-   18. PUBLIC PPC API
-   ========================================================= */
+   PUBLIC API
+========================================================= */
 
 window.PPC = {
 
-    State: State,
+    State,
 
-    switchDataset:
-        switchDataset,
+    switchDataset,
 
     render:
-        renderPPCChart,
+        render3D,
 
-    setMode:
-        function (mode) {
+    setMode(mode) {
 
-            if (
-                mode !== "standard" &&
-                mode !== "paired"
-            ) {
+        if (
+            mode !==
+            "standard" &&
+            mode !==
+            "paired"
+        ) {
 
-                return;
-
-            }
-
-            State.viewMode =
-                mode;
-
-            renderPPCChart();
-
-        },
-
-    setPivot:
-        function (dimension) {
-
-            if (
-                State.selectedDimensions.includes(
-                    dimension
-                )
-            ) {
-
-                State.activePivotAxis =
-                    dimension;
-
-                renderPPCChart();
-
-            }
-
-        },
-
-    getDimensions:
-        function () {
-
-            return [
-                ...State.selectedDimensions
-            ];
+            return;
 
         }
 
+        State.viewMode =
+            mode;
+
+        render3D();
+
+    },
+
+    setPivot(dimension) {
+
+        if (
+            State.selectedDimensions.includes(
+                dimension
+            )
+        ) {
+
+            State.activePivotAxis =
+                dimension;
+
+            render3D();
+
+        }
+
+    },
+
+    resetAxisOrder,
+
+    resetCamera
+
 };
-
-
-/* =========================================================
-   END OF APP.JS
-   ========================================================= */
 
