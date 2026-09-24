@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pivoting Parallel Charts - Advanced Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Load D3.js via CDN -->
+    <script src="https://cloudflare.com"></script>
+</head>
+<body>
+
+    <!-- Upper Dataset Tabs Header -->
+    <header class="app-header">
+        <nav class="dataset-tabs">
+            <button class="tab-btn active" data-dataset="titanic">Titanic</button>
+            <button class="tab-btn" data-dataset="mushrooms">Mushrooms</button>
+            <button class="tab-btn" data-dataset="covid">Covid</button>
+            <button class="tab-btn" data-dataset="survey">Survey</button>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Sidebar Controls Dashboard Grid -->
+        <aside class="control-panel">
+            <div class="control-group">
+                <h3>Visualization Mode</h3>
+                <div class="mode-toggle">
+                    <label class="radio-label">
+                        <input type="radio" name="viewMode" value="standard" checked>
+                        <span>Standard Mode</span>
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="viewMode" value="paired">
+                        <span>Paired Mode</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Select 3 or more dimensions to visualize</h3>
+                <div id="dimension-selector-box" class="checkbox-list">
+                    <!-- JavaScript dynamically populates checkboxes based on dataset -->
+                </div>
+                <p id="dimension-warning" class="warning-text hidden">Please select at least 3 dimensions.</p>
+            </div>
+        </aside>
+
+        <!-- Dynamic Chart Rendering Workspace -->
+        <section class="chart-workspace">
+            <div class="workspace-header">
+                <h2 id="active-dataset-title">Titanic Dataset Parallel Analysis</h2>
+                <p class="hint-text">Click an axis header to designate it as the active <strong>Pivot Axis</strong>.</p>
+            </div>
+            
+            <div id="parallel-chart-canvas">
+                <!-- SVG Canvas dynamically injected here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Shared Tooltip Component -->
+    <div id="chart-tooltip" class="tooltip hidden"></div>
+
+    <script src="app1.js"></script>
+</body>
+</html>
