@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CISC 0681 | Modern 3D Avatar Lab</title>
-    <!-- Tailwind CSS CDN for a clean dark-mode developer UI -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Realistic 3D Character Studio</title>
+    <!-- Tailwind CSS Engine -->
+    <script src="https://jsdelivr.net"></script>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #0a0e17;
+            background-color: #05070f;
+            color: #f8fafc;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         #container {
@@ -21,63 +22,49 @@
             height: 100vh;
             z-index: 1;
         }
-        /* Custom styling override for lil-gui to blend into our modern interface seamlessly */
+        /* Custom Premium Overrides for lil-gui mapping */
         .lil-gui {
-            --background-color: rgba(15, 23, 42, 0.85) !important;
+            --background-color: rgba(15, 23, 42, 0.75) !important;
             --text-color: #e2e8f0 !important;
             --title-background-color: rgba(30, 41, 59, 0.9) !important;
             --widget-color: #334155 !important;
             --hover-color: #475569 !important;
             --focus-color: #6366f1 !important;
+            --number-color: #38bdf8 !important;
+            --string-color: #34d399 !important;
             font-family: monospace !important;
             border-radius: 12px !important;
             overflow: hidden !important;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5) !important;
-            border: 1px solid rgba(51, 65, 85, 0.5) !important;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
             backdrop-filter: blur(12px) !important;
         }
+        .lil-gui .title { font-weight: 700 !important; letter-spacing: 0.05em !important; }
     </style>
 </head>
 <body>
 
-    <!-- WebGL Canvas Container -->
     <div id="container"></div>
 
-    <!-- Minimal HUD Interface -->
-    <div class="absolute top-0 left-0 w-full h-full pointer-events-none z-10 flex flex-col justify-between p-6">
-        <!-- Dashboard Header -->
-        <header class="pointer-events-auto bg-slate-900/80 backdrop-blur-md border border-slate-800 rounded-2xl p-4 shadow-2xl max-w-sm flex items-center justify-between transition-all duration-300 hover:border-indigo-500/50">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow-md shadow-indigo-500/20">3D</div>
-                <div>
-                    <h1 class="text-slate-200 font-bold tracking-wide text-xs m-0 uppercase">Graphics Sandbox</h1>
-                    <p class="text-indigo-400 font-mono text-[10px] mt-0.5">LOADED: avatar2.js</p>
-                </div>
-            </div>
-            <span class="flex h-2 w-2 relative">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-            </span>
+    <!-- Sleek Minimalist Top HUD Overlay -->
+    <div class="absolute top-6 left-6 z-10 pointer-events-none flex flex-col gap-2">
+        <header class="pointer-events-auto bg-slate-950/70 backdrop-blur-xl border border-white/5 rounded-xl px-5 py-3 shadow-2xl max-w-xs">
+            <h1 class="text-white font-bold tracking-wider text-xs uppercase">Character Studio</h1>
+            <p class="text-slate-400 text-[10px] tracking-widest mt-0.5 uppercase">PBR Rendering Core v2.0</p>
         </header>
-
-        <!-- Dynamic User Interaction Hints -->
-        <footer class="pointer-events-auto bg-slate-900/70 backdrop-blur-md border border-slate-800/60 rounded-xl px-4 py-2.5 text-center font-mono text-[10px] text-slate-400 self-center shadow-xl tracking-wider uppercase border-b-2 border-b-indigo-500">
-            [Left-Click + Drag] Orbit • [Scroll] Zoom • [Right-Click + Drag] Pan
-        </footer>
     </div>
 
-    <!-- Modular Script Imports using Native Browser Import Maps -->
+    <!-- Import Map Mapping Infrastructure -->
     <script type="importmap">
         {
             "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+                "three": "https://unpkg.com",
+                "three/addons/": "https://unpkg.com"
             }
         }
     </script>
 
-    <!-- Main Module Loading Layer -->
+    <!-- Run Logic System File -->
     <script type="module" src="./avatar2.js"></script>
-
 </body>
 </html>
