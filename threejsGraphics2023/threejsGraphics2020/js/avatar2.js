@@ -1,6 +1,8 @@
-import * as THREE from 'three';
+//import * as THREE from 'three';
+import * as THREE from './node_modules/three/build/three.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+// From a local file path
 
 // 1. Global Application State Object
 const state = {
