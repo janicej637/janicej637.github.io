@@ -1,0 +1,175 @@
+:root {
+    --bg-main: #141619;
+    --bg-panel: #1f2327;
+    --accent-color: #00bc8c;
+    --text-primary: #ffffff;
+    --text-muted: #9aa0a6;
+    --border-color: #343a40;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    overflow-x: hidden;
+}
+
+/* Header & Tabs */
+.app-header {
+    background-color: var(--bg-panel);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 20px;
+}
+
+.dataset-tabs {
+    display: flex;
+    gap: 5px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: 15px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover, .tab-btn.active {
+    color: var(--text-primary);
+    border-bottom: 3px solid var(--accent-color);
+}
+
+/* Layout Dashboard Layout */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    height: calc(100vh - 52px);
+}
+
+.control-panel {
+    background-color: var(--bg-panel);
+    border-right: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.control-group h3 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+/* Toggle Switch Styling */
+.mode-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Checkbox Selection Lists */
+.checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.warning-text {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Rendering Canvas */
+.chart-workspace {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.workspace-header h2 {
+    margin: 0 0 5px 0;
+    font-size: 22px;
+}
+
+.hint-text {
+    margin: 0 0 20px 0;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+#parallel-chart-canvas {
+    flex-grow: 1;
+    background-color: #1a1d21;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    position: relative;
+}
+
+/* Dynamic D3 Parallel Set SVG Element Classes */
+.axis-column-group {
+    cursor: pointer;
+}
+
+.axis-header-text {
+    fill: var(--text-primary);
+    font-weight: bold;
+    font-size: 14px;
+    text-anchor: middle;
+}
+
+.axis-header-text.pivot-active {
+    fill: var(--accent-color);
+    text-decoration: underline;
+}
+
+.ribbon-link {
+    fill-opacity: 0.35;
+    transition: fill-opacity 0.2s;
+}
+
+.ribbon-link:hover {
+    fill-opacity: 0.7;
+}
+
+/* Tooltips */
+.tooltip {
+    position: absolute;
+    background: rgba(20, 22, 25, 0.95);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
