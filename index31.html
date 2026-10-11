@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Computer Basics Game</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:24px;
+    background:#eef3ff;color:#1b2340;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  #app{width:100%;max-width:560px}
+  .top{display:flex;justify-content:space-between;font-weight:700;margin-bottom:12px}
+  .card{background:#fff;border-radius:18px;padding:26px;box-shadow:0 6px 20px rgba(30,50,120,.12);text-align:center}
+  h1,h2{margin:0 0 8px} p{font-size:1.1rem;line-height:1.5;margin:8px 0 16px}
+  .emoji{font-size:3.5rem}
+  button{font:inherit;font-size:1.1rem;cursor:pointer;border:0;border-radius:12px;padding:14px 20px;background:#dde5ff;color:#1b2340;margin:4px}
+  button:hover{background:#c9d5ff}
+  button.go{background:#3b6cff;color:#fff;font-weight:700}
+  button.go:hover{background:#2b58e0}
+  .big{font-size:2.2rem;font-weight:800;margin:10px 0}
+  .thing{font-size:1.6rem;background:#fff6d6;border-radius:14px;padding:18px;margin:10px 0}
+  .row{display:flex;justify-content:center;flex-wrap:wrap}
+  .row button{flex:1 1 130px}
+  .msg{min-height:1.6em;font-weight:700;margin:10px 0}
+  .good{color:#12906b} .bad{color:#d33a4f}
+  .bits button{width:64px;height:76px;font-size:1.8rem;font-family:ui-monospace,Menlo,monospace}
+  .bits button.on{background:#3b6cff;color:#fff}
+  .pv{font-size:.9rem;color:#5b6690}
+  .bit{display:inline-block;margin:4px}
+  .shake{animation:s .3s} @keyframes s{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top"><span id="level"></span><span>⭐ <span id="stars">0</span></span></div>
+  <div id="stage"></div>
+</div>
+
+<script>
+(function(){
+  var stage=document.getElementById('stage'), stars=0, step=0;
+  function el(t,c,h){var e=document.createElement(t); if(c)e.className=c; if(h!==undefined)e.innerHTML=h; return e;}
+  function show(card){stage.innerHTML=''; stage.appendChild(card);}
+  function addStar(n){stars+=n; document.getElementById('stars').textContent=stars;}
+  function label(t){document.getElementById('level').textContent=t;}
+  function shake(n){n.classList.remove('shake'); void n.offsetWidth; n.classList.add('shake');}
+
+  function home(){
+    stars=0; addStar(0); label('');
+    var c=el('div','card','<div class="emoji">💻</div><h1>Computer Basics</h1><p>Three quick games. Let\'s learn how computers work!</p>');
+    var b=el('button','go','Play'); b.onclick=game1; c.appendChild(b); show(c);
+  }
+
+  function next(title, text, nextFn, nextLabel){
+    var c=el('div','card','<div class="emoji">🎉</div><h2>'+title+'</h2><p>'+text+'</p>');
+    var b=el('button','go',nextLabel); b.onclick=nextFn; c.appendChild(b); show(c);
+  }
+
+  /* Game 1: sort */
+  function game1(){
+    label('Game 1 of 3');
+    var items=[['⌨️ Keyboard','in'],['🖱️ Mouse','in'],['🖥️ Screen','out'],['🔊 Speaker','out'],['🧠 CPU (the brain)','inside'],['💾 Storage','inside']];
+    items.sort(function(){return Math.random()-.5;});
+    var i=0;
+    var c=el('div','card','<h2>Sort the parts</h2><p>Where does this part belong?</p>');
+    var thing=el('div','thing'); c.appendChild(thing);
+    var row=el('div','row'); c.appendChild(row);
+    var msg=el('div','msg'); c.appendChild(msg);
+    c.appendChild(el('p','', '<small>Input = you send things in. Output = the computer shows you. Inside = thinks and saves.</small>'));
+    function load(){thing.textContent=items[i][0]; msg.textContent='';}
+    [['Input','in'],['Output','out'],['Inside','inside']].forEach(function(o){
+      var b=el('button','',o[0]);
+      b.onclick=function(){
+        if(o[1]===items[i][1]){
+          addStar(1); msg.className='msg good'; msg.textContent='Yes!'; i++;
+          setTimeout(function(){ if(i>=items.length) next('Nice!','Input devices send things in. Output devices show results. The CPU thinks and storage saves your files.',game2,'Next game'); else {msg.className='msg'; load();} },500);
+        } else {shake(thing); msg.className='msg bad'; msg.textContent='Try again';}
+      };
+      row.appendChild(b);
+    });
+    load(); show(c);
+  }
+
+  /* Game 2: binary */
+  function game2(){
+    label('Game 2 of 3');
+    var targets=[2,5,9], r=0, vals=[8,4,2,1];
+    var c=el('div','card'); show(c);
+    function round(){
+      var bits=[0,0,0,0];
+      c.innerHTML='<h2>Make the number</h2><p>Computers use only 1 and 0. Tap the boxes to add up to:</p><div class="big">'+targets[r]+'</div>';
+      var wrap=el('div','bits'); c.appendChild(wrap);
+      vals.forEach(function(v,k){
+        var d=el('div','bit'); var b=el('button','','0');
+        b.onclick=function(){bits[k]^=1; b.textContent=bits[k]; b.classList.toggle('on',!!bits[k]); sum.textContent='Total: '+total(); msg.textContent='';};
+        d.appendChild(b); d.appendChild(el('div','pv','worth '+v)); wrap.appendChild(d);
+      });
+      function total(){return bits.reduce(function(a,x,j){return a+x*vals[j];},0);}
+      var sum=el('p','','Total: 0'); c.appendChild(sum);
+      var msg=el('div','msg'); c.appendChild(msg);
+      var chk=el('button','go','Check');
+      chk.onclick=function(){
+        if(total()===targets[r]){
+          addStar(1); msg.className='msg good'; msg.textContent='Correct!'; r++;
+          setTimeout(function(){ if(r>=targets.length) next('Great job!','Every photo, song, and game is made of 1s and 0s called bits.',game3,'Last game'); else round(); },600);
+        } else {shake(wrap); msg.className='msg bad'; msg.textContent='Not yet. Try different boxes.';}
+      };
+      c.appendChild(chk);
+    }
+    round();
+  }
+
+  /* Game 3: quiz */
+  function game3(){
+    label('Game 3 of 3');
+    var qs=[
+      ['Which one is a program (software)?',['A mouse','A web browser'],1],
+      ['What happens to your unsaved work if the power goes out?',['It is lost','It is saved'],0],
+      ['Which part does the computer\'s thinking?',['CPU','Speaker'],0]
+    ];
+    var i=0;
+    var c=el('div','card'); show(c);
+    function q(){
+      c.innerHTML='<h2>Quick quiz</h2><p>'+qs[i][0]+'</p>';
+      var row=el('div','row'); c.appendChild(row);
+      var msg=el('div','msg'); c.appendChild(msg);
+      qs[i][1].forEach(function(t,k){
+        var b=el('button','',t);
+        b.onclick=function(){
+          if(k===qs[i][2]){
+            addStar(1); msg.className='msg good'; msg.textContent='Right!'; i++;
+            setTimeout(function(){ if(i>=qs.length) done(); else q(); },600);
+          } else {shake(b); msg.className='msg bad'; msg.textContent='Try again';}
+        };
+        row.appendChild(b);
+      });
+    }
+    function done(){
+      var c2=el('div','card','<div class="emoji">🏆</div><h2>You did it!</h2><p>You earned '+stars+' stars. You now know the basics of computers.</p>');
+      var b=el('button','go','Play again'); b.onclick=home; c2.appendChild(b); show(c2);
+    }
+    q();
+  }
+
+  home();
+})();
+</script>
+</body>
+</html>
