@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Byte Quest: Intro to Computers</title>
+<style>
+  :root{
+    --bg:#0f1226; --panel:#1a1f3d; --panel2:#232a52; --ink:#eef1ff; --muted:#9aa3d0;
+    --accent:#4df0c0; --accent2:#7c8cff; --warn:#ffb84d; --bad:#ff6b7a; --good:#4df0c0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 0%,#1d2358 0%,var(--bg) 55%);color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;justify-content:center;padding:20px}
+  #app{width:100%;max-width:820px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  h1{font-size:1.4rem;margin:0;letter-spacing:.5px}
+  h1 span{color:var(--accent)}
+  .stats{display:flex;gap:10px;font-size:.9rem}
+  .pill{background:var(--panel);padding:6px 12px;border-radius:999px;border:1px solid #2f3768}
+  .bar{height:8px;background:var(--panel);border-radius:99px;overflow:hidden;margin-bottom:18px}
+  .bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .4s}
+  .card{background:var(--panel);border:1px solid #2f3768;border-radius:16px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+  h2{margin:0 0 6px;font-size:1.3rem}
+  p{line-height:1.55;color:var(--muted);margin:6px 0 14px}
+  .lesson{background:var(--panel2);border-left:4px solid var(--accent2);padding:10px 14px;border-radius:8px;color:var(--ink);font-size:.95rem;margin:12px 0}
+  button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:10px 16px;background:var(--panel2);color:var(--ink);
+    border:1px solid #3a4480;transition:transform .08s,background .15s}
+  button:hover{background:#2e376b} button:active{transform:scale(.97)}
+  button.primary{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#06122a;font-weight:700;border:0}
+  button:disabled{opacity:.5;cursor:default}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .center{text-align:center}
+  .big{font-size:3rem;margin:4px 0}
+  .feedback{min-height:1.5em;margin-top:10px;font-weight:600}
+  .ok{color:var(--good)} .no{color:var(--bad)}
+  .shake{animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .pop{animation:pop .35s}
+  @keyframes pop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+
+  /* sort game */
+  .items{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;min-height:56px}
+  .item{font-size:1rem}
+  .item.sel{outline:3px solid var(--warn);background:#3a3470}
+  .bins{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+  .bin{background:var(--panel2);border:2px dashed #4a5599;border-radius:12px;padding:12px;min-height:120px;cursor:pointer}
+  .bin:hover{border-color:var(--accent)}
+  .bin h3{margin:0 0 2px;font-size:1rem}
+  .bin small{color:var(--muted);display:block;margin-bottom:8px}
+  .chip{display:inline-block;background:#12162f;border-radius:8px;padding:3px 9px;margin:3px 3px 0 0;font-size:.85rem;color:var(--accent)}
+
+  /* binary */
+  .bits{display:flex;gap:8px;justify-content:center;margin:18px 0;flex-wrap:wrap}
+  .bit{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .bit .pv{font-size:.8rem;color:var(--muted)}
+  .bit button{width:48px;height:60px;font-size:1.6rem;font-family:ui-monospace,Menlo,monospace}
+  .bit button.on{background:var(--accent);color:#06122a;box-shadow:0 0 14px var(--accent)}
+  .target{font-size:2.4rem;font-weight:800;color:var(--warn)}
+  .mono{font-family:ui-monospace,Menlo,monospace}
+
+  /* quiz */
+  .opts{display:grid;gap:10px;margin-top:12px}
+  .opts button{text-align:left}
+  .opts button.right{background:#12483b;border-color:var(--good)}
+  .opts button.wrong{background:#512029;border-color:var(--bad)}
+  .qnum{color:var(--muted);font-size:.85rem}
+
+  /* boot */
+  .steps{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+  ol.built{padding-left:22px;margin:10px 0;color:var(--accent)} ol.built li{margin:4px 0}
+  .scn{font-size:1.05rem;background:var(--panel2);padding:16px;border-radius:12px;margin:12px 0;min-height:70px;color:var(--ink)}
+  .badge{display:inline-block;background:var(--panel2);border:1px solid var(--accent);color:var(--accent);padding:6px 14px;border-radius:999px;margin:6px;font-size:.9rem}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>⚡ Byte <span>Quest</span></h1>
+    <div class="stats">
+      <div class="pill" id="lvlPill">Level 0/5</div>
+      <div class="pill">⭐ <span id="xp">0</span> XP</div>
+    </div>
+  </header>
+  <div class="bar"><div id="prog"></div></div>
+  <main id="stage"></main>
+</div>
+
+<script>
+(function(){
+  const stage = document.getElementById('stage');
+  const state = { xp:0, idx:-1, earned:[] };
+  const TOTAL = 5;
+
+  function el(tag, cls, html){ const e=document.createElement(tag); if(cls) e.className=cls; if(html!==undefined) e.innerHTML=html; return e; }
+  function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+  function addXp(n){ state.xp+=n; document.getElementById('xp').textContent=state.xp; }
+  function setProgress(){
+    document.getElementById('prog').style.width=(Math.max(0,state.idx)/TOTAL*100)+'%';
+    document.getElementById('lvlPill').textContent = state.idx<0 ? 'Ready' : 'Level '+Math.min(state.idx+1,TOTAL)+'/'+TOTAL;
+  }
+  function mount(node){ stage.innerHTML=''; node.classList.add('pop'); stage.appendChild(node); }
+  function shake(n){ n.classList.remove('shake'); void n.offsetWidth; n.classList.add('shake'); }
+
+  /* ---------- Screens ---------- */
+  function start(){
+    state.xp=0; state.idx=-1; state.earned=[]; addXp(0); setProgress();
+    const c = el('div','card center');
+    c.innerHTML = '<div class="big">💻</div><h2>Welcome, Recruit!</h2>' +
+      '<p>Your mission: learn how computers really work. Beat 5 short levels about hardware, binary, memory, booting up, and staying safe online.</p>' +
+      '<p>No experience needed. Wrong answers are fine, that is how we learn!</p>';
+    const b = el('button','primary','Start the quest ▶'); b.onclick=()=>nextLevel();
+    c.appendChild(b); mount(c);
+  }
+
+  function nextLevel(){
+    state.idx++; setProgress();
+    if(state.idx>=TOTAL) return finish();
+    LEVELS[state.idx]();
+  }
+
+  function levelDone(points, badge, lesson){
+    addXp(points); state.earned.push(badge);
+    state.idx_done = state.idx + 1;
+    document.getElementById('prog').style.width=((state.idx+1)/TOTAL*100)+'%';
+    const c = el('div','card center');
+    c.innerHTML = '<div class="big">🎉</div><h2>Level complete!</h2><p>You earned <b style="color:var(--warn)">+'+points+' XP</b> and the badge:</p><div class="badge">'+badge+'</div>' +
+      '<div class="lesson" style="text-align:left">'+lesson+'</div>';
+    const b = el('button','primary', state.idx+1>=TOTAL ? 'See my results ▶' : 'Next level ▶'); b.onclick=nextLevel;
+    c.appendChild(b); mount(c);
+  }
+
+  function finish(){
+    const max = 50+100+75+60+60;
+    const pct = state.xp/max;
+    let rank = pct>.85 ? 'Master Technician 🏆' : pct>.6 ? 'Skilled Operator 🔧' : pct>.35 ? 'Rising Coder 🌱' : 'Curious Beginner 🔍';
+    let best=state.xp;
+    try{ const old=parseInt(localStorage.getItem('bytequest-best')||'0',10); best=Math.max(old,state.xp); localStorage.setItem('bytequest-best',best);}catch(e){}
+    const c = el('div','card center');
+    c.innerHTML = '<div class="big">🏁</div><h2>Quest complete!</h2><p>Final score: <b style="color:var(--warn)">'+state.xp+' XP</b> (best: '+best+')</p>' +
+      '<h2 style="color:var(--accent)">'+rank+'</h2>' +
+      '<div>'+state.earned.map(b=>'<span class="badge">'+b+'</span>').join('')+'</div>' +
+      '<div class="lesson" style="text-align:left"><b>What you now know:</b> computers take <i>input</i>, <i>process</i> it with the CPU and RAM, <i>store</i> it, and show <i>output</i>. Everything inside is bits (0s and 1s), software tells hardware what to do, and good habits keep you safe.</div>';
+    const b = el('button','primary','Play again ↺'); b.onclick=start;
+    c.appendChild(b); mount(c);
+  }
+
+  /* ---------- Level 1: Sort the parts ---------- */
+  function level1(){
+    const bins = [
+      {id:'input', name:'⌨️ Input', sub:'Sends data IN'},
+      {id:'output', name:'🖥️ Output', sub:'Shows results OUT'},
+      {id:'brain', name:'🧠 Processing & Memory', sub:'Thinks and remembers right now'},
+      {id:'storage', name:'💾 Storage', sub:'Keeps files when powered off'}
+    ];
+    const items = shuffle([
+      ['Keyboard','input'],['Mouse','input'],['Microphone','input'],['Webcam','input'],
+      ['Monitor','output'],['Speakers','output'],['Printer','output'],
+      ['CPU','brain'],['RAM','brain'],
+      ['SSD','storage'],['Hard drive','storage'],['USB flash drive','storage']
+    ]);
+    let selected=null, mistakes=0, placed=0;
+    const c = el('div','card');
+    c.innerHTML='<h2>Level 1: Meet the Hardware</h2><p>Hardware is the physical stuff you can touch. Tap a part, then tap the box where it belongs.</p>';
+    const tray = el('div','items'); c.appendChild(tray);
+    const grid = el('div','bins'); c.appendChild(grid);
+    const fb = el('div','feedback'); c.appendChild(fb);
+
+    items.forEach(([name,cat])=>{
+      const b = el('button','item',name); b.dataset.cat=cat;
+      b.onclick=()=>{ tray.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel')); selected=b; b.classList.add('sel'); fb.textContent=''; };
+      tray.appendChild(b);
+    });
+    bins.forEach(bn=>{
+      const d = el('div','bin','<h3>'+bn.name+'</h3><small>'+bn.sub+'</small>');
+      d.onclick=()=>{
+        if(!selected){ fb.className='feedback'; fb.textContent='Pick a part first 👆'; return; }
+        if(selected.dataset.cat===bn.id){
+          d.appendChild(el('span','chip',selected.textContent));
+          selected.remove(); selected=null; placed++;
+          fb.className='feedback ok'; fb.textContent='✅ Correct!';
+          if(placed===items.length){
+            const pts=Math.max(10, 50-mistakes*5);
+            setTimeout(()=>levelDone(pts,'🔩 Hardware Hero','The <b>CPU</b> is the brain, <b>RAM</b> is short-term memory (cleared when power goes off), and <b>storage</b> keeps files long-term. Input devices send data in; output devices show results.'),600);
+          }
+        } else {
+          mistakes++; shake(d); fb.className='feedback no';
+          fb.textContent='❌ Not quite. Think: does it send data in, show results, think, or save files?';
+        }
+      };
+      grid.appendChild(d);
+    });
+    mount(c);
+  }
+
+  /* ---------- Level 2: Binary ---------- */
+  function level2(){
+    const targets = [5, 12, 37, 100, 201];
+    let r=0, wrongChecks=0, total=0;
+    const c = el('div','card center');
+    mount(c);
+    function round(){
+      c.innerHTML='<h2>Level 2: Speak Binary</h2><p>Computers only understand <b>on (1)</b> and <b>off (0)</b>. Each bit is worth double the one to its right. Tap bits to make the number below.</p>';
+      const vals=[128,64,32,16,8,4,2,1];
+      const bitState=vals.map(()=>0);
+      c.appendChild(el('div','qnum','Round '+(r+1)+' of '+targets.length));
+      c.appendChild(el('div','target',targets[r]));
+      const bits = el('div','bits'); c.appendChild(bits);
+      const sum = el('p','mono','Your number: 0'); c.appendChild(sum);
+      const fb = el('div','feedback'); c.appendChild(fb);
+      const btns=[];
+      vals.forEach((v,i)=>{
+        const w=el('div','bit'); const b=el('button','','0'); btns.push(b);
+        b.onclick=()=>{ bitState[i]^=1; b.textContent=bitState[i]; b.classList.toggle('on',!!bitState[i]);
+          const s=bitState.reduce((a,x,j)=>a+x*vals[j],0); sum.textContent='Your number: '+s; fb.textContent=''; };
+        w.appendChild(b); w.appendChild(el('div','pv',v)); bits.appendChild(w);
+      });
+      const chk = el('button','primary','Check ✔');
+      chk.onclick=()=>{
+        const s=bitState.reduce((a,x,j)=>a+x*vals[j],0);
+        if(s===targets[r]){
+          total+=Math.max(5,20-wrongChecks*5); wrongChecks=0;
+          fb.className='feedback ok'; fb.textContent='✅ '+bitState.join('')+' = '+s+'!'; chk.disabled=true;
+          setTimeout(()=>{ r++; if(r>=targets.length){
+            levelDone(total,'🔢 Binary Brain','Every file, photo, and song is stored as <b>bits</b>. 8 bits make a <b>byte</b>, which can represent 0 to 255. Adding up the place values of the "on" bits gives the number.');
+          } else round(); },900);
+        } else {
+          wrongChecks++; shake(bits); fb.className='feedback no';
+          fb.textContent = s<targets[r] ? 'Too small. Turn on a bigger bit.' : 'Too big. Try a smaller combination.';
+        }
+      };
+      c.appendChild(chk);
+    }
+    round();
+  }
+
+  /* ---------- Level 3: Quiz ---------- */
+  function level3(){
+    const qs=[
+      {q:'You are typing an essay but have not saved it. The power goes out. Why is the essay lost?',
+       o:['RAM is temporary and clears without power','The CPU got too hot','Storage is always empty','The monitor turned off'],a:0,
+       e:'RAM holds what you are working on right now, but only while powered. Saving copies it to storage.'},
+      {q:'Which one is SOFTWARE?',
+       o:['A keyboard','A web browser','A motherboard','A power cable'],a:1,
+       e:'Software is the programs and instructions. Hardware is the physical parts.'},
+      {q:'What does the operating system (like Windows, macOS, or Android) do?',
+       o:['Only plays music','Manages hardware and runs your apps','Makes the screen brighter','Stores your passwords online'],a:1,
+       e:'The OS is the manager that lets apps share the CPU, memory, storage, and devices.'},
+      {q:'Roughly what does a CPU do?',
+       o:['Follows instructions and does calculations','Stores photos forever','Connects to Wi-Fi only','Cools the case'],a:0,
+       e:'The CPU executes billions of tiny instructions every second.'},
+      {q:'Which holds more and keeps data after shutdown?',
+       o:['RAM','CPU cache','SSD or hard drive','Graphics port'],a:2,
+       e:'Storage is slower than RAM but much larger and permanent.'}
+    ];
+    let i=0, score=0;
+    const c=el('div','card'); mount(c);
+    function show(){
+      const q=qs[i]; c.innerHTML='<h2>Level 3: Brain Teasers</h2><div class="qnum">Question '+(i+1)+' of '+qs.length+'</div><p style="color:var(--ink);font-size:1.05rem">'+q.q+'</p>';
+      const opts=el('div','opts'); c.appendChild(opts);
+      const fb=el('div','feedback'); c.appendChild(fb);
+      let answered=false;
+      q.o.forEach((t,k)=>{
+        const b=el('button','',t);
+        b.onclick=()=>{
+          if(answered) return; answered=true;
+          const kids=[...opts.children];
+          if(k===q.a){ b.classList.add('right'); score+=15; fb.className='feedback ok'; fb.textContent='✅ Correct! '+q.e; }
+          else { b.classList.add('wrong'); kids[q.a].classList.add('right'); fb.className='feedback no'; fb.textContent='❌ '+q.e; }
+          const n=el('button','primary', i+1>=qs.length?'Finish ▶':'Next ▶'); n.style.marginTop='12px';
+          n.onclick=()=>{ i++; if(i>=qs.length) levelDone(score,'📚 Tech Scholar','Hardware = physical parts. Software = instructions. The <b>OS</b> is the software that manages everything else. Remember: RAM is temporary, storage is permanent.'); else show(); };
+          c.appendChild(n);
+        };
+        opts.appendChild(b);
+      });
+    }
+    show();
+  }
+
+  /* ---------- Level 4: Boot sequence ---------- */
+  function level4(){
+    const correct=[
+      'Press the power button',
+      'Firmware checks the hardware (self-test)',
+      'Operating system loads from storage into RAM',
+      'Login screen appears',
+      'You open your apps'
+    ];
+    const pool=shuffle(correct);
+    let next=0, mistakes=0;
+    const c=el('div','card');
+    c.innerHTML='<h2>Level 4: Boot It Up!</h2><p>What happens when you turn a computer on? Tap the steps in the correct order, from first to last.</p>';
+    const steps=el('div','steps'); c.appendChild(steps);
+    c.appendChild(el('div','qnum','Your boot sequence:'));
+    const built=el('ol','built'); c.appendChild(built);
+    const fb=el('div','feedback'); c.appendChild(fb);
+    pool.forEach(s=>{
+      const b=el('button','',s);
+      b.onclick=()=>{
+        if(s===correct[next]){
+          built.appendChild(el('li','',s)); b.remove(); next++;
+          fb.className='feedback ok'; fb.textContent='✅ Yes!';
+          if(next===correct.length) setTimeout(()=>levelDone(Math.max(10,60-mistakes*10),'🚀 Boot Master','Booting: <b>firmware</b> tests the hardware, then the <b>operating system</b> is copied from storage into RAM so the CPU can run it. Only then can you log in and use apps.'),700);
+        } else { mistakes++; shake(b); fb.className='feedback no'; fb.textContent='❌ That is not the next step. What has to happen first?'; }
+      };
+      steps.appendChild(b);
+    });
+    mount(c);
+  }
+
+  /* ---------- Level 5: Safe or risky ---------- */
+  function level5(){
+    const sc=shuffle([
+      ['An email says "You won a prize! Click here and enter your bank details now!"','risky','Classic phishing. Real prizes do not ask for bank details by email.'],
+      ['Using a long password with random words, numbers, and symbols, unique to each site.','safe','Long, unique passwords are hard to guess. A password manager can remember them for you.'],
+      ['Installing software from a random pop-up that says your PC is infected.','risky','Fake alerts push malware. Install apps only from trusted sources.'],
+      ['Installing updates for your operating system and apps when they appear.','safe','Updates patch security holes that attackers use.'],
+      ['Using the same simple password ("password123") everywhere.','risky','If one site leaks it, attackers can try it everywhere else.'],
+      ['Turning on two-factor authentication for your email account.','safe','A second step, like a code on your phone, stops most account takeovers.']
+    ]).slice(0,5);
+    let i=0, score=0;
+    const c=el('div','card'); mount(c);
+    function show(){
+      const [t,ans,why]=sc[i];
+      c.innerHTML='<h2>Level 5: Stay Safe Online</h2><div class="qnum">Scenario '+(i+1)+' of '+sc.length+'</div>';
+      c.appendChild(el('div','scn',t));
+      const row=el('div','row'); c.appendChild(row);
+      const fb=el('div','feedback'); c.appendChild(fb);
+      let done=false;
+      [['👍 Safe','safe'],['⚠️ Risky','risky']].forEach(([label,val])=>{
+        const b=el('button','',label);
+        b.onclick=()=>{
+          if(done) return; done=true;
+          if(val===ans){ score+=12; fb.className='feedback ok'; fb.textContent='✅ Right! '+why; }
+          else { fb.className='feedback no'; fb.textContent='❌ Actually it is '+ans+'. '+why; }
+          const n=el('button','primary', i+1>=sc.length?'Finish ▶':'Next ▶'); n.style.marginTop='12px';
+          n.onclick=()=>{ i++; if(i>=sc.length) levelDone(score,'🛡️ Cyber Guardian','Be suspicious of urgent messages, use long unique passwords, enable two-factor authentication, and keep your software updated.'); else show(); };
+          c.appendChild(n);
+        };
+        row.appendChild(b);
+      });
+    }
+    show();
+  }
+
+  const LEVELS=[level1,level2,level3,level4,level5];
+  start();
+})();
+</script>
+</body>
+</html>
