@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From Zero to SQL</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:20px;
+    background:#eef3ff;color:#1b2340;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  #app{width:100%;max-width:720px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;font-weight:700;flex-wrap:wrap}
+  .top .lbl{flex:1;text-align:center;font-weight:600;color:#4b5688;font-size:.95rem}
+  .card{background:#fff;border-radius:18px;padding:24px;box-shadow:0 6px 20px rgba(30,50,120,.12);text-align:center;margin-bottom:16px}
+  .left{text-align:left}
+  h1,h2{margin:0 0 8px} p{font-size:1.05rem;line-height:1.55;margin:8px 0 14px}
+  .note{font-size:.92rem;color:#5b6690;margin:6px 0}
+  .emoji{font-size:3.4rem}
+  button{font:inherit;font-size:1.05rem;cursor:pointer;border:0;border-radius:12px;padding:12px 18px;background:#dde5ff;color:#1b2340;margin:4px}
+  button:hover:not(:disabled){background:#c9d5ff}
+  button:disabled{cursor:default}
+  button.go{background:#3b6cff;color:#fff;font-weight:700}
+  button.go:hover:not(:disabled){background:#2b58e0}
+  .big{font-size:2.2rem;font-weight:800;margin:8px 0}
+  .thing{font-size:1.5rem;background:#fff6d6;border-radius:14px;padding:18px;margin:10px 0}
+  .row{display:flex;justify-content:center;flex-wrap:wrap}
+  .left .row{justify-content:flex-start}
+  .msg{min-height:1.5em;font-weight:700;margin:8px 0}
+  .good{color:#12906b} .bad{color:#d33a4f}
+  p.good,p.bad{font-weight:700}
+  .shake{animation:s .3s} @keyframes s{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+  .q{font-size:1.15rem;font-weight:600}
+  .opts{display:grid;gap:8px;margin:10px 0}
+  .opts button{text-align:left;margin:0}
+  .opts button.right{background:#c9f0e1}
+  .opts button.wrong{background:#ffd9de;opacity:.8}
+  .bits button{width:64px;height:76px;font-size:1.8rem;font-family:ui-monospace,Menlo,monospace}
+  .bits button.on{background:#3b6cff;color:#fff}
+  .pv{font-size:.9rem;color:#5b6690}
+  .bit{display:inline-block;margin:4px}
+  .lesson{background:#eef3ff;border-left:4px solid #3b6cff;border-radius:8px;padding:12px 14px;margin:14px 0}
+
+  /* map */
+  .meter{height:10px;background:#dde5ff;border-radius:99px;overflow:hidden;margin-top:10px}
+  .meter div{height:100%;background:#3b6cff}
+  .world h2{text-align:left}
+  .world .note{text-align:left}
+  .lv{display:flex;justify-content:space-between;gap:8px;width:100%;text-align:left;margin:6px 0;background:#f1f4ff}
+  .lv.done{background:#e3f6ee}
+  .lv.now{outline:3px solid #3b6cff;background:#fff}
+  .lv:disabled{opacity:.5}
+
+  /* sql */
+  pre.code{background:#131a35;color:#e8ecff;padding:12px 14px;border-radius:10px;overflow-x:auto;font-size:.95rem;margin:6px 0 12px;text-align:left;white-space:pre-wrap}
+  textarea.sql{width:100%;min-height:110px;background:#131a35;color:#e8ecff;border:2px solid #3b6cff;border-radius:10px;
+    padding:12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1rem;resize:vertical}
+  .task{background:#fff6d6;border-radius:12px;padding:12px 14px;margin:12px 0;font-size:1.05rem}
+  .hintbox{background:#eef3ff;border-radius:10px;padding:10px 14px;margin:8px 0;text-align:left}
+  .tw{max-height:250px;overflow:auto;border:1px solid #dde3f7;border-radius:8px;margin:6px 0;background:#fff}
+  table{border-collapse:collapse;width:100%;font-size:.9rem;text-align:left}
+  th{background:#eef2ff;position:sticky;top:0}
+  th,td{padding:6px 10px;border-bottom:1px solid #eef1fb;white-space:nowrap}
+  .tabs{display:flex;flex-wrap:wrap}
+  .tab{padding:6px 12px;font-size:.9rem;margin:2px 4px 2px 0}
+  .tab.on{background:#3b6cff;color:#fff}
+  .out{margin-top:12px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <button id="mapBtn" style="visibility:hidden;margin:0">🗺️ Map</button>
+    <span class="lbl" id="lbl"></span>
+    <span>⭐ <span id="stars">0</span></span>
+  </div>
+  <div id="stage"></div>
+</div>
+
+<script>
+(function(){
+/*==ENGINE==*/
+function clone(x){return JSON.parse(JSON.stringify(x));}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ---------- Practice database ---------- */
+var BASE={
+  authors:{cols:['id','name','country'],rows:[
+    [1,'Ava Moreno','USA'],[2,'Liam Chen','China'],[3,'Sofia Rossi','Italy'],[4,'Noah Smith','UK'],[5,'Maya Patel','India']]},
+  books:{cols:['id','title','author_id','genre','price','year','stock'],rows:[
+    [1,'The Silent Sea',1,'Mystery',12.99,2019,30],
+    [2,'Code Garden',2,'Tech',29.5,2021,12],
+    [3,'Pasta Dreams',3,'Cooking',18,2018,25],
+    [4,'Midnight Train',1,'Mystery',14.5,2022,8],
+    [5,'Data Tales',5,'Tech',34.99,2023,15],
+    [6,'Rainy Days',4,'Fiction',9.99,2017,40],
+    [7,'Spice Route',5,'Cooking',21,2020,0],
+    [8,'Robot Hearts',2,'Fiction',15.75,2024,20],
+    [9,'Lost Lighthouse',4,'Mystery',11.25,2016,5],
+    [10,'Binary Birds',2,'Tech',24,2022,18]]},
+  customers:{cols:['id','name','city'],rows:[
+    [1,'Zoe','Miami'],[2,'Omar','Boston'],[3,'Lena','Miami'],[4,'Raj','Austin'],[5,'Ivy','Boston']]},
+  orders:{cols:['id','customer_id','book_id','qty'],rows:[
+    [1,1,2,1],[2,1,5,2],[3,2,1,1],[4,3,3,3],[5,3,5,1],[6,4,10,2],[7,5,6,1],[8,2,8,1],[9,1,1,1],[10,4,2,1]]}
+};
+
+/* ---------- Tiny SQL engine ---------- */
+var AGGS=['COUNT','SUM','AVG','MIN','MAX'];
+var RESERVED=['WHERE','JOIN','INNER','LEFT','OUTER','ON','GROUP','ORDER','LIMIT','HAVING','SET','VALUES'];
+var CLAUSE=['FROM','WHERE','GROUP','ORDER','LIMIT','HAVING','JOIN','ON','AND','OR','VALUES','SET','SELECT'];
+var AMB={};
+
+function tokenize(sql){
+  var re=/\s*(?:('(?:[^']|'')*')|(\d+\.\d+|\d+)|([A-Za-z_][A-Za-z0-9_]*)|(<=|>=|<>|!=|=|<|>|\(|\)|,|\*|\.|;|\+|-|\/))/y;
+  var toks=[],pos=0;
+  while(pos<sql.length){
+    re.lastIndex=pos;
+    var m=re.exec(sql);
+    if(!m){
+      var rest=sql.slice(pos);
+      if(/^\s*$/.test(rest)) break;
+      var t=rest.replace(/^\s+/,'');
+      if(t.charAt(0)==="'") throw new Error("A text value is missing its closing quote (').");
+      if(t.charAt(0)==='"') throw new Error("Use single quotes for text, like 'Tech', not double quotes.");
+      throw new Error('I do not understand this part: '+t.slice(0,12));
+    }
+    pos=re.lastIndex;
+    if(m[1]!==undefined) toks.push({t:'str',v:m[1].slice(1,-1).replace(/''/g,"'")});
+    else if(m[2]!==undefined) toks.push({t:'num',v:parseFloat(m[2])});
+    else if(m[3]!==undefined) toks.push({t:'id',v:m[3],u:m[3].toUpperCase()});
+    else toks.push({t:'op',v:m[4],u:m[4]});
+  }
+  return toks;
+}
+
+function Parser(toks){this.t=toks;this.i=0;}
+Parser.prototype={
+  peek:function(){return this.t[this.i];},
+  near:function(){var x=this.t[this.i];return x?' but found "'+x.v+'"':' but the query ended';},
+  isKw:function(k){var x=this.t[this.i];return !!x&&x.t==='id'&&x.u===k;},
+  isOp:function(o){var x=this.t[this.i];return !!x&&x.t==='op'&&x.u===o;},
+  acceptKw:function(k){if(this.isKw(k)){this.i++;return true;}return false;},
+  acceptOp:function(o){if(this.isOp(o)){this.i++;return true;}return false;},
+  expectKw:function(k){if(!this.acceptKw(k)) throw new Error('Expected '+k+this.near());},
+  expectOp:function(o){if(!this.acceptOp(o)) throw new Error('Expected "'+o+'"'+this.near());},
+  ident:function(){var x=this.t[this.i];if(!x||x.t!=='id') throw new Error('Expected a name'+this.near());this.i++;return x.v;},
+
+  statement:function(){
+    if(this.acceptKw('SELECT')) return this.select();
+    if(this.acceptKw('INSERT')) return this.insert();
+    if(this.acceptKw('UPDATE')) return this.update();
+    if(this.acceptKw('DELETE')) return this.del();
+    if(this.acceptKw('CREATE')) return this.create();
+    var x=this.peek();
+    throw new Error('A query should start with SELECT, INSERT, UPDATE, DELETE or CREATE TABLE, not "'+x.v+'".');
+  },
+  tableRef:function(){
+    var name=this.ident(),alias=null;
+    if(this.acceptKw('AS')) alias=this.ident();
+    else{var x=this.peek();if(x&&x.t==='id'&&RESERVED.indexOf(x.u)<0){alias=x.v;this.i++;}}
+    return {name:name,alias:alias};
+  },
+  select:function(){
+    var q={type:'select',items:[],joins:[]};
+    q.distinct=this.acceptKw('DISTINCT');
+    do{
+      if(this.isOp('*')){this.i++;q.items.push({star:true});}
+      else{
+        var s=this.i,e=this.parseAdd(),end=this.i,alias=null;
+        if(this.acceptKw('AS')) alias=this.ident();
+        var name;
+        if(e.k==='col') name=e.name.split('.').pop();
+        else name=this.t.slice(s,end).map(function(x){return x.t==='str'?"'"+x.v+"'":String(x.v);}).join(' ')
+          .replace(/ ?\( ?/g,'(').replace(/ \)/g,')').replace(/ ?\. ?/g,'.').replace(/ ,/g,',');
+        q.items.push({e:e,alias:alias,name:name});
+      }
+    }while(this.acceptOp(','));
+    this.expectKw('FROM');
+    q.from=this.tableRef();
+    while(true){
+      var kind=null;
+      if(this.isKw('INNER')){this.i++;this.expectKw('JOIN');kind='inner';}
+      else if(this.isKw('LEFT')){this.i++;this.acceptKw('OUTER');this.expectKw('JOIN');kind='left';}
+      else if(this.acceptKw('JOIN')) kind='inner';
+      else break;
+      var ref=this.tableRef();this.expectKw('ON');
+      q.joins.push({kind:kind,ref:ref,on:this.parseOr()});
+    }
+    if(this.acceptKw('WHERE')) q.where=this.parseOr();
+    if(this.acceptKw('GROUP')){this.expectKw('BY');q.group=[];do{q.group.push(this.parseAdd());}while(this.acceptOp(','));}
+    if(this.acceptKw('HAVING')) q.having=this.parseOr();
+    if(this.acceptKw('ORDER')){
+      this.expectKw('BY');q.order=[];
+      do{var e2=this.parseAdd(),desc=false;if(this.acceptKw('DESC')) desc=true;else this.acceptKw('ASC');q.order.push({e:e2,desc:desc});}while(this.acceptOp(','));
+    }
+    if(this.acceptKw('LIMIT')){var x=this.t[this.i];if(!x||x.t!=='num') throw new Error('LIMIT needs a number'+this.near());this.i++;q.limit=x.v;}
+    return q;
+  },
+  insert:function(){
+    this.expectKw('INTO');var t=this.ident(),cols=null;
+    if(this.acceptOp('(')){cols=[];do{cols.push(this.ident().toLowerCase());}while(this.acceptOp(','));this.expectOp(')');}
+    this.expectKw('VALUES');var rows=[];
+    do{this.expectOp('(');var r=[];do{r.push(this.parseAdd());}while(this.acceptOp(','));this.expectOp(')');rows.push(r);}while(this.acceptOp(','));
+    return {type:'insert',table:t,cols:cols,rows:rows};
+  },
+  update:function(){
+    var t=this.ident();this.expectKw('SET');var sets=[];
+    do{var c=this.ident().toLowerCase();this.expectOp('=');sets.push({c:c,e:this.parseAdd()});}while(this.acceptOp(','));
+    var w=null;if(this.acceptKw('WHERE')) w=this.parseOr();
+    return {type:'update',table:t,sets:sets,where:w};
+  },
+  del:function(){
+    this.expectKw('FROM');var t=this.ident(),w=null;
+    if(this.acceptKw('WHERE')) w=this.parseOr();
+    return {type:'delete',table:t,where:w};
+  },
+  create:function(){
+    this.expectKw('TABLE');var t=this.ident();this.expectOp('(');var cols=[];
+    do{
+      cols.push(this.ident().toLowerCase());var depth=0;
+      while(this.peek()){
+        var x=this.peek();
+        if(x.t==='op'&&x.u==='(') depth++;
+        else if(x.t==='op'&&x.u===')'){if(depth===0) break;depth--;}
+        else if(x.t==='op'&&x.u===','&&depth===0) break;
+        this.i++;
+      }
+    }while(this.acceptOp(','));
+    this.expectOp(')');
+    return {type:'create',table:t,cols:cols};
+  },
+
+  parseOr:function(){var l=this.parseAnd();while(this.acceptKw('OR')) l={k:'or',l:l,r:this.parseAnd()};return l;},
+  parseAnd:function(){var l=this.parseNot();while(this.acceptKw('AND')) l={k:'and',l:l,r:this.parseNot()};return l;},
+  parseNot:function(){if(this.acceptKw('NOT')) return {k:'not',e:this.parseNot()};return this.parsePred();},
+  parsePred:function(){
+    var l=this.parseAdd(),neg=false;
+    if(this.acceptKw('IS')){var n=this.acceptKw('NOT');this.expectKw('NULL');return {k:'isnull',e:l,neg:n};}
+    if(this.isKw('NOT')){var nx=this.t[this.i+1];if(nx&&nx.t==='id'&&(nx.u==='LIKE'||nx.u==='IN'||nx.u==='BETWEEN')){this.i++;neg=true;}}
+    if(this.acceptKw('LIKE')) return {k:'like',l:l,r:this.parseAdd(),neg:neg};
+    if(this.acceptKw('IN')){this.expectOp('(');var list=[];do{list.push(this.parseAdd());}while(this.acceptOp(','));this.expectOp(')');return {k:'in',l:l,list:list,neg:neg};}
+    if(this.acceptKw('BETWEEN')){var a=this.parseAdd();this.expectKw('AND');var b=this.parseAdd();return {k:'between',e:l,a:a,b:b,neg:neg};}
+    var op=this.peek();
+    if(op&&op.t==='op'&&['=','!=','<>','<','>','<=','>='].indexOf(op.u)>=0){this.i++;return {k:'cmp',op:op.u,l:l,r:this.parseAdd()};}
+    return l;
+  },
+  parseAdd:function(){
+    var l=this.parseMul();
+    while(this.isOp('+')||this.isOp('-')){var op=this.next().u;l={k:'bin',op:op,l:l,r:this.parseMul()};}
+    return l;
+  },
+  parseMul:function(){
+    var l=this.parsePrimary();
+    while(this.isOp('*')||this.isOp('/')){var op=this.next().u;l={k:'bin',op:op,l:l,r:this.parsePrimary()};}
+    return l;
+  },
+  next:function(){return this.t[this.i++];},
+  parsePrimary:function(){
+    var x=this.peek();
+    if(!x) throw new Error('The query ended too early');
+    if(x.t==='num'||x.t==='str'){this.i++;return {k:'lit',v:x.v};}
+    if(x.t==='op'&&x.u==='-'){this.i++;return {k:'neg',e:this.parsePrimary()};}
+    if(x.t==='op'&&x.u==='('){this.i++;var e=this.parseOr();this.expectOp(')');return e;}
+    if(x.t==='id'){
+      if(x.u==='NULL'){this.i++;return {k:'lit',v:null};}
+      if(CLAUSE.indexOf(x.u)>=0) throw new Error('Unexpected "'+x.v+'" here. Is there an extra comma or something missing?');
+      var nx=this.t[this.i+1];
+      if(AGGS.indexOf(x.u)>=0&&nx&&nx.t==='op'&&nx.u==='(') return this.parseAgg();
+      this.i++;var name=x.v;
+      if(this.isOp('.')){this.i++;name+='.'+this.ident();}
+      return {k:'col',name:name.toLowerCase()};
+    }
+    throw new Error('Unexpected "'+x.v+'"');
+  },
+  parseAgg:function(){
+    var fn=this.next().u;this.expectOp('(');
+    var distinct=this.acceptKw('DISTINCT'),arg;
+    if(this.isOp('*')){this.i++;arg='*';}else arg=this.parseAdd();
+    this.expectOp(')');
+    return {k:'agg',fn:fn,arg:arg,distinct:distinct};
+  }
+};
+
+function parseAll(sql){
+  var p=new Parser(tokenize(sql)),stmts=[];
+  while(p.peek()){
+    if(p.acceptOp(';')) continue;
+    stmts.push(p.statement());
+    if(p.peek()&&!p.isOp(';')) throw new Error('Unexpected "'+p.peek().v+'". Did you forget a keyword, a comma or a semicolon?');
+  }
+  if(!stmts.length) throw new Error('Type a query first.');
+  return stmts;
+}
+
+function cmpVals(a,b){
+  if(typeof a==='number'&&typeof b==='number') return a-b;
+  a=String(a);b=String(b);return a<b?-1:a>b?1:0;
+}
+function hasAgg(n){
+  if(!n||typeof n!=='object') return false;
+  if(n.k==='agg') return true;
+  for(var key in n){var v=n[key];
+    if(Array.isArray(v)){if(v.some(hasAgg)) return true;}
+    else if(v&&typeof v==='object'&&hasAgg(v)) return true;}
+  return false;
+}
+function ev(n,row,grp){
+  var a,b,c;
+  switch(n.k){
+    case 'lit': return n.v;
+    case 'col':
+      if(n.name in row) return row[n.name];
+      if(AMB[n.name]) throw new Error('"'+n.name+'" is in more than one table. Write table.'+n.name+' instead.');
+      throw new Error('There is no column called "'+n.name+'"');
+    case 'neg': a=ev(n.e,row,grp);return a==null?null:-a;
+    case 'bin':
+      a=ev(n.l,row,grp);b=ev(n.r,row,grp);
+      if(a==null||b==null) return null;
+      if(n.op==='+') return a+b;
+      if(n.op==='-') return a-b;
+      if(n.op==='*') return a*b;
+      return b===0?null:a/b;
+    case 'cmp':
+      a=ev(n.l,row,grp);b=ev(n.r,row,grp);
+      if(a==null||b==null) return false;
+      c=cmpVals(a,b);
+      switch(n.op){case '=':return c===0;case '!=':case '<>':return c!==0;case '<':return c<0;case '>':return c>0;case '<=':return c<=0;default:return c>=0;}
+    case 'and': return !!ev(n.l,row,grp)&&!!ev(n.r,row,grp);
+    case 'or': return !!ev(n.l,row,grp)||!!ev(n.r,row,grp);
+    case 'not': return !ev(n.e,row,grp);
+    case 'like':
+      a=ev(n.l,row,grp);b=ev(n.r,row,grp);
+      if(a==null||b==null) return false;
+      var re=new RegExp('^'+String(b).replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/%/g,'.*').replace(/_/g,'.')+'$','i');
+      c=re.test(String(a));return n.neg?!c:c;
+    case 'in':
+      a=ev(n.l,row,grp);
+      if(a==null) return false;
+      c=n.list.some(function(x){return cmpVals(a,ev(x,row,grp))===0;});return n.neg?!c:c;
+    case 'between':
+      a=ev(n.e,row,grp);
+      if(a==null) return false;
+      c=cmpVals(a,ev(n.a,row,grp))>=0&&cmpVals(a,ev(n.b,row,grp))<=0;return n.neg?!c:c;
+    case 'isnull': c=ev(n.e,row,grp)==null;return n.neg?!c:c;
+    case 'agg':
+      if(!grp) throw new Error(n.fn+'() can only be used in SELECT, HAVING or ORDER BY.');
+      var vals=n.arg==='*'?grp.map(function(){return 1;}):grp.map(function(r){return ev(n.arg,r);}).filter(function(v){return v!=null;});
+      if(n.distinct){var seen={};vals=vals.filter(function(v){var k=JSON.stringify(v);if(seen[k]) return false;seen[k]=1;return true;});}
+      if(n.fn==='COUNT') return vals.length;
+      if(!vals.length) return null;
+      if(n.fn==='SUM'||n.fn==='AVG'){var s=vals.reduce(function(x,y){return x+y;},0);return n.fn==='SUM'?s:s/vals.length;}
+      if(n.fn==='MIN') return vals.reduce(function(x,y){return cmpVals(x,y)<=0?x:y;});
+      return vals.reduce(function(x,y){return cmpVals(x,y)>=0?x:y;});
+  }
+  throw new Error('Cannot understand this expression');
+}
+function rnd(v){if(v===undefined) return null;return typeof v==='number'&&v%1!==0?Math.round(v*100)/100:v;}
+function getTable(db,name){var t=db[name.toLowerCase()];if(!t) throw new Error('There is no table called "'+name+'"');return t;}
+
+function runSelect(db,q){
+  var refs=[q.from].concat(q.joins.map(function(j){return j.ref;}));
+  var sources=refs.map(function(r){return {alias:(r.alias||r.name).toLowerCase(),t:getTable(db,r.name)};});
+  var counts={};AMB={};
+  sources.forEach(function(s){s.t.cols.forEach(function(c){counts[c]=(counts[c]||0)+1;if(counts[c]>1) AMB[c]=true;});});
+  function mk(s,vals,base){
+    var r=base?Object.assign({},base):{};
+    s.t.cols.forEach(function(c,j){var v=vals?vals[j]:null;r[s.alias+'.'+c]=v;if(!AMB[c]) r[c]=v;});
+    return r;
+  }
+  var rows=sources[0].t.rows.map(function(v){return mk(sources[0],v,null);});
+  q.joins.forEach(function(j,ji){
+    var s=sources[ji+1],out=[];
+    rows.forEach(function(l){
+      var matched=false;
+      s.t.rows.forEach(function(v){var r=mk(s,v,l);if(ev(j.on,r)){out.push(r);matched=true;}});
+      if(!matched&&j.kind==='left') out.push(mk(s,null,l));
+    });
+    rows=out;
+  });
+  if(q.where) rows=rows.filter(function(r){return ev(q.where,r);});
+  var useAgg=q.items.some(function(it){return it.e&&hasAgg(it.e);})||(q.having&&hasAgg(q.having))||(q.order&&q.order.some(function(o){return hasAgg(o.e);}));
+  var units;
+  if(q.group){
+    var map={},order=[];
+    rows.forEach(function(r){var k=JSON.stringify(q.group.map(function(g){return ev(g,r);}));if(!map[k]){map[k]=[];order.push(k);}map[k].push(r);});
+    units=order.map(function(k){return {rep:map[k][0],grp:map[k]};});
+  }else if(useAgg){units=[{rep:rows[0]||{},grp:rows}];}
+  else units=rows.map(function(r){return {rep:r,grp:undefined};});
+  if(q.having) units=units.filter(function(u){return ev(q.having,u.rep,u.grp);});
+  var cols=[];
+  q.items.forEach(function(it){
+    if(it.star) sources.forEach(function(s){s.t.cols.forEach(function(c){cols.push(c);});});
+    else cols.push(it.alias||it.name);
+  });
+  var recs=units.map(function(u){
+    var out=[];
+    q.items.forEach(function(it){
+      if(it.star) sources.forEach(function(s){s.t.cols.forEach(function(c){out.push(u.rep[s.alias+'.'+c]);});});
+      else out.push(ev(it.e,u.rep,u.grp));
+    });
+    return {out:out,u:u};
+  });
+  if(q.distinct){var seen={};recs=recs.filter(function(r){var k=JSON.stringify(r.out);if(seen[k]) return false;seen[k]=1;return true;});}
+  if(q.order){
+    var lc=cols.map(function(c){return String(c).toLowerCase();});
+    recs.forEach(function(r,i){
+      r.i=i;
+      r.keys=q.order.map(function(o){
+        var e=o.e;
+        if(e.k==='col'&&e.name.indexOf('.')<0){var ix=lc.indexOf(e.name);if(ix>=0) return r.out[ix];}
+        return ev(e,r.u.rep,r.u.grp);
+      });
+    });
+    recs.sort(function(a,b){
+      for(var k=0;k<q.order.length;k++){
+        var x=a.keys[k],y=b.keys[k],c;
+        if(x==null&&y==null) c=0;else if(x==null) c=-1;else if(y==null) c=1;else c=cmpVals(x,y);
+        if(c!==0) return q.order[k].desc?-c:c;
+      }
+      return a.i-b.i;
+    });
+  }
+  if(q.limit!==undefined) recs=recs.slice(0,q.limit);
+  return {type:'rows',cols:cols,rows:recs.map(function(r){return r.out.map(rnd);})};
+}
+
+function rowObj(name,t,vals){
+  var r={};
+  t.cols.forEach(function(c,j){r[c]=vals[j];r[name.toLowerCase()+'.'+c]=vals[j];});
+  return r;
+}
+function runStmt(db,s){
+  AMB={};
+  var key=s.table.toLowerCase(),t;
+  if(s.type==='create'){
+    if(db[key]) throw new Error('A table called "'+s.table+'" already exists.');
+    db[key]={cols:s.cols,rows:[]};
+    return {type:'ok',message:'Created table '+s.table+' with columns: '+s.cols.join(', ')+'.',table:key};
+  }
+  t=getTable(db,s.table);
+  if(s.type==='insert'){
+    var cols=s.cols||t.cols;
+    s.rows.forEach(function(r){
+      if(r.length!==cols.length) throw new Error('You gave '+r.length+' value(s) for '+cols.length+' column(s).');
+      var nr=t.cols.map(function(){return null;});
+      cols.forEach(function(c,j){
+        var ix=t.cols.indexOf(c);
+        if(ix<0) throw new Error('The table "'+s.table+'" has no column called "'+c+'"');
+        nr[ix]=ev(r[j],{});
+      });
+      t.rows.push(nr);
+    });
+    return {type:'ok',message:'Added '+s.rows.length+' row(s) to '+s.table+'.',table:key};
+  }
+  if(s.type==='update'){
+    var n=0;
+    t.rows.forEach(function(vals){
+      var ro=rowObj(s.table,t,vals);
+      if(!s.where||ev(s.where,ro)){
+        var nv=s.sets.map(function(x){
+          var ix=t.cols.indexOf(x.c);
+          if(ix<0) throw new Error('The table "'+s.table+'" has no column called "'+x.c+'"');
+          return [ix,ev(x.e,ro)];
+        });
+        nv.forEach(function(p){vals[p[0]]=p[1];});
+        n++;
+      }
+    });
+    return {type:'ok',message:'Updated '+n+' row(s).'+(s.where?'':' There was no WHERE, so every row changed!'),table:key};
+  }
+  var before=t.rows.length;
+  t.rows=t.rows.filter(function(vals){return s.where?!ev(s.where,rowObj(s.table,t,vals)):false;});
+  return {type:'ok',message:'Deleted '+(before-t.rows.length)+' row(s).'+(s.where?'':' There was no WHERE, so every row was deleted!'),table:key};
+}
+
+function execAll(sql){
+  var stmts=parseAll(sql),db=clone(BASE),results=[];
+  stmts.forEach(function(s){results.push(s.type==='select'?runSelect(db,s):runStmt(db,s));});
+  return {db:db,results:results};
+}
+function dbSig(db){
+  return Object.keys(db).sort().map(function(k){return k+':'+JSON.stringify(db[k].cols)+JSON.stringify(db[k].rows);}).join('|');
+}
+function judge(user,sol,ordered){
+  var ul=user.results[user.results.length-1],sl=sol.results[sol.results.length-1];
+  if(sl.type==='rows'){
+    if(ul.type!=='rows') return 'Your code did not show a table of results. Start with SELECT.';
+    if(ul.cols.length!==sl.cols.length) return 'Your result has '+ul.cols.length+' column(s), but the answer has '+sl.cols.length+'.';
+    if(ul.rows.length!==sl.rows.length) return 'Your result has '+ul.rows.length+' row(s), but the answer has '+sl.rows.length+'.';
+    var a=ul.rows.map(function(r){return JSON.stringify(r);}),b=sl.rows.map(function(r){return JSON.stringify(r);});
+    if(a.join('|')===b.join('|')) return null;
+    var same=a.slice().sort().join('|')===b.slice().sort().join('|');
+    if(same&&!ordered) return null;
+    if(same) return 'Right rows, but in the wrong order. Check ORDER BY.';
+    return 'Right size, but some values are different. Check your columns, WHERE and spelling.';
+  }
+  if(dbSig(user.db)===dbSig(sol.db)) return null;
+  var names=Object.keys(sol.db);
+  for(var i=0;i<names.length;i++){
+    var n=names[i],ut=user.db[n],st=sol.db[n];
+    if(!ut) return 'The table "'+n+'" was not created.';
+    if(JSON.stringify(ut.cols)!==JSON.stringify(st.cols)) return 'The columns of "'+n+'" should be: '+st.cols.join(', ')+'.';
+    if(ut.rows.length!==st.rows.length) return 'The "'+n+'" table has '+ut.rows.length+' row(s) but should have '+st.rows.length+'.';
+    if(JSON.stringify(ut.rows)!==JSON.stringify(st.rows)) return 'The "'+n+'" table has the right number of rows, but some values are not right.';
+  }
+  return 'Something else in the database changed. Check your WHERE.';
+}
+
+/* ---------- The learning path ---------- */
+var WORLDS=[
+ {emoji:'💻',name:'Meet the Computer',blurb:'What a computer is made of and what it does.',levels:[
+  {id:'1.1',type:'sort',title:'Sort the parts',
+   intro:'A computer takes things in, thinks, and shows results. Where does each part belong?',
+   bins:[['in','Input','you send things in'],['out','Output','it shows you things'],['inside','Inside','it thinks and saves']],
+   items:[['⌨️ Keyboard','in'],['🖱️ Mouse','in'],['🎤 Microphone','in'],['🖥️ Screen','out'],['🔊 Speaker','out'],['🖨️ Printer','out'],['🧠 CPU (the brain)','inside'],['⚡ RAM (short-term memory)','inside'],['💾 Storage (long-term memory)','inside']],
+   remember:'Input devices send things in, output devices show results, and inside the computer the CPU thinks while RAM and storage hold data.'},
+  {id:'1.2',type:'quiz',title:'Hardware and software',
+   qs:[
+    {q:'Which one is software (a program)?',o:['A mouse','A web browser','A screen'],a:1,e:'Software is a set of instructions. You cannot touch it. Hardware is the physical parts.'},
+    {q:'What is the CPU?',o:['The brain that follows instructions','A place to plug in a mouse','The screen'],a:0,e:'The CPU does billions of tiny steps every second.'},
+    {q:'You are writing an essay and the power goes out before you save. What happens?',o:['It is lost, because RAM forgets when power is off','It is safe, because the CPU keeps it','It moves to the internet'],a:0,e:'RAM holds what you are working on right now. Saving copies it to storage, which keeps it.'},
+    {q:'What does the operating system (Windows, macOS, Android) do?',o:['It manages the computer and runs your apps','It only plays music','It makes the screen bigger'],a:0,e:'The operating system is the manager that lets apps use the parts of the computer.'}],
+   remember:'Hardware is the parts you can touch. Software is the instructions. The operating system manages everything. Save your work so it moves from RAM to storage.'}
+ ]},
+ {emoji:'🌐',name:'Bits, Files & the Internet',blurb:'How computers store things and talk to each other.',levels:[
+  {id:'2.1',type:'binary',title:'Speak in bits',
+   intro:'Computers only know two things: 1 (on) and 0 (off). Each box has a value. Tap boxes to turn them on and add up to the number.',
+   targets:[2,5,9,13],
+   remember:'Everything in a computer, even photos and songs, is made of bits (1s and 0s). 8 bits make one byte.'},
+  {id:'2.2',type:'quiz',title:'Files and folders',
+   qs:[
+    {q:'What is a file?',o:['A named piece of saved data, like a photo or a document','A type of screen','A kind of virus'],a:0,e:'Photos, songs, and documents are all files.'},
+    {q:'In "photo.jpg", what does ".jpg" tell you?',o:['What kind of file it is','Who made it','How big your screen is'],a:0,e:'The ending is called a file extension. It shows the file type.'},
+    {q:'What is a folder for?',o:['Keeping files organized','Making the computer faster','Connecting to the internet'],a:0,e:'Folders group files, just like paper folders.'},
+    {q:'Which is the biggest?',o:['1 gigabyte (GB)','1 megabyte (MB)','1 kilobyte (KB)'],a:0,e:'Sizes go KB, MB, GB, TB. Each is about 1,000 times bigger than the one before.'}],
+   remember:'Files hold data, folders organize files, and the size of data is measured in KB, MB, GB, and TB.'},
+  {id:'2.3',type:'quiz',title:'The internet',
+   qs:[
+    {q:'What is a web browser?',o:['A program that shows websites, like Chrome or Safari','A kind of cable','A part inside the CPU'],a:0,e:'A browser asks for web pages and shows them to you.'},
+    {q:'When you open a website, where does the page come from?',o:['A server, a computer that shares data','Inside your keyboard','Your own screen'],a:0,e:'Servers are computers that are always on and ready to send data.'},
+    {q:'What is a URL?',o:['The address of a web page','A kind of file','A computer part'],a:0,e:'A URL is like a street address for a page, for example example.com.'},
+    {q:'Where do websites and apps keep their data, like users and orders?',o:['In a database on a server','On a sticky note','Nowhere'],a:0,e:'And that is where SQL comes in. You are almost there!'}],
+   remember:'Your browser asks a server for a page using a URL. Servers keep data in databases.'}
+ ]},
+ {emoji:'📋',name:'Data & Tables',blurb:'How data is organized so SQL can use it.',levels:[
+  {id:'3.1',type:'quiz',title:'Reading a table',show:['authors'],
+   qs:[
+    {q:'Each ______ holds one item, like one author.',o:['row','column','folder'],a:0,e:'A row is one record.'},
+    {q:'A ______ holds one kind of information, like country.',o:['column','row','folder'],a:0,e:'A column is one kind of information, shared by every row.'},
+    {q:'How many columns does the authors table have?',o:['3','5','10'],a:0,e:'id, name, and country.'},
+    {q:'How many rows (authors) does it have?',o:['5','3','10'],a:0,e:'There are five authors.'},
+    {q:'Which column gives every author a different number, so we never mix them up?',o:['id','name','country'],a:0,e:'A unique column like id is called a primary key.'}],
+   remember:'A table has columns (kinds of information) and rows (one item each). A primary key like id is different for every row.'},
+  {id:'3.2',type:'quiz',title:'What is a database?',
+   qs:[
+    {q:'A database is...',o:['An organized collection of tables','One cell in a spreadsheet','A kind of printer'],a:0,e:'Databases keep lots of tables safe and easy to search.'},
+    {q:'What is SQL?',o:['A language for asking a database questions','A brand of computer','A website'],a:0,e:'SQL stands for Structured Query Language. Say "S-Q-L" or "sequel".'},
+    {q:'What is a "query"?',o:['A question or command you send to a database','A broken file','A row in a table'],a:0,e:'You write a query, and the database sends back an answer.'},
+    {q:'What can SQL do?',o:['Find, add, change, and delete data','Only print pages','Make the screen brighter'],a:0,e:'Those four jobs are what you will practice next.'}],
+   remember:'A database stores tables. SQL is the language you use to find, add, change, and delete data.'}
+ ]},
+ {emoji:'🔎',name:'Your First Queries',blurb:'Ask the database questions with SELECT.',levels:[
+  {id:'4.1',type:'sql',title:'SELECT everything',tables:['books'],
+   learn:'SELECT chooses what to show. The star * means "all columns". FROM names the table.',ex:'SELECT * FROM authors',
+   task:'Show every column and every row of the <b>books</b> table.',
+   solution:'SELECT * FROM books',hint:'Write SELECT * FROM and then the table name.',
+   remember:'SELECT * FROM table shows everything in a table.'},
+  {id:'4.2',type:'sql',title:'Pick columns',tables:['books'],
+   learn:'Instead of *, write the column names you want, separated by commas.',ex:'SELECT name, country FROM authors',
+   task:'Show only the <b>title</b> and <b>price</b> of every book.',
+   solution:'SELECT title, price FROM books',hint:'SELECT title, price FROM ... which table?',
+   remember:'List the columns you want after SELECT, separated by commas.'},
+  {id:'4.3',type:'sql',title:'Filter with WHERE',tables:['books'],
+   learn:'WHERE keeps only the rows that match. Text goes in single quotes.',ex:"SELECT name FROM authors WHERE country = 'India'",
+   task:'Show the <b>title</b> of every book whose genre is Tech.',
+   solution:"SELECT title FROM books WHERE genre = 'Tech'",hint:"After FROM books add: WHERE genre = 'Tech'",
+   remember:'WHERE filters rows. Put text in single quotes.'},
+  {id:'4.4',type:'sql',title:'Compare numbers',tables:['books'],
+   learn:'Compare numbers with = < > <= >= and !=. Numbers have no quotes.',ex:'SELECT title FROM books WHERE year > 2020',
+   task:'Show the <b>title</b> and <b>price</b> of books that cost less than 15.',
+   solution:'SELECT title, price FROM books WHERE price < 15',hint:'WHERE price < 15',
+   remember:'Use < and > to compare numbers, with no quotes.'},
+  {id:'4.5',type:'sql',title:'AND and OR',tables:['books'],
+   learn:'AND needs both conditions to be true. OR needs at least one.',ex:'SELECT title FROM books WHERE year > 2020 AND stock > 10',
+   task:'Show the <b>title</b> of Mystery books that cost less than 13.',
+   solution:"SELECT title FROM books WHERE genre = 'Mystery' AND price < 13",hint:"WHERE genre = 'Mystery' AND price < 13",
+   remember:'AND means both must be true. OR means either can be true.'},
+  {id:'4.6',type:'sql',title:'Sort with ORDER BY',tables:['books'],ordered:true,
+   learn:'ORDER BY sorts the results. ASC is smallest first (the default). DESC is biggest first.',ex:'SELECT title, year FROM books ORDER BY year DESC',
+   task:'Show the <b>title</b> and <b>price</b> of all books, most expensive first.',
+   solution:'SELECT title, price FROM books ORDER BY price DESC',hint:'Finish with ORDER BY price DESC',
+   remember:'ORDER BY column DESC sorts biggest first. ASC sorts smallest first.'},
+  {id:'4.7',type:'sql',title:'Only the top: LIMIT',tables:['books'],ordered:true,
+   learn:'LIMIT keeps only the first rows. Use it after ORDER BY to get a "top 3".',ex:'SELECT title FROM books ORDER BY year DESC LIMIT 2',
+   task:'Show the <b>title</b> and <b>price</b> of the 3 cheapest books, cheapest first.',
+   solution:'SELECT title, price FROM books ORDER BY price ASC LIMIT 3',hint:'ORDER BY price ASC LIMIT 3',
+   remember:'ORDER BY plus LIMIT gives you a top or bottom list.'},
+  {id:'4.8',type:'sql',title:'No repeats: DISTINCT',tables:['books'],
+   learn:'DISTINCT removes repeated values from the results.',ex:'SELECT DISTINCT country FROM authors',
+   task:'Show each <b>genre</b> only once.',
+   solution:'SELECT DISTINCT genre FROM books',hint:'SELECT DISTINCT genre FROM books',
+   remember:'SELECT DISTINCT shows each value only once.'},
+  {id:'4.9',type:'sql',title:'Find patterns: LIKE',tables:['books'],
+   learn:'LIKE finds text patterns. The % sign means "anything".',ex:"SELECT name FROM authors WHERE name LIKE 'M%'",
+   task:'Show the <b>title</b> of books whose title starts with B.',
+   solution:"SELECT title FROM books WHERE title LIKE 'B%'",hint:"WHERE title LIKE 'B%'",
+   remember:"LIKE 'B%' means starts with B. LIKE '%B' means ends with B."}
+ ]},
+ {emoji:'📊',name:'Count & Summarize',blurb:'Turn many rows into one useful number.',levels:[
+  {id:'5.1',type:'sql',title:'COUNT rows',tables:['books'],
+   learn:'COUNT(*) counts rows.',ex:'SELECT COUNT(*) FROM authors',
+   task:'How many books are in the <b>books</b> table?',
+   solution:'SELECT COUNT(*) FROM books',hint:'SELECT COUNT(*) FROM books',
+   remember:'COUNT(*) counts rows.'},
+  {id:'5.2',type:'sql',title:'SUM',tables:['books','orders'],
+   learn:'SUM adds up a column. AVG finds the average. MIN and MAX find the smallest and biggest.',ex:'SELECT SUM(qty) FROM orders',
+   task:'What is the total number of books in stock? Add up the <b>stock</b> column.',
+   solution:'SELECT SUM(stock) FROM books',hint:'SELECT SUM(stock) FROM books',
+   remember:'SUM, AVG, MIN, and MAX summarize a column.'},
+  {id:'5.3',type:'sql',title:'Summarize some rows',tables:['books'],
+   learn:'You can use WHERE too, to summarize only some rows.',ex:'SELECT AVG(qty) FROM orders WHERE customer_id = 1',
+   task:'What is the average <b>price</b> of Tech books?',
+   solution:"SELECT AVG(price) FROM books WHERE genre = 'Tech'",hint:"SELECT AVG(price) FROM books WHERE genre = 'Tech'",
+   remember:'WHERE picks the rows first, then AVG, SUM, and COUNT work on those rows.'},
+  {id:'5.4',type:'sql',title:'GROUP BY',tables:['books'],
+   learn:'GROUP BY makes one row for each group. COUNT or SUM then works inside each group.',ex:'SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id',
+   task:'For each genre, show the <b>genre</b> and how many books it has.',
+   solution:'SELECT genre, COUNT(*) FROM books GROUP BY genre',hint:'SELECT genre, COUNT(*) FROM books GROUP BY genre',
+   remember:'GROUP BY gives one row per group, so you can count or add up each group.'},
+  {id:'5.5',type:'sql',title:'Filter groups: HAVING',tables:['books'],
+   learn:'WHERE filters rows before grouping. HAVING filters groups after grouping.',ex:'SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id HAVING COUNT(*) > 2',
+   task:'Show the <b>genre</b> and book count, but only for genres with more than 2 books.',
+   solution:'SELECT genre, COUNT(*) FROM books GROUP BY genre HAVING COUNT(*) > 2',hint:'Add HAVING COUNT(*) > 2 after GROUP BY genre',
+   remember:'Use WHERE for rows and HAVING for groups.'}
+ ]},
+ {emoji:'🔗',name:'Connect Tables (JOIN)',blurb:'Combine information from more than one table.',levels:[
+  {id:'6.1',type:'quiz',title:'Why connect tables?',show:['books','authors'],
+   qs:[
+    {q:'In the books table, author_id holds a number. What does it point to?',o:['The id of a row in the authors table','The price','The year'],a:0,e:'It links each book to its author.'},
+    {q:'Why not type the author name in every book row?',o:['Storing it once avoids mistakes and repeated data','Computers cannot store names','Tables can only hold numbers'],a:0,e:'If an author changes their name, you fix it in one place.'},
+    {q:'A column that points to another table\'s id is called a...',o:['foreign key','house key','sort key'],a:0,e:'A foreign key connects two tables.'},
+    {q:'What does a JOIN do?',o:['Combines rows from two tables where the keys match','Deletes a table','Sorts a column'],a:0,e:'JOIN lets you ask questions across tables.'}],
+   remember:'A foreign key (like author_id) points to a primary key (like authors.id). JOIN uses them to combine tables.'},
+  {id:'6.2',type:'sql',title:'Your first JOIN',tables:['books','authors'],
+   learn:'JOIN glues tables together. ON says which columns match. Write table.column to be clear.',ex:'SELECT orders.id, customers.name FROM orders JOIN customers ON orders.customer_id = customers.id',
+   task:'Show each book <b>title</b> next to its author <b>name</b>.',
+   solution:'SELECT books.title, authors.name FROM books JOIN authors ON books.author_id = authors.id',
+   hint:'FROM books JOIN authors ON books.author_id = authors.id',
+   remember:'JOIN table ON a.key = b.key combines two tables.'},
+  {id:'6.3',type:'sql',title:'JOIN and WHERE',tables:['books','authors'],
+   learn:'After a JOIN you can still use WHERE, GROUP BY, ORDER BY, and LIMIT.',ex:"SELECT orders.id, customers.name FROM orders JOIN customers ON orders.customer_id = customers.id WHERE customers.city = 'Miami'",
+   task:'Show the <b>title</b> of books written by authors from India.',
+   solution:"SELECT books.title FROM books JOIN authors ON books.author_id = authors.id WHERE authors.country = 'India'",
+   hint:"Join books and authors, then WHERE authors.country = 'India'",
+   remember:'JOIN first, then filter with WHERE as usual.'},
+  {id:'6.4',type:'sql',title:'JOIN and GROUP BY',tables:['books','authors'],
+   learn:'Group by a column from the joined table to summarize per person or thing.',ex:'SELECT customers.name, COUNT(*) FROM orders JOIN customers ON orders.customer_id = customers.id GROUP BY customers.name',
+   task:'Show each author <b>name</b> and how many books they wrote.',
+   solution:'SELECT authors.name, COUNT(*) FROM books JOIN authors ON books.author_id = authors.id GROUP BY authors.name',
+   hint:'SELECT authors.name, COUNT(*) ... GROUP BY authors.name',
+   remember:'JOIN plus GROUP BY answers questions like "how many per person?"'},
+  {id:'6.5',type:'sql',title:'Join three tables',tables:['orders','customers','books'],
+   learn:'You can add more JOINs, one after another. The orders table connects customers and books.',ex:'SELECT a.x, b.y FROM t1 JOIN t2 ON ... JOIN t3 ON ...',
+   task:'Show each customer <b>name</b> with the <b>title</b> of every book they ordered.',
+   solution:'SELECT customers.name, books.title FROM orders JOIN customers ON orders.customer_id = customers.id JOIN books ON orders.book_id = books.id',
+   hint:'FROM orders JOIN customers ON orders.customer_id = customers.id JOIN books ON orders.book_id = books.id',
+   remember:'Chain JOINs to follow links across many tables.'}
+ ]},
+ {emoji:'✏️',name:'Change the Data',blurb:'Add, edit, and remove rows, and make new tables.',levels:[
+  {id:'7.1',type:'sql',title:'INSERT a row',tables:['authors'],
+   learn:'INSERT INTO adds a new row. List the columns, then the VALUES in the same order.',ex:"INSERT INTO customers (id, name, city) VALUES (6, 'Max', 'Tampa')",
+   task:'Add a new author: id <b>6</b>, name <b>Ken Park</b>, country <b>Korea</b>.',
+   solution:"INSERT INTO authors (id, name, country) VALUES (6, 'Ken Park', 'Korea')",
+   hint:"INSERT INTO authors (id, name, country) VALUES (6, 'Ken Park', 'Korea')",
+   remember:'INSERT INTO table (columns) VALUES (values) adds a row.'},
+  {id:'7.2',type:'sql',title:'UPDATE a row',tables:['books'],
+   learn:'UPDATE changes existing rows. Always add WHERE, or every row changes!',ex:'UPDATE books SET price = 10 WHERE id = 6',
+   task:'The book Spice Route (id 7) is back in stock. Set its <b>stock</b> to 10.',
+   solution:'UPDATE books SET stock = 10 WHERE id = 7',hint:'UPDATE books SET stock = 10 WHERE id = 7',
+   remember:'UPDATE table SET column = value WHERE ... Never forget the WHERE.'},
+  {id:'7.3',type:'sql',title:'DELETE a row',tables:['books'],
+   learn:'DELETE FROM removes rows. Like UPDATE, always add WHERE.',ex:'DELETE FROM orders WHERE id = 3',
+   task:'Remove the book with id <b>9</b> from the books table.',
+   solution:'DELETE FROM books WHERE id = 9',hint:'DELETE FROM books WHERE id = 9',
+   remember:'DELETE FROM table WHERE ... removes rows. Without WHERE it removes all of them!'},
+  {id:'7.4',type:'sql',title:'CREATE a table',tables:[],
+   learn:'CREATE TABLE makes a new table. List each column and its type: INTEGER for whole numbers, TEXT for words.',ex:'CREATE TABLE pets (id INTEGER, name TEXT)',
+   task:'Create a table called <b>readers</b> with columns <b>id</b> (INTEGER) and <b>name</b> (TEXT). Then insert one reader: id 1, name Zoe. Write two statements separated by a semicolon.',
+   solution:"CREATE TABLE readers (id INTEGER, name TEXT); INSERT INTO readers (id, name) VALUES (1, 'Zoe')",
+   hint:"CREATE TABLE readers (id INTEGER, name TEXT); then INSERT INTO readers (id, name) VALUES (1, 'Zoe')",
+   remember:'CREATE TABLE defines the columns. Then INSERT fills it with rows.'}
+ ]},
+ {emoji:'👑',name:'Final Boss',blurb:'Mix everything you learned.',levels:[
+  {id:'8.1',type:'sql',title:'Top customers',tables:['orders','customers'],
+   learn:'Time to mix JOIN, GROUP BY, SUM, ORDER BY, and LIMIT. Build it one piece at a time!',ex:'',
+   task:'Show the 3 customers who ordered the most books in total: their <b>name</b> and the total of <b>orders.qty</b>, biggest total first.',
+   solution:'SELECT customers.name, SUM(orders.qty) FROM orders JOIN customers ON orders.customer_id = customers.id GROUP BY customers.name ORDER BY SUM(orders.qty) DESC LIMIT 3',
+   hint:'JOIN orders and customers, GROUP BY customers.name, SUM(orders.qty), ORDER BY SUM(orders.qty) DESC, LIMIT 3',
+   remember:'Big questions are just small steps stacked together.'},
+  {id:'8.2',type:'sql',title:'Money by genre',tables:['orders','books'],
+   learn:'You can do math inside SUM, like price * qty.',ex:'SELECT SUM(price * stock) FROM books',
+   task:'For each <b>genre</b>, show the genre and the total money made: add up <b>price times qty</b> for every order. Join orders to books.',
+   solution:'SELECT books.genre, SUM(books.price * orders.qty) FROM orders JOIN books ON orders.book_id = books.id GROUP BY books.genre',
+   hint:'SELECT books.genre, SUM(books.price * orders.qty) FROM orders JOIN books ON ... GROUP BY books.genre',
+   remember:'You can calculate inside SUM and group the answer by any column.'}
+ ]}
+];
+var LEVELS=[];
+WORLDS.forEach(function(w){w.levels.forEach(function(l){l.w=w;LEVELS.push(l);});});
+/*==END==*/
+
+/* ---------- App ---------- */
+var stage=document.getElementById('stage'),starsEl=document.getElementById('stars'),lblEl=document.getElementById('lbl'),mapBtn=document.getElementById('mapBtn');
+var prog={};
+try{prog=JSON.parse(localStorage.getItem('zero-to-sql-v1')||'{}')||{};}catch(e){prog={};}
+function save(){try{localStorage.setItem('zero-to-sql-v1',JSON.stringify(prog));}catch(e){}}
+function totalStars(){var n=0;for(var k in prog) n+=prog[k];return n;}
+function updateStars(){starsEl.textContent=totalStars();}
+function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;}
+function show(node){stage.innerHTML='';stage.appendChild(node);window.scrollTo(0,0);}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function shake(n){n.classList.remove('shake');void n.offsetWidth;n.classList.add('shake');}
+mapBtn.onclick=function(){showMap();};
+
+function tableHtml(cols,rows){
+  var h='<div class="tw"><table><thead><tr>'+cols.map(function(c){return '<th>'+esc(c)+'</th>';}).join('')+'</tr></thead><tbody>';
+  if(!rows.length) h+='<tr><td colspan="'+Math.max(cols.length,1)+'"><i>(no rows)</i></td></tr>';
+  rows.forEach(function(r){h+='<tr>'+r.map(function(v){return '<td>'+(v===null||v===undefined?'<i>NULL</i>':esc(v))+'</td>';}).join('')+'</tr>';});
+  return h+'</tbody></table></div>';
+}
+function viewer(names){
+  var box=el('div'),tabs=el('div','tabs'),body=el('div');
+  function draw(n){var t=BASE[n];body.innerHTML='<p class="note">Table <b>'+esc(n)+'</b>. Columns: '+esc(t.cols.join(', '))+'</p>'+tableHtml(t.cols,t.rows);}
+  names.forEach(function(n,k){
+    var b=el('button','tab'+(k===0?' on':''),esc(n));
+    b.onclick=function(){[].forEach.call(tabs.children,function(x){x.classList.remove('on');});b.classList.add('on');draw(n);};
+    tabs.appendChild(b);
+  });
+  box.appendChild(tabs);box.appendChild(body);draw(names[0]);return box;
+}
+
+function showMap(){
+  mapBtn.style.visibility='hidden';lblEl.textContent='';updateStars();
+  var wrap=el('div'),done=LEVELS.filter(function(l){return prog[l.id];}).length,current=-1,nowBtn=null;
+  for(var i=0;i<LEVELS.length;i++){if(!prog[LEVELS[i].id]){current=i;break;}}
+  var intro=el('div','card left','<h1>From Zero to SQL</h1><p>No computer knowledge needed. Play one short level at a time. By the end you will write real SQL.</p><div class="meter"><div style="width:'+(done/LEVELS.length*100)+'%"></div></div><p class="note">'+done+' of '+LEVELS.length+' levels complete</p>');
+  if(done===LEVELS.length){var cb=el('button','go','🎓 See my certificate');cb.onclick=certificate;intro.appendChild(cb);}
+  wrap.appendChild(intro);
+  WORLDS.forEach(function(w){
+    var c=el('div','card world');
+    c.appendChild(el('h2','',w.emoji+' '+esc(w.name)));c.appendChild(el('p','note',esc(w.blurb)));
+    w.levels.forEach(function(l){
+      var idx=LEVELS.indexOf(l),ok=prog[l.id],open=idx===0||!!prog[LEVELS[idx-1].id];
+      var b=el('button','lv'+(idx===current?' now':'')+(ok?' done':''));
+      b.disabled=!open;
+      b.innerHTML='<span>'+(ok?'✓':open?'▶':'🔒')+' '+l.id+' &nbsp;'+esc(l.title)+'</span><span>'+(ok?'★'.repeat(ok)+'☆'.repeat(3-ok):'')+'</span>';
+      b.onclick=function(){startLevel(idx);};
+      if(idx===current) nowBtn=b;
+      c.appendChild(b);
+    });
+    wrap.appendChild(c);
+  });
+  var rb=el('button','','Reset progress');
+  rb.onclick=function(){if(confirm('Erase all progress and start over?')){prog={};save();showMap();}};
+  wrap.appendChild(rb);
+  show(wrap);
+  if(nowBtn&&done>0) nowBtn.scrollIntoView({block:'center'});
+}
+
+function startLevel(i){
+  var l=LEVELS[i];
+  mapBtn.style.visibility='visible';
+  lblEl.textContent=l.w.emoji+' '+l.w.name+' · '+l.id;
+  ({sort:runSort,quiz:runQuiz,binary:runBinary,sql:runSql})[l.type](l,i);
+}
+
+function complete(i,mistakes){
+  var l=LEVELS[i],st=mistakes===0?3:mistakes<=2?2:1;
+  prog[l.id]=Math.max(prog[l.id]||0,st);save();updateStars();
+  var last=i+1>=LEVELS.length;
+  var c=el('div','card','<div class="emoji">🎉</div><h2>Level complete!</h2><p style="font-size:1.8rem;margin:4px 0">'+'⭐'.repeat(st)+'</p>'+
+    '<div class="lesson left"><b>Remember:</b> '+esc(l.remember)+'</div>');
+  var b=el('button','go',last?'🎓 See my certificate':'Next level ▶');
+  b.onclick=function(){if(last) certificate();else startLevel(i+1);};
+  var m=el('button','','🗺️ Map');m.onclick=showMap;
+  c.appendChild(b);c.appendChild(m);show(c);
+}
+
+function certificate(){
+  mapBtn.style.visibility='visible';lblEl.textContent='';
+  var c=el('div','card','<div class="emoji">🎓</div><h1>You did it!</h1>'+
+    '<p>You went from "what is a computer?" to writing real SQL: SELECT, WHERE, ORDER BY, GROUP BY, JOIN, INSERT, UPDATE, DELETE, and CREATE TABLE.</p>'+
+    '<p><b>'+totalStars()+' of '+(LEVELS.length*3)+' stars</b></p>'+
+    '<div class="lesson left"><b>What to do next</b><br>• Install a free database like SQLite, PostgreSQL, or MySQL and practice on your own data.<br>'+
+    '• Learn more: subqueries, indexes, constraints, normalization, and window functions.<br>'+
+    '• Build a small project, like a library or store database, and answer your own questions with SQL.</div>');
+  var m=el('button','go','🗺️ Back to map');m.onclick=showMap;c.appendChild(m);show(c);
+}
+
+/* ----- level types ----- */
+function runSort(l,i){
+  var items=shuffle(l.items),k=0,mistakes=0,busy=false;
+  var c=el('div','card','<h2>'+esc(l.title)+'</h2><p>'+l.intro+'</p>');
+  var count=el('p','note'),thing=el('div','thing'),row=el('div','row'),msg=el('div','msg');
+  c.appendChild(count);c.appendChild(thing);c.appendChild(row);c.appendChild(msg);
+  c.appendChild(el('p','note',l.bins.map(function(b){return '<b>'+esc(b[1])+'</b>: '+esc(b[2]);}).join(' &nbsp;·&nbsp; ')));
+  function load(){count.textContent='Part '+(k+1)+' of '+items.length;thing.innerHTML=esc(items[k][0]);msg.textContent='';busy=false;}
+  l.bins.forEach(function(b){
+    var btn=el('button','',esc(b[1]));
+    btn.onclick=function(){
+      if(busy) return;
+      if(b[0]===items[k][1]){
+        busy=true;msg.className='msg good';msg.textContent='Yes!';k++;
+        setTimeout(function(){if(k>=items.length) complete(i,mistakes);else load();},400);
+      }else{mistakes++;shake(thing);msg.className='msg bad';msg.textContent='Try again.';}
+    };
+    row.appendChild(btn);
+  });
+  load();show(c);
+}
+
+function runQuiz(l,i){
+  var q=0,mistakes=0,c=el('div','card left');
+  function draw(){
+    var Q=l.qs[q];c.innerHTML='';
+    c.appendChild(el('h2','',esc(l.title)));
+    if(l.show){c.appendChild(viewer(l.show));}
+    c.appendChild(el('p','note','Question '+(q+1)+' of '+l.qs.length));
+    c.appendChild(el('p','q',esc(Q.q)));
+    var opts=el('div','opts'),msg=el('div','msg'),locked=false;
+    shuffle(Q.o.map(function(t,k){return {t:t,k:k};})).forEach(function(o){
+      var b=el('button','',esc(o.t));
+      b.onclick=function(){
+        if(locked||b.disabled) return;
+        if(o.k===Q.a){
+          locked=true;b.classList.add('right');msg.className='msg good';msg.innerHTML='✅ Right! '+esc(Q.e);
+          [].forEach.call(opts.children,function(x){x.disabled=true;});
+          var n=el('button','go',q+1>=l.qs.length?'Finish ▶':'Next ▶');
+          n.onclick=function(){q++;if(q>=l.qs.length) complete(i,mistakes);else draw();};
+          c.appendChild(n);
+        }else{mistakes++;b.disabled=true;b.classList.add('wrong');shake(opts);msg.className='msg bad';msg.textContent='Not quite. Try another answer.';}
+      };
+      opts.appendChild(b);
+    });
+    c.appendChild(opts);c.appendChild(msg);
+  }
+  draw();show(c);
+}
+
+function runBinary(l,i){
+  var r=0,mistakes=0,vals=[8,4,2,1],c=el('div','card');
+  function round(){
+    var bits=[0,0,0,0];
+    c.innerHTML='<h2>'+esc(l.title)+'</h2><p>'+l.intro+'</p><p class="note">Round '+(r+1)+' of '+l.targets.length+'</p><div class="big">'+l.targets[r]+'</div>';
+    var wrap=el('div','bits');c.appendChild(wrap);
+    function total(){return bits.reduce(function(a,x,j){return a+x*vals[j];},0);}
+    var sum=el('p','','Total: 0'),msg=el('div','msg');
+    vals.forEach(function(v,k){
+      var d=el('div','bit'),b=el('button','','0');
+      b.onclick=function(){bits[k]^=1;b.textContent=bits[k];b.classList.toggle('on',!!bits[k]);sum.textContent='Total: '+total();msg.textContent='';};
+      d.appendChild(b);d.appendChild(el('div','pv','worth '+v));wrap.appendChild(d);
+    });
+    c.appendChild(sum);c.appendChild(msg);
+    var chk=el('button','go','Check');
+    chk.onclick=function(){
+      if(total()===l.targets[r]){
+        msg.className='msg good';msg.textContent='Correct!';chk.disabled=true;r++;
+        setTimeout(function(){if(r>=l.targets.length) complete(i,mistakes);else round();},600);
+      }else{mistakes++;shake(wrap);msg.className='msg bad';msg.textContent='Not yet. Try different boxes.';}
+    };
+    c.appendChild(chk);
+  }
+  round();show(c);
+}
+
+function renderResults(user){
+  var html='';
+  user.results.forEach(function(r){if(r.type==='ok') html+='<p class="note">✔ '+esc(r.message)+'</p>';});
+  var last=user.results[user.results.length-1];
+  if(last.type==='rows') html+=tableHtml(last.cols,last.rows);
+  else if(last.table&&user.db[last.table]) html+='<p class="note">The <b>'+esc(last.table)+'</b> table now looks like this:</p>'+tableHtml(user.db[last.table].cols,user.db[last.table].rows);
+  return html;
+}
+
+function runSql(l,i){
+  var mistakes=0,fails=0,hinted=false,peeked=false,solved=false,peekBtn=null;
+  var c=el('div','card left');
+  c.appendChild(el('h2','',esc(l.title)));
+  c.appendChild(el('p','',l.learn));
+  if(l.ex){c.appendChild(el('p','note','Example:'));c.appendChild(el('pre','code',esc(l.ex)));}
+  c.appendChild(el('div','task','🎯 <b>Your task:</b> '+l.task));
+  if(l.tables&&l.tables.length){c.appendChild(el('p','note','Peek at the data. It resets every time you run.'));c.appendChild(viewer(l.tables));}
+  var ta=el('textarea','sql');
+  ta.spellcheck=false;ta.setAttribute('autocapitalize','off');ta.setAttribute('autocomplete','off');ta.placeholder='Type your SQL here... (Ctrl+Enter to run)';
+  c.appendChild(ta);
+  var row=el('div','row'),run=el('button','go','Run ▶'),hint=el('button','','💡 Hint');
+  row.appendChild(run);row.appendChild(hint);c.appendChild(row);
+  var info=el('div','hintbox');info.style.display='none';c.appendChild(info);
+  var out=el('div','out');c.appendChild(out);
+
+  hint.onclick=function(){if(!hinted){hinted=true;mistakes++;}info.style.display='block';info.innerHTML='💡 '+esc(l.hint);};
+  function addPeek(){
+    if(peekBtn) return;
+    peekBtn=el('button','','👀 Show answer');
+    peekBtn.onclick=function(){
+      if(!peeked){peeked=true;mistakes++;}
+      ta.value=l.solution;info.style.display='block';
+      info.innerHTML='Here is one answer. Press Run to try it:<pre class="code">'+esc(l.solution)+'</pre>';
+    };
+    row.appendChild(peekBtn);
+  }
+  function doRun(){
+    var sql=ta.value.trim();
+    if(!sql){out.innerHTML='<p class="bad">Type a query first.</p>';return;}
+    var user;
+    try{user=execAll(sql);}catch(err){out.innerHTML='<p class="bad">⚠️ '+esc(err.message)+'</p>';return;}
+    var res=judge(user,execAll(l.solution),l.ordered),html=renderResults(user);
+    if(res===null){
+      solved=true;out.innerHTML='<p class="good">✅ Correct!</p>'+html;
+      var n=el('button','go','Continue ▶');n.onclick=function(){complete(i,mistakes);};out.appendChild(n);
+    }else{
+      if(!solved){mistakes++;fails++;}
+      out.innerHTML='<p class="bad">❌ '+esc(res)+'</p>'+html;
+      if(fails>=3) addPeek();
+    }
+  }
+  run.onclick=doRun;
+  ta.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();doRun();}});
+  show(c);
+}
+
+updateStars();showMap();
+})();
+</script>
+</body>
+</html>
