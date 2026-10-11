@@ -742,7 +742,7 @@ function showMap(){
   mapBtn.style.visibility='hidden';lblEl.textContent='';updateStars();
   var wrap=el('div'),done=LEVELS.filter(function(l){return prog[l.id];}).length,current=-1,nowBtn=null;
   for(var i=0;i<LEVELS.length;i++){if(!prog[LEVELS[i].id]){current=i;break;}}
-  var intro=el('div','card left','<h1>From Zero to SQL</h1><p>No computer knowledge needed. Play one short level at a time. By the end you will write real SQL.</p><div class="meter"><div style="width:'+(done/LEVELS.length*100)+'%"></div></div><p class="note">'+done+' of '+LEVELS.length+' levels complete</p>');
+  var intro=el('div','card left','<h1>Zero to SQL Hero</h1><p>No computer knowledge needed. Play one short level at a time. By the end you will write real SQL.</p><div class="meter"><div style="width:'+(done/LEVELS.length*100)+'%"></div></div><p class="note">'+done+' of '+LEVELS.length+' levels complete</p>');
   if(done===LEVELS.length){var cb=el('button','go','🎓 See my certificate');cb.onclick=certificate;intro.appendChild(cb);}
   wrap.appendChild(intro);
   WORLDS.forEach(function(w){
